@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab · The Moving Dot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #000000;
+            cursor: none;
+            font-family: 'DM Sans', sans-serif;
+            color: #e8e8e8;
+        }
+
+        /* Flowing gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 69, 197, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(231, 76, 60, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 60% 60%, rgba(241, 196, 15, 0.1) 0%, transparent 50%);
+            animation: flow 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes flow {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(10%, 10%) rotate(120deg);
+            }
+            66% {
+                transform: translate(-5%, 5%) rotate(240deg);
+            }
+        }
+
+        /* Custom cursor */
+        .cursor {
+            width: 40px;
+            height: 40px;
+            border: 2px solid;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease-out;
+            transform: translate(-50%, -50%);
+            animation: cursorColor 8s ease-in-out infinite;
+        }
+
+        @keyframes cursorColor {
+            0%, 100% { border-color: rgba(139, 69, 197, 0.6); }
+            25% { border-color: rgba(52, 152, 219, 0.6); }
+            50% { border-color: rgba(231, 76, 60, 0.6); }
+            75% { border-color: rgba(241, 196, 15, 0.6); }
+        }
+
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s ease-out;
+            animation: dotColor 8s ease-in-out infinite;
+        }
+
+        @keyframes dotColor {
+            0%, 100% { background: #8b45c5; box-shadow: 0 0 15px #8b45c5; }
+            25% { background: #3498db; box-shadow: 0 0 15px #3498db; }
+            50% { background: #e74c3c; box-shadow: 0 0 15px #e74c3c; }
+            75% { background: #f1c40f; box-shadow: 0 0 15px #f1c40f; }
+        }
+
+        /* Canvas for particles */
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 0 4rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            color: #e8e8e8;
+            text-decoration: none;
+        }
+
+        .logo .dot-accent {
+            animation: logoColor 8s ease-in-out infinite;
+            font-size: 2rem;
+            vertical-align: middle;
+        }
+
+        @keyframes logoColor {
+            0%, 100% { color: #8b45c5; }
+            25% { color: #3498db; }
+            50% { color: #e74c3c; }
+            75% { color: #f1c40f; }
+        }
+
+        .back-link {
+            color: #a0a0a8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            animation: backColor 8s ease-in-out infinite;
+        }
+
+        @keyframes backColor {
+            0%, 100% { color: rgba(139, 69, 197, 0.8); }
+            25% { color: rgba(52, 152, 219, 0.8); }
+            50% { color: rgba(231, 76, 60, 0.8); }
+            75% { color: rgba(241, 196, 15, 0.8); }
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        /* Title */
+        .page-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 4rem;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: #a0a0a8;
+            font-size: 1.1rem;
+            margin-bottom: 6rem;
+            font-style: italic;
+        }
+
+        /* Lab Badge */
+        .lab-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(139, 69, 197, 0.1);
+            border: 1px solid rgba(139, 69, 197, 0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            animation: badgeColor 8s ease-in-out infinite;
+        }
+
+        @keyframes badgeColor {
+            0%, 100% { 
+                background: rgba(139, 69, 197, 0.1);
+                border-color: rgba(139, 69, 197, 0.3);
+                color: rgba(139, 69, 197, 0.9);
+            }
+            25% { 
+                background: rgba(52, 152, 219, 0.1);
+                border-color: rgba(52, 152, 219, 0.3);
+                color: rgba(52, 152, 219, 0.9);
+            }
+            50% { 
+                background: rgba(231, 76, 60, 0.1);
+                border-color: rgba(231, 76, 60, 0.3);
+                color: rgba(231, 76, 60, 0.9);
+            }
+            75% { 
+                background: rgba(241, 196, 15, 0.1);
+                border-color: rgba(241, 196, 15, 0.3);
+                color: rgba(241, 196, 15, 0.9);
+            }
+        }
+
+        /* Lab Grid */
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            margin-bottom: 6rem;
+        }
+
+        /* Lab Card */
+        .lab-card {
+            position: relative;
+            background: rgba(19, 19, 26, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-decoration: none;
+            color: #e8e8e8;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .lab-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                rgba(139, 69, 197, 0.8), 
+                rgba(52, 152, 219, 0.8), 
+                rgba(231, 76, 60, 0.8), 
+                rgba(241, 196, 15, 0.8));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+            background-size: 200% 100%;
+            animation: gradientShift 8s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+        }
+
+        .lab-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .lab-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 69, 197, 0.1), transparent);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .lab-card:hover::after {
+            width: 500px;
+            height: 500px;
+        }
+
+        .lab-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(139, 69, 197, 0.4);
+            box-shadow: 0 20px 60px rgba(139, 69, 197, 0.2);
+        }
+
+        .lab-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .lab-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            border-radius: 12px;
+            background: rgba(139, 69, 197, 0.1);
+            border: 1px solid rgba(139, 69, 197, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .lab-card:hover .lab-icon {
+            background: rgba(139, 69, 197, 0.2);
+            border-color: rgba(139, 69, 197, 0.5);
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .lab-card:nth-child(2) .lab-icon {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: rgba(52, 152, 219, 0.3);
+        }
+
+        .lab-card:nth-child(2):hover .lab-icon {
+            background: rgba(52, 152, 219, 0.2);
+            border-color: rgba(52, 152, 219, 0.5);
+        }
+
+        .lab-card:nth-child(3) .lab-icon {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+
+        .lab-card:nth-child(3):hover .lab-icon {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+
+        .lab-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .lab-description {
+            color: #a0a0a8;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .lab-url {
+            font-size: 0.85rem;
+            color: rgba(139, 69, 197, 0.7);
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .lab-card:nth-child(2) .lab-url {
+            color: rgba(52, 152, 219, 0.7);
+        }
+
+        .lab-card:nth-child(3) .lab-url {
+            color: rgba(231, 76, 60, 0.7);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 4rem;
+            }
+
+            .lab-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            header {
+                padding: 1rem 0 2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flowing gradient background -->
+    <div class="bg-gradient"></div>
+
+    <!-- Custom cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Canvas for particles -->
+    <canvas id="canvas"></canvas>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <a href="/" class="logo">
+                <span class="dot-accent">·</span> the moving dot
+            </a>
+            <a href="/" class="back-link">← BACK</a>
+        </header>
+
+        <!-- Title -->
+        <h1 class="page-title">Lab</h1>
+        <p class="page-subtitle">Experimental projects and creative explorations</p>
+
+        <!-- Lab Grid -->
+        <div class="lab-grid">
+            <a href="https://wmbusflow.themovingdot.com/" class="lab-card" target="_blank">
+                <div class="lab-card-content">
+                    <div class="lab-badge">Experiment</div>
+                    <div class="lab-icon">🚌</div>
+                    <h2 class="lab-title">Bus Flow Analyzer</h2>
+                    <p class="lab-description">
+                        Interactive visualization and analysis tool for urban bus network flow patterns and service optimization studies.
+                    </p>
+                    <div class="lab-url">wmbusflow.themovingdot.com</div>
+                </div>
+            </a>
+
+            <a href="https://timecompare.themovingdot.com/" class="lab-card" target="_blank">
+                <div class="lab-card-content">
+                    <div class="lab-badge">Experiment</div>
+                    <div class="lab-icon">⏱️</div>
+                    <h2 class="lab-title">Time Compare</h2>
+                    <p class="lab-description">
+                        Multi-timezone comparison and temporal analysis utility for coordinating across different time contexts and schedules.
+                    </p>
+                    <div class="lab-url">timecompare.themovingdot.com</div>
+                </div>
+            </a>
+
+            <a href="https://life.themovingdot.com/" class="lab-card" target="_blank">
+                <div class="lab-card-content">
+                    <div class="lab-badge">Experiment</div>
+                    <div class="lab-icon">🌱</div>
+                    <h2 class="lab-title">Life</h2>
+                    <p class="lab-description">
+                        Contemplative interface for exploring life patterns, temporal perspectives, and personal reflection through data visualization.
+                    </p>
+                    <div class="lab-url">life.themovingdot.com</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Particle system
+        const colors = [
+            { r: 139, g: 69, b: 197 },   // Purple
+            { r: 52, g: 152, b: 219 },   // Blue
+            { r: 231, g: 76, b: 60 },    // Red
+            { r: 241, g: 196, b: 15 }    // Yellow
+        ];
+        
+        let colorIndex = 0;
+        let colorTransition = 0;
+        
+        function getCurrentColor() {
+            const nextIndex = (colorIndex + 1) % colors.length;
+            const current = colors[colorIndex];
+            const next = colors[nextIndex];
+            
+            const r = current.r + (next.r - current.r) * colorTransition;
+            const g = current.g + (next.g - current.g) * colorTransition;
+            const b = current.b + (next.b - current.b) * colorTransition;
+            
+            return { r, g, b };
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.y = Math.random() * canvas.height;
+                this.history = [];
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = 0;
+                this.speed = 0.2 + Math.random() * 0.5;
+                this.size = 1 + Math.random() * 2;
+                this.opacity = Math.random() * 0.5 + 0.3;
+            }
+
+            update() {
+                this.history.push({ x: this.x, y: this.y });
+                if (this.history.length > 10) {
+                    this.history.shift();
+                }
+
+                this.y += this.speed;
+                this.x += Math.sin(this.y * 0.01) * 0.5;
+
+                if (this.y > canvas.height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                const color = getCurrentColor();
+                
+                // Draw trail
+                for (let i = 0; i < this.history.length; i++) {
+                    const point = this.history[i];
+                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3;
+                    ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${trailOpacity})`;
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, this.size * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Draw particle
+                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw glow
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
+                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2})`);
+                gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Create particles
+        const particles = [];
+        const particleCount = 50;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        // Connection lines
+        function drawConnections() {
+            const color = getCurrentColor();
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 150) {
+                        const opacity = (1 - distance / 150) * 0.15;
+                        ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            // Update color transition
+            colorTransition += 0.002;
+            if (colorTransition >= 1) {
+                colorTransition = 0;
+                colorIndex = (colorIndex + 1) % colors.length;
+            }
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawConnections();
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+        let dotX = 0;
+        let dotY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function updateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            dotX += (mouseX - dotX) * 0.25;
+            dotY += (mouseY - dotY) * 0.25;
+
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            cursorDot.style.left = dotX + 'px';
+            cursorDot.style.top = dotY + 'px';
+
+            requestAnimationFrame(updateCursor);
+        }
+
+        updateCursor();
+
+        // Cursor hover effects
+        const labCards = document.querySelectorAll('.lab-card, .back-link');
+        labCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            });
+            card.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+
+        // Hide cursor when leaving page
+        document.addEventListener('mouseleave', () => {
+            cursor.style.opacity = '0';
+            cursorDot.style.opacity = '0';
+        });
+
+        document.addEventListener('mouseenter', () => {
+            cursor.style.opacity = '1';
+            cursorDot.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
