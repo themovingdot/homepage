@@ -347,6 +347,20 @@
             color: rgba(241, 196, 15, 0.7);
         }
 
+        /* Product video */
+        .product-video {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-video {
+            border-color: rgba(52, 152, 219, 0.5);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
+        }
+
         /* Focus states for keyboard navigation */
         .product-card:focus {
             outline: none;
@@ -440,16 +454,22 @@
                 </div>
             </a>
 
-            <a href="https://vehcount.themovingdot.com/" class="product-card" target="_blank">
+            <div class="product-card">
                 <div class="product-card-content">
                     <div class="product-icon">🚗</div>
                     <h2 class="product-title">Vehicle Counter</h2>
+                    <video class="product-video" controls loop muted playsinline>
+                        <source src="assets/Veh_count_v0.1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                     <p class="product-description">
                         Real-time vehicle counting and traffic flow analysis system for transportation planning and road usage studies.
                     </p>
-                    <div class="product-url">vehcount.themovingdot.com</div>
+                    <a href="https://vehcount.themovingdot.com/" target="_blank" class="product-url" style="display: block; text-decoration: none;">
+                        vehcount.themovingdot.com →
+                    </a>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 
