@@ -1,0 +1,6 @@
+# robots.txt for themovingdot.com
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://themovingdot.com/sitemap.xml
