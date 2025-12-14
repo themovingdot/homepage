@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>· the moving dot</title>
+    <meta name="description" content="the moving dot - Interactive digital experiences, innovative products, and experimental lab projects">
+    <meta property="og:title" content="· the moving dot">
+    <meta property="og:description" content="Interactive digital experiences, innovative products, and experimental lab projects">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="· the moving dot">
+    <meta name="twitter:description" content="Interactive digital experiences, innovative products, and experimental lab projects">
     <style>
         * {
             margin: 0;
@@ -227,6 +234,55 @@
             opacity: 1;
         }
 
+        /* Focus states for keyboard navigation */
+        .nav-link:focus {
+            outline: none;
+        }
+
+        .nav-link:focus .nav-circle {
+            transform: scale(1.2) rotate(90deg);
+            border-color: #8b45c5;
+            box-shadow: 0 0 40px rgba(139, 69, 197, 0.6);
+        }
+
+        .nav-link:focus::before {
+            transform: scale(2);
+            background: #8b45c5;
+            box-shadow: 0 0 40px rgba(139, 69, 197, 0.8);
+        }
+
+        .nav-link:focus .nav-label {
+            opacity: 1;
+        }
+
+        .email-circle:focus {
+            outline: none;
+            transform: scale(1.3);
+            border-color: #8b45c5;
+            box-shadow: 0 0 30px rgba(139, 69, 197, 0.4);
+        }
+
+        .email-circle:focus::before {
+            transform: scale(1.5);
+            background: #8b45c5;
+            box-shadow: 0 0 30px rgba(139, 69, 197, 0.8);
+        }
+
+        /* Touch device support */
+        body.touch-device {
+            cursor: auto;
+        }
+
+        body.touch-device .cursor,
+        body.touch-device .cursor-dot {
+            display: none;
+        }
+
+        body.touch-device .nav-link,
+        body.touch-device .email-circle {
+            cursor: pointer;
+        }
+
         /* Orbiting rings */
         .ring {
             position: absolute;
@@ -336,6 +392,7 @@
         }
 
         .email-circle {
+            position: relative;
             width: 30px;
             height: 30px;
             border: 2px solid;
@@ -436,16 +493,36 @@
             opacity: 1;
         }
 
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             nav {
                 flex-direction: column;
-                gap: 3rem;
+                gap: 2rem;
             }
 
             .nav-link {
-                width: 100px;
-                height: 100px;
+                width: 90px;
+                height: 90px;
+            }
+
+            .email-contact {
+                bottom: 20px;
+            }
+
+            .email-label {
+                bottom: 40px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -470,28 +547,40 @@
     <div class="center-dot"></div>
 
     <!-- Navigation -->
-    <nav>
-        <a href="product.html" class="nav-link">
+    <nav aria-label="Main navigation">
+        <a href="product.html" class="nav-link" aria-label="Go to Product page">
             <div class="nav-circle"></div>
             <span class="nav-label">PRODUCT</span>
         </a>
-        <a href="lab.html" class="nav-link">
+        <a href="lab.html" class="nav-link" aria-label="Go to Lab page">
             <div class="nav-circle"></div>
             <span class="nav-label">LAB</span>
         </a>
-        <a href="server.html" class="nav-link">
+        <a href="server.html" class="nav-link" aria-label="Go to Server page">
             <div class="nav-circle"></div>
             <span class="nav-label">SERVER</span>
         </a>
     </nav>
 
-    <!-- Email contact circles -->
+    <!-- Email contact -->
     <div class="email-contact">
-        <span class="email-label">info@themovingdot.com</span>
-        <a href="mailto:info@themovingdot.com" class="email-circle"></a>
+        <a href="mailto:info@themovingdot.com" class="email-circle" aria-label="Contact us by email">
+            <span class="email-label">info@themovingdot.com</span>
+        </a>
     </div>
 
     <script>
+        // Detect touch device
+        function isTouchDevice() {
+            return (('ontouchstart' in window) ||
+                (navigator.maxTouchPoints > 0) ||
+                (navigator.msMaxTouchPoints > 0));
+        }
+
+        if (isTouchDevice()) {
+            document.body.classList.add('touch-device');
+        }
+
         // Canvas setup
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -639,36 +728,50 @@
             canvas.height = window.innerHeight;
         });
 
-        // Custom cursor
+        // Custom cursor (only on non-touch devices)
         const cursor = document.querySelector('.cursor');
         const cursorDot = document.querySelector('.cursor-dot');
-        let mouseX = 0;
-        let mouseY = 0;
-        let cursorX = 0;
-        let cursorY = 0;
-        let dotX = 0;
-        let dotY = 0;
 
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
+        if (!isTouchDevice()) {
+            let mouseX = 0;
+            let mouseY = 0;
+            let cursorX = 0;
+            let cursorY = 0;
+            let dotX = 0;
+            let dotY = 0;
 
-        function updateCursor() {
-            cursorX += (mouseX - cursorX) * 0.15;
-            cursorY += (mouseY - cursorY) * 0.15;
-            dotX += (mouseX - dotX) * 0.25;
-            dotY += (mouseY - dotY) * 0.25;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
 
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            cursorDot.style.left = dotX + 'px';
-            cursorDot.style.top = dotY + 'px';
+            function updateCursor() {
+                cursorX += (mouseX - cursorX) * 0.15;
+                cursorY += (mouseY - cursorY) * 0.15;
+                dotX += (mouseX - dotX) * 0.25;
+                dotY += (mouseY - dotY) * 0.25;
 
-            requestAnimationFrame(updateCursor);
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+                cursorDot.style.left = dotX + 'px';
+                cursorDot.style.top = dotY + 'px';
+
+                requestAnimationFrame(updateCursor);
+            }
+
+            updateCursor();
+
+            // Hide default cursor
+            document.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '0';
+                cursorDot.style.opacity = '0';
+            });
+
+            document.addEventListener('mouseenter', () => {
+                cursor.style.opacity = '1';
+                cursorDot.style.opacity = '1';
+            });
         }
-
-        updateCursor();
 
         // Cursor hover effects
         const navLinks = document.querySelectorAll('.nav-link');
@@ -681,40 +784,47 @@
             });
         });
 
-        // Cursor hover effects for email circles
-        const emailCircles = document.querySelectorAll('.email-circle');
+        // Cursor hover effects for email circle
+        const emailCircle = document.querySelector('.email-circle');
         const emailLabel = document.querySelector('.email-label');
-        
-        emailCircles.forEach(circle => {
-            circle.addEventListener('mouseenter', () => {
+
+        if (emailCircle && !isTouchDevice()) {
+            emailCircle.addEventListener('mouseenter', () => {
                 cursor.style.transform = 'translate(-50%, -50%) scale(1.3)';
             });
-            circle.addEventListener('mouseleave', () => {
+            emailCircle.addEventListener('mouseleave', () => {
                 cursor.style.transform = 'translate(-50%, -50%) scale(1)';
             });
-            
-            // Show email on click
-            circle.addEventListener('click', (e) => {
+        }
+
+        // Show email and copy to clipboard on click
+        if (emailCircle && emailLabel) {
+            emailCircle.addEventListener('click', (e) => {
                 e.preventDefault();
+
+                // Toggle email visibility
+                const isVisible = emailLabel.classList.contains('visible');
                 emailLabel.classList.toggle('visible');
-                
-                // Copy to clipboard
-                navigator.clipboard.writeText('info@themovingdot.com').then(() => {
-                    console.log('Email copied to clipboard');
-                });
+
+                // Copy to clipboard with user feedback
+                if (!isVisible) {
+                    navigator.clipboard.writeText('info@themovingdot.com')
+                        .then(() => {
+                            const originalText = emailLabel.textContent;
+                            emailLabel.textContent = 'Email copied!';
+
+                            // Reset after 2 seconds
+                            setTimeout(() => {
+                                emailLabel.textContent = originalText;
+                            }, 2000);
+                        })
+                        .catch(() => {
+                            // Fallback: open mailto link
+                            window.location.href = 'mailto:info@themovingdot.com';
+                        });
+                }
             });
-        });
-
-        // Hide default cursor
-        document.addEventListener('mouseleave', () => {
-            cursor.style.opacity = '0';
-            cursorDot.style.opacity = '0';
-        });
-
-        document.addEventListener('mouseenter', () => {
-            cursor.style.opacity = '1';
-            cursorDot.style.opacity = '1';
-        });
+        }
     </script>
 </body>
 </html>
