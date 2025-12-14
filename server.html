@@ -348,6 +348,16 @@
             border-color: rgba(231, 76, 60, 0.5);
         }
 
+        .server-card:nth-child(4) .server-icon {
+            background: rgba(241, 196, 15, 0.1);
+            border-color: rgba(241, 196, 15, 0.3);
+        }
+
+        .server-card:nth-child(4):hover .server-icon {
+            background: rgba(241, 196, 15, 0.2);
+            border-color: rgba(241, 196, 15, 0.5);
+        }
+
         .server-title {
             font-family: 'Crimson Pro', serif;
             font-size: 1.8rem;
@@ -376,6 +386,10 @@
 
         .server-card:nth-child(3) .server-url {
             color: rgba(231, 76, 60, 0.7);
+        }
+
+        .server-card:nth-child(4) .server-url {
+            color: rgba(241, 196, 15, 0.7);
         }
 
         /* Password Protection Modal */
@@ -626,6 +640,18 @@
                         Local large language model inference server for AI-powered applications and natural language processing.
                     </p>
                     <div class="server-url">ollama.themovingdot.com</div>
+                </div>
+            </a>
+
+            <a href="https://n8n.themovingdot.com" class="server-card" target="_blank">
+                <div class="server-card-content">
+                    <div class="server-badge">Service</div>
+                    <div class="server-icon">⚡</div>
+                    <h2 class="server-title">n8n</h2>
+                    <p class="server-description">
+                        Workflow automation platform for connecting apps and services with advanced integration capabilities.
+                    </p>
+                    <div class="server-url">n8n.themovingdot.com</div>
                 </div>
             </a>
         </div>
