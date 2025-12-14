@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products · The Moving Dot</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="description" content="Innovative digital products including household survey forms and vehicle counting systems for data collection and analysis">
+    <meta property="og:title" content="Products · The Moving Dot">
+    <meta property="og:description" content="Innovative digital products including household survey forms and vehicle counting systems for data collection and analysis">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Products · The Moving Dot">
+    <meta name="twitter:description" content="Innovative digital products including household survey forms and vehicle counting systems for data collection and analysis">
+    <meta name="theme-color" content="#000000">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -337,6 +347,59 @@
             color: rgba(241, 196, 15, 0.7);
         }
 
+        /* Product video */
+        .product-video {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-video {
+            border-color: rgba(52, 152, 219, 0.5);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Focus states for keyboard navigation */
+        .product-card:focus {
+            outline: none;
+            transform: translateY(-12px);
+            border-color: rgba(139, 69, 197, 0.6);
+            box-shadow: 0 20px 60px rgba(139, 69, 197, 0.4);
+        }
+
+        .back-link:focus {
+            outline: 2px solid rgba(139, 69, 197, 0.6);
+            outline-offset: 4px;
+        }
+
+        /* Touch device support */
+        body.touch-device {
+            cursor: auto;
+        }
+
+        body.touch-device .cursor,
+        body.touch-device .cursor-dot {
+            display: none;
+        }
+
+        body.touch-device .product-card,
+        body.touch-device .back-link {
+            cursor: pointer;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .page-title {
@@ -391,20 +454,37 @@
                 </div>
             </a>
 
-            <a href="https://vehcount.themovingdot.com/" class="product-card" target="_blank">
+            <div class="product-card">
                 <div class="product-card-content">
                     <div class="product-icon">🚗</div>
                     <h2 class="product-title">Vehicle Counter</h2>
+                    <video class="product-video" controls loop muted playsinline>
+                        <source src="assets/Veh_count_v0.1.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                     <p class="product-description">
                         Real-time vehicle counting and traffic flow analysis system for transportation planning and road usage studies.
                     </p>
-                    <div class="product-url">vehcount.themovingdot.com</div>
+                    <a href="https://vehcount.themovingdot.com/" target="_blank" class="product-url" style="display: block; text-decoration: none;">
+                        vehcount.themovingdot.com →
+                    </a>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 
     <script>
+        // Detect touch device
+        function isTouchDevice() {
+            return (('ontouchstart' in window) ||
+                (navigator.maxTouchPoints > 0) ||
+                (navigator.msMaxTouchPoints > 0));
+        }
+
+        if (isTouchDevice()) {
+            document.body.classList.add('touch-device');
+        }
+
         // Canvas setup
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -418,19 +498,19 @@
             { r: 231, g: 76, b: 60 },    // Red
             { r: 241, g: 196, b: 15 }    // Yellow
         ];
-        
+
         let colorIndex = 0;
         let colorTransition = 0;
-        
+
         function getCurrentColor() {
             const nextIndex = (colorIndex + 1) % colors.length;
             const current = colors[colorIndex];
             const next = colors[nextIndex];
-            
+
             const r = current.r + (next.r - current.r) * colorTransition;
             const g = current.g + (next.g - current.g) * colorTransition;
             const b = current.b + (next.b - current.b) * colorTransition;
-            
+
             return { r, g, b };
         }
 
@@ -493,9 +573,9 @@
             }
         }
 
-        // Create particles
+        // Create particles (reduced count on mobile for better performance)
         const particles = [];
-        const particleCount = 50;
+        const particleCount = window.innerWidth < 768 ? 30 : 50;
         for (let i = 0; i < particleCount; i++) {
             particles.push(new Particle());
         }
@@ -552,58 +632,61 @@
             canvas.height = window.innerHeight;
         });
 
-        // Custom cursor
+        // Custom cursor (only on non-touch devices)
         const cursor = document.querySelector('.cursor');
         const cursorDot = document.querySelector('.cursor-dot');
-        let mouseX = 0;
-        let mouseY = 0;
-        let cursorX = 0;
-        let cursorY = 0;
-        let dotX = 0;
-        let dotY = 0;
 
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
+        if (!isTouchDevice()) {
+            let mouseX = 0;
+            let mouseY = 0;
+            let cursorX = 0;
+            let cursorY = 0;
+            let dotX = 0;
+            let dotY = 0;
 
-        function updateCursor() {
-            cursorX += (mouseX - cursorX) * 0.15;
-            cursorY += (mouseY - cursorY) * 0.15;
-            dotX += (mouseX - dotX) * 0.25;
-            dotY += (mouseY - dotY) * 0.25;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
 
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            cursorDot.style.left = dotX + 'px';
-            cursorDot.style.top = dotY + 'px';
+            function updateCursor() {
+                cursorX += (mouseX - cursorX) * 0.15;
+                cursorY += (mouseY - cursorY) * 0.15;
+                dotX += (mouseX - dotX) * 0.25;
+                dotY += (mouseY - dotY) * 0.25;
 
-            requestAnimationFrame(updateCursor);
+                cursor.style.left = cursorX + 'px';
+                cursor.style.top = cursorY + 'px';
+                cursorDot.style.left = dotX + 'px';
+                cursorDot.style.top = dotY + 'px';
+
+                requestAnimationFrame(updateCursor);
+            }
+
+            updateCursor();
+
+            // Cursor hover effects
+            const productCards = document.querySelectorAll('.product-card, .back-link');
+            productCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                });
+            });
+
+            // Hide cursor when leaving page
+            document.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '0';
+                cursorDot.style.opacity = '0';
+            });
+
+            document.addEventListener('mouseenter', () => {
+                cursor.style.opacity = '1';
+                cursorDot.style.opacity = '1';
+            });
         }
-
-        updateCursor();
-
-        // Cursor hover effects
-        const productCards = document.querySelectorAll('.product-card, .back-link');
-        productCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            });
-            card.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-        });
-
-        // Hide cursor when leaving page
-        document.addEventListener('mouseleave', () => {
-            cursor.style.opacity = '0';
-            cursorDot.style.opacity = '0';
-        });
-
-        document.addEventListener('mouseenter', () => {
-            cursor.style.opacity = '1';
-            cursorDot.style.opacity = '1';
-        });
     </script>
 </body>
 </html>
