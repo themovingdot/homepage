@@ -6,13 +6,13 @@
     <title>Lab · The Moving Dot</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="manifest" href="/manifest.json">
-    <meta name="description" content="Experimental projects including bus flow analysis, route planning, time zone comparison, transport connectivity, and data visualization explorations">
+    <meta name="description" content="Experimental projects including bus flow analysis, real-time bus tracking, route planning, time zone comparison, transport connectivity, and data visualization explorations">
     <meta property="og:title" content="Lab · The Moving Dot">
-    <meta property="og:description" content="Experimental projects including bus flow analysis, route planning, time zone comparison, transport connectivity, and data visualization explorations">
+    <meta property="og:description" content="Experimental projects including bus flow analysis, real-time bus tracking, route planning, time zone comparison, transport connectivity, and data visualization explorations">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Lab · The Moving Dot">
-    <meta name="twitter:description" content="Experimental projects including bus flow analysis, route planning, time zone comparison, transport connectivity, and data visualization explorations">
+    <meta name="twitter:description" content="Experimental projects including bus flow analysis, real-time bus tracking, route planning, time zone comparison, transport connectivity, and data visualization explorations">
     <meta name="theme-color" content="#000000">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -406,6 +406,20 @@
             color: rgba(46, 204, 113, 0.7);
         }
 
+        .lab-card:nth-child(6) .lab-icon {
+            background: rgba(155, 89, 182, 0.1);
+            border-color: rgba(155, 89, 182, 0.3);
+        }
+
+        .lab-card:nth-child(6):hover .lab-icon {
+            background: rgba(155, 89, 182, 0.2);
+            border-color: rgba(155, 89, 182, 0.5);
+        }
+
+        .lab-card:nth-child(6) .lab-url {
+            color: rgba(155, 89, 182, 0.7);
+        }
+
         /* Focus states for keyboard navigation */
         .lab-card:focus {
             outline: none;
@@ -551,6 +565,18 @@
                         Multi-origin route planning application with bidirectional routing modes for logistics optimization, commute planning, and delivery coordination.
                     </p>
                     <div class="lab-url">one2many.themovingdot.com</div>
+                </div>
+            </a>
+
+            <a href="https://whereistherainbowbus.netlify.app/" class="lab-card" target="_blank">
+                <div class="lab-card-content">
+                    <div class="lab-badge">Experiment</div>
+                    <div class="lab-icon">🌈</div>
+                    <h2 class="lab-title">Rainbow Bus Tracker</h2>
+                    <p class="lab-description">
+                        Real-time location tracking for Birmingham's iconic rainbow bus, helping residents and visitors locate and plan journeys with this distinctive service.
+                    </p>
+                    <div class="lab-url">whereistherainbowbus.netlify.app</div>
                 </div>
             </a>
         </div>
