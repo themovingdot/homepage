@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products · The Moving Dot</title>
+    <title>Transport Survey Forms · The Moving Dot</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="manifest" href="/manifest.json">
-    <meta name="description" content="Innovative digital products including household survey forms and vehicle counting systems for data collection and analysis">
-    <meta property="og:title" content="Products · The Moving Dot">
-    <meta property="og:description" content="Innovative digital products including household survey forms and vehicle counting systems for data collection and analysis">
+    <meta name="description" content="Transport survey solutions including roadside interviews and household travel diary surveys for comprehensive travel behavior data collection">
+    <meta property="og:title" content="Transport Survey Forms · The Moving Dot">
+    <meta property="og:description" content="Transport survey solutions including roadside interviews and household travel diary surveys for comprehensive travel behavior data collection">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Products · The Moving Dot">
-    <meta name="twitter:description" content="Innovative digital products including household survey forms and vehicle counting systems for data collection and analysis">
+    <meta name="twitter:title" content="Transport Survey Forms · The Moving Dot">
+    <meta name="twitter:description" content="Transport survey solutions including roadside interviews and household travel diary surveys for comprehensive travel behavior data collection">
     <meta name="theme-color" content="#000000">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,7 +41,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 50%, rgba(139, 69, 197, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.15) 0%, transparent 50%),
                 radial-gradient(circle at 40% 20%, rgba(231, 76, 60, 0.12) 0%, transparent 50%),
@@ -179,20 +179,31 @@
             font-size: 4rem;
             font-weight: 300;
             text-align: center;
-            margin-bottom: 6rem;
+            margin-bottom: 1.5rem;
             letter-spacing: -1px;
         }
 
-        /* Products Grid */
-        .products-grid {
+        .page-subtitle {
+            text-align: center;
+            color: #a0a0a8;
+            font-size: 1.1rem;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Survey Grid */
+        .survey-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 3rem;
             margin-bottom: 6rem;
         }
 
-        /* Product Card */
-        .product-card {
+        /* Survey Card */
+        .survey-card {
             position: relative;
             background: rgba(19, 19, 26, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -205,17 +216,17 @@
             overflow: hidden;
         }
 
-        .product-card::before {
+        .survey-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, 
-                rgba(139, 69, 197, 0.8), 
-                rgba(52, 152, 219, 0.8), 
-                rgba(231, 76, 60, 0.8), 
+            background: linear-gradient(90deg,
+                rgba(139, 69, 197, 0.8),
+                rgba(52, 152, 219, 0.8),
+                rgba(231, 76, 60, 0.8),
                 rgba(241, 196, 15, 0.8));
             transform: scaleX(0);
             transform-origin: left;
@@ -229,11 +240,11 @@
             50% { background-position: 100% 0%; }
         }
 
-        .product-card:hover::before {
+        .survey-card:hover::before {
             transform: scaleX(1);
         }
 
-        .product-card::after {
+        .survey-card::after {
             content: '';
             position: absolute;
             top: 50%;
@@ -247,23 +258,23 @@
             z-index: 0;
         }
 
-        .product-card:hover::after {
+        .survey-card:hover::after {
             width: 500px;
             height: 500px;
         }
 
-        .product-card:hover {
+        .survey-card:hover {
             transform: translateY(-12px);
             border-color: rgba(139, 69, 197, 0.4);
             box-shadow: 0 20px 60px rgba(139, 69, 197, 0.2);
         }
 
-        .product-card-content {
+        .survey-card-content {
             position: relative;
             z-index: 1;
         }
 
-        .product-icon {
+        .survey-icon {
             width: 60px;
             height: 60px;
             margin-bottom: 2rem;
@@ -277,43 +288,32 @@
             transition: all 0.4s ease;
         }
 
-        .product-card:hover .product-icon {
+        .survey-card:hover .survey-icon {
             background: rgba(139, 69, 197, 0.2);
             border-color: rgba(139, 69, 197, 0.5);
             transform: scale(1.1) rotate(5deg);
         }
 
-        .product-card:nth-child(2) .product-icon {
+        .survey-card:nth-child(2) .survey-icon {
             background: rgba(52, 152, 219, 0.1);
             border-color: rgba(52, 152, 219, 0.3);
         }
 
-        .product-card:nth-child(2):hover .product-icon {
+        .survey-card:nth-child(2):hover .survey-icon {
             background: rgba(52, 152, 219, 0.2);
             border-color: rgba(52, 152, 219, 0.5);
         }
 
-        .product-card:nth-child(3) .product-icon {
-            background: rgba(231, 76, 60, 0.1);
-            border-color: rgba(231, 76, 60, 0.3);
+        .survey-card:nth-child(2):hover {
+            border-color: rgba(52, 152, 219, 0.4);
+            box-shadow: 0 20px 60px rgba(52, 152, 219, 0.2);
         }
 
-        .product-card:nth-child(3):hover .product-icon {
-            background: rgba(231, 76, 60, 0.2);
-            border-color: rgba(231, 76, 60, 0.5);
+        .survey-card:nth-child(2)::after {
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.1), transparent);
         }
 
-        .product-card:nth-child(4) .product-icon {
-            background: rgba(241, 196, 15, 0.1);
-            border-color: rgba(241, 196, 15, 0.3);
-        }
-
-        .product-card:nth-child(4):hover .product-icon {
-            background: rgba(241, 196, 15, 0.2);
-            border-color: rgba(241, 196, 15, 0.5);
-        }
-
-        .product-title {
+        .survey-title {
             font-family: 'Crimson Pro', serif;
             font-size: 1.8rem;
             font-weight: 400;
@@ -321,48 +321,26 @@
             line-height: 1.3;
         }
 
-        .product-description {
+        .survey-description {
             color: #a0a0a8;
             line-height: 1.8;
             margin-bottom: 1.5rem;
             font-size: 0.95rem;
         }
 
-        .product-url {
+        .survey-url {
             font-size: 0.85rem;
             color: rgba(139, 69, 197, 0.7);
             font-family: monospace;
             word-break: break-all;
         }
 
-        .product-card:nth-child(2) .product-url {
+        .survey-card:nth-child(2) .survey-url {
             color: rgba(52, 152, 219, 0.7);
         }
 
-        .product-card:nth-child(3) .product-url {
-            color: rgba(231, 76, 60, 0.7);
-        }
-
-        .product-card:nth-child(4) .product-url {
-            color: rgba(241, 196, 15, 0.7);
-        }
-
-        /* Product video */
-        .product-video {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(52, 152, 219, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .product-card:hover .product-video {
-            border-color: rgba(52, 152, 219, 0.5);
-            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
-        }
-
         /* Focus states for keyboard navigation */
-        .product-card:focus {
+        .survey-card:focus {
             outline: none;
             transform: translateY(-12px);
             border-color: rgba(139, 69, 197, 0.6);
@@ -384,7 +362,7 @@
             display: none;
         }
 
-        body.touch-device .product-card,
+        body.touch-device .survey-card,
         body.touch-device .back-link {
             cursor: pointer;
         }
@@ -404,10 +382,14 @@
         @media (max-width: 768px) {
             .page-title {
                 font-size: 2.5rem;
-                margin-bottom: 4rem;
+                margin-bottom: 1rem;
             }
 
-            .products-grid {
+            .page-subtitle {
+                margin-bottom: 3rem;
+            }
+
+            .survey-grid {
                 grid-template-columns: 1fr;
                 gap: 2rem;
             }
@@ -435,50 +417,34 @@
             <a href="index.html" class="logo">
                 <span class="dot-accent">·</span> the moving dot
             </a>
-            <a href="index.html" class="back-link">← BACK</a>
+            <a href="product.html" class="back-link">← BACK TO PRODUCTS</a>
         </header>
 
         <!-- Title -->
-        <h1 class="page-title">Products</h1>
+        <h1 class="page-title">Transport Survey Forms</h1>
+        <p class="page-subtitle">Digital survey tools for comprehensive travel behavior data collection and transportation planning</p>
 
-        <!-- Products Grid -->
-        <div class="products-grid">
-            <a href="https://hhs-survey-form.themovingdot.com/" class="product-card" target="_blank">
-                <div class="product-card-content">
-                    <div class="product-icon">📋</div>
-                    <h2 class="product-title">Household Survey Form</h2>
-                    <p class="product-description">
-                        Digital household survey collection tool for comprehensive travel behavior analysis and demographic data gathering.
+        <!-- Survey Grid -->
+        <div class="survey-grid">
+            <a href="https://rsi.themovingdot.com" class="survey-card" target="_blank">
+                <div class="survey-card-content">
+                    <div class="survey-icon">🚧</div>
+                    <h2 class="survey-title">Road Side Interview</h2>
+                    <p class="survey-description">
+                        Digital roadside interview survey tool for collecting travel origin-destination data, trip purposes, and vehicle occupancy information at strategic locations.
                     </p>
-                    <div class="product-url">hhs-survey-form.themovingdot.com</div>
+                    <div class="survey-url">rsi.themovingdot.com</div>
                 </div>
             </a>
 
-            <div class="product-card">
-                <div class="product-card-content">
-                    <div class="product-icon">🚗</div>
-                    <h2 class="product-title">Vehicle Counter</h2>
-                    <video class="product-video" controls loop muted playsinline>
-                        <source src="assets/Veh_count_v0.1.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <p class="product-description">
-                        Real-time vehicle counting and traffic flow analysis system for transportation planning and road usage studies.
+            <a href="https://hhs.themovingdot.com" class="survey-card" target="_blank">
+                <div class="survey-card-content">
+                    <div class="survey-icon">🏠</div>
+                    <h2 class="survey-title">Household Travel Diary Survey</h2>
+                    <p class="survey-description">
+                        Comprehensive household travel diary survey for capturing detailed daily travel patterns, mode choices, and activity schedules for transportation planning.
                     </p>
-                    <a href="https://vehcount.themovingdot.com/" target="_blank" class="product-url" style="display: block; text-decoration: none;">
-                        vehcount.themovingdot.com →
-                    </a>
-                </div>
-            </div>
-
-            <a href="survey.html" class="product-card">
-                <div class="product-card-content">
-                    <div class="product-icon">📝</div>
-                    <h2 class="product-title">Transport Survey Forms</h2>
-                    <p class="product-description">
-                        Comprehensive transport survey solutions including roadside interviews and household travel diary surveys for data collection and transportation planning.
-                    </p>
-                    <div class="product-url">View survey tools →</div>
+                    <div class="survey-url">hhs.themovingdot.com</div>
                 </div>
             </a>
         </div>
@@ -556,7 +522,7 @@
 
             draw() {
                 const color = getCurrentColor();
-                
+
                 // Draw trail
                 for (let i = 0; i < this.history.length; i++) {
                     const point = this.history[i];
@@ -621,7 +587,7 @@
                 colorTransition = 0;
                 colorIndex = (colorIndex + 1) % colors.length;
             }
-            
+
             ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -677,8 +643,8 @@
             updateCursor();
 
             // Cursor hover effects
-            const productCards = document.querySelectorAll('.product-card, .back-link');
-            productCards.forEach(card => {
+            const surveyCards = document.querySelectorAll('.survey-card, .back-link');
+            surveyCards.forEach(card => {
                 card.addEventListener('mouseenter', () => {
                     cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
                 });
