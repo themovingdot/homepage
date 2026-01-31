@@ -313,6 +313,29 @@
             background: radial-gradient(circle, rgba(52, 152, 219, 0.1), transparent);
         }
 
+        .survey-card:nth-child(3) .survey-icon {
+            background: rgba(231, 76, 60, 0.1);
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+
+        .survey-card:nth-child(3):hover .survey-icon {
+            background: rgba(231, 76, 60, 0.2);
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+
+        .survey-card:nth-child(3):hover {
+            border-color: rgba(231, 76, 60, 0.4);
+            box-shadow: 0 20px 60px rgba(231, 76, 60, 0.2);
+        }
+
+        .survey-card:nth-child(3)::after {
+            background: radial-gradient(circle, rgba(231, 76, 60, 0.1), transparent);
+        }
+
+        .survey-card:nth-child(3) .survey-url {
+            color: rgba(231, 76, 60, 0.7);
+        }
+
         .survey-title {
             font-family: 'Crimson Pro', serif;
             font-size: 1.8rem;
@@ -574,6 +597,17 @@
                         Comprehensive household travel diary survey for capturing detailed daily travel patterns, mode choices, and activity schedules for transportation planning.
                     </p>
                     <div class="survey-url">hhs.themovingdot.com</div>
+                </div>
+            </a>
+
+            <a href="https://pts.themovingdot.com" class="survey-card" target="_blank">
+                <div class="survey-card-content">
+                    <div class="survey-icon">🚌</div>
+                    <h2 class="survey-title">Public Transport Interview Survey</h2>
+                    <p class="survey-description">
+                        Digital interview survey tool for collecting public transport usage data, passenger travel patterns, and transit service feedback for improved planning.
+                    </p>
+                    <div class="survey-url">pts.themovingdot.com</div>
                 </div>
             </a>
         </div>
