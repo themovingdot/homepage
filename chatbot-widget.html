@@ -472,7 +472,7 @@
 
     <script>
         // Configuration
-        const CHATBOT_API_URL = 'https://cloudflare-llm-worker.hongwei-8a7.workers.dev/';
+        const CHATBOT_API_URL = 'https://cloudflare-llm-worker.hongwei-8a7.workers.dev/chat';
 
         // DOM Elements
         const chatButton = document.getElementById('chat-button');
@@ -545,8 +545,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        message: message,
-                        history: conversationHistory
+                        messages: conversationHistory
                     })
                 });
 
@@ -559,8 +558,32 @@
 
                 const data = await response.json();
 
-                // Extract response based on common API response formats
-                let botResponse = data.response || data.message || data.content || data.text || 'Sorry, I received an empty response.';
+                // Debug: log the actual API response
+                console.log('API Response:', data);
+
+                // Try to extract the bot response from various possible formats
+                let botResponse;
+                if (typeof data === 'string') {
+                    botResponse = data;
+                } else if (data.response) {
+                    botResponse = data.response;
+                } else if (data.message) {
+                    botResponse = data.message;
+                } else if (data.content) {
+                    botResponse = data.content;
+                } else if (data.text) {
+                    botResponse = data.text;
+                } else if (data.result) {
+                    botResponse = data.result;
+                } else if (data.output) {
+                    botResponse = data.output;
+                } else if (data.reply) {
+                    botResponse = data.reply;
+                } else {
+                    // If no known field, try to stringify the whole response
+                    console.warn('Unknown API response format:', data);
+                    botResponse = 'Sorry, I received a response in an unexpected format. Please check the console for details.';
+                }
 
                 // Add bot response to UI
                 addMessage(botResponse, 'bot');
