@@ -1222,7 +1222,7 @@
 
     <script>
         // Chat Widget JavaScript
-        const CHATBOT_API_URL = 'https://cloudflare-llm-worker.hongwei-8a7.workers.dev/';
+        const CHATBOT_API_URL = 'https://cloudflare-llm-worker.hongwei-8a7.workers.dev/chat';
 
         const chatButton = document.getElementById('chat-button');
         const chatWindow = document.getElementById('chat-window');
@@ -1277,8 +1277,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        message: message,
-                        history: conversationHistory
+                        messages: conversationHistory
                     })
                 });
 

@@ -472,7 +472,7 @@
 
     <script>
         // Configuration
-        const CHATBOT_API_URL = 'https://cloudflare-llm-worker.hongwei-8a7.workers.dev/';
+        const CHATBOT_API_URL = 'https://cloudflare-llm-worker.hongwei-8a7.workers.dev/chat';
 
         // DOM Elements
         const chatButton = document.getElementById('chat-button');
@@ -545,8 +545,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        message: message,
-                        history: conversationHistory
+                        messages: conversationHistory
                     })
                 });
 
