@@ -1127,8 +1127,10 @@
                 colorTransition = 0;
                 colorIndex = (colorIndex + 1) % colors.length;
             }
-            
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+
+            // Use theme-appropriate canvas background
+            const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+            ctx.fillStyle = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             drawConnections();
