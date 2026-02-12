@@ -18,6 +18,26 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root[data-theme="dark"] {
+            --bg-primary: #000000;
+            --bg-secondary: rgba(19, 19, 26, 0.8);
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a8;
+            --gradient-opacity: 0.15;
+            --card-border: rgba(255, 255, 255, 0.1);
+            --chat-bg: rgba(20, 20, 20, 0.98);
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: rgba(249, 249, 251, 0.9);
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --gradient-opacity: 0.08;
+            --card-border: rgba(0, 0, 0, 0.1);
+            --chat-bg: rgba(255, 255, 255, 0.98);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -28,10 +48,11 @@
             width: 100vw;
             min-height: 100vh;
             overflow-x: hidden;
-            background: #000000;
+            background: var(--bg-primary);
             cursor: none;
             font-family: 'DM Sans', sans-serif;
-            color: #e8e8e8;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Flowing gradient background */
@@ -41,13 +62,14 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(139, 69, 197, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(231, 76, 60, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 60% 60%, rgba(241, 196, 15, 0.1) 0%, transparent 50%);
+            background:
+                radial-gradient(circle at 20% 50%, rgba(139, 69, 197, var(--gradient-opacity)) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(52, 152, 219, var(--gradient-opacity)) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(231, 76, 60, calc(var(--gradient-opacity) * 0.8)) 0%, transparent 50%),
+                radial-gradient(circle at 60% 60%, rgba(241, 196, 15, calc(var(--gradient-opacity) * 0.67)) 0%, transparent 50%);
             animation: flow 20s ease-in-out infinite;
             z-index: 0;
+            transition: opacity 0.3s ease;
         }
 
         @keyframes flow {
@@ -136,8 +158,9 @@
             font-size: 1.5rem;
             font-weight: 300;
             letter-spacing: 0.5px;
-            color: #e8e8e8;
+            color: var(--text-primary);
             text-decoration: none;
+            transition: color 0.3s ease;
         }
 
         .logo .dot-accent {
@@ -194,12 +217,12 @@
         /* Product Card */
         .product-card {
             position: relative;
-            background: rgba(19, 19, 26, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--bg-secondary);
+            border: 1px solid var(--card-border);
             border-radius: 16px;
             padding: 3rem 2rem;
             text-decoration: none;
-            color: #e8e8e8;
+            color: var(--text-primary);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
             overflow: hidden;
@@ -322,10 +345,11 @@
         }
 
         .product-description {
-            color: #a0a0a8;
+            color: var(--text-secondary);
             line-height: 1.8;
             margin-bottom: 1.5rem;
             font-size: 0.95rem;
+            transition: color 0.3s ease;
         }
 
         .product-url {
@@ -417,6 +441,54 @@
             }
         }
 
+        /* Theme Toggle Styles */
+        #theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 10001;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(139, 69, 197, 0.2);
+            border: 2px solid rgba(139, 69, 197, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        #theme-toggle:hover {
+            transform: scale(1.1) rotate(10deg);
+            background: rgba(139, 69, 197, 0.3);
+            border-color: rgba(139, 69, 197, 0.6);
+            box-shadow: 0 4px 20px rgba(139, 69, 197, 0.3);
+        }
+
+        #theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-icon {
+            user-select: none;
+            pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        [data-theme="light"] #theme-toggle {
+            background: rgba(52, 152, 219, 0.15);
+            border-color: rgba(52, 152, 219, 0.3);
+        }
+
+        [data-theme="light"] #theme-toggle:hover {
+            background: rgba(52, 152, 219, 0.25);
+            border-color: rgba(52, 152, 219, 0.5);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
+        }
+
         /* Chat Widget Styles */
         #chat-widget-container {
             position: fixed;
@@ -467,14 +539,19 @@
             right: 20px;
             width: 380px;
             height: 550px;
-            background: rgba(20, 20, 20, 0.98);
+            background: var(--chat-bg);
             border: 1px solid rgba(139, 69, 197, 0.3);
             border-radius: 16px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
             display: none;
             flex-direction: column;
             overflow: hidden;
             backdrop-filter: blur(10px);
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="light"] #chat-window {
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
         }
 
         #chat-window.open {
@@ -505,8 +582,9 @@
         #chat-header h3 {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #fff;
+            color: var(--text-primary);
             margin: 0;
+            transition: color 0.3s ease;
         }
 
         #chat-header .status {
@@ -535,11 +613,11 @@
         #close-chat {
             background: none;
             border: none;
-            color: #e8e8e8;
+            color: var(--text-primary);
             font-size: 1.5rem;
             cursor: pointer;
             opacity: 0.6;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, color 0.3s ease;
             line-height: 1;
             padding: 0;
             width: 24px;
@@ -607,8 +685,13 @@
         .message.bot {
             align-self: flex-start;
             background: rgba(255, 255, 255, 0.08);
-            color: #e8e8e8;
+            color: var(--text-primary);
             border-bottom-left-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        [data-theme="light"] .message.bot {
+            background: rgba(0, 0, 0, 0.05);
         }
 
         .message.error {
@@ -673,11 +756,16 @@
             border: 1px solid rgba(139, 69, 197, 0.3);
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.05);
-            color: #e8e8e8;
+            color: var(--text-primary);
             font-family: system-ui, -apple-system, sans-serif;
             font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        }
+
+        [data-theme="light"] #chat-input {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(139, 69, 197, 0.2);
         }
 
         #chat-input:focus {
@@ -741,6 +829,11 @@
     </style>
 </head>
 <body>
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="theme-icon">☀️</span>
+    </button>
+
     <!-- Flowing gradient background -->
     <div class="bg-gradient"></div>
 
@@ -1186,5 +1279,8 @@
             }
         });
     </script>
+
+    <!-- Theme Toggle Script -->
+    <script src="theme.js"></script>
 </body>
 </html>
