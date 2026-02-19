@@ -1371,7 +1371,32 @@
         const sendButton = document.getElementById('send-button');
         const typingIndicator = document.querySelector('.typing-indicator');
 
-        let conversationHistory = [];
+        function getPageContext() {
+            const title = document.title;
+            const description = document.querySelector('meta[name="description"]')?.content || '';
+            const url = window.location.href;
+
+            const clone = document.body.cloneNode(true);
+            ['script', 'style', '#chat-widget-container', 'canvas'].forEach(sel => {
+                clone.querySelectorAll(sel).forEach(el => el.remove());
+            });
+            const pageText = (clone.innerText || clone.textContent).replace(/\s+/g, ' ').trim().slice(0, 3000);
+
+            return `You are a helpful AI assistant embedded on "The Moving Dot" website. You have full access to the current page content and should use it to answer visitor questions accurately.
+
+Page title: ${title}
+Page URL: ${url}
+Page description: ${description}
+
+Page content:
+${pageText}
+
+Answer questions about this page and the projects shown on it. Be concise and friendly.`;
+        }
+
+        let conversationHistory = [
+            { role: 'system', content: getPageContext() }
+        ];
         let isChatOpen = false;
 
         function toggleChat() {
