@@ -380,6 +380,52 @@
             color: rgba(241, 196, 15, 0.7);
         }
 
+        .survey-card:nth-child(5) .survey-icon {
+            background: rgba(139, 69, 197, 0.1);
+            border-color: rgba(139, 69, 197, 0.3);
+        }
+
+        .survey-card:nth-child(5):hover .survey-icon {
+            background: rgba(139, 69, 197, 0.2);
+            border-color: rgba(139, 69, 197, 0.5);
+        }
+
+        .survey-card:nth-child(5):hover {
+            border-color: rgba(139, 69, 197, 0.4);
+            box-shadow: 0 20px 60px rgba(139, 69, 197, 0.2);
+        }
+
+        .survey-card:nth-child(5)::after {
+            background: radial-gradient(circle, rgba(139, 69, 197, 0.1), transparent);
+        }
+
+        .survey-card:nth-child(5) .survey-url {
+            color: rgba(139, 69, 197, 0.7);
+        }
+
+        .survey-card:nth-child(6) .survey-icon {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: rgba(52, 152, 219, 0.3);
+        }
+
+        .survey-card:nth-child(6):hover .survey-icon {
+            background: rgba(52, 152, 219, 0.2);
+            border-color: rgba(52, 152, 219, 0.5);
+        }
+
+        .survey-card:nth-child(6):hover {
+            border-color: rgba(52, 152, 219, 0.4);
+            box-shadow: 0 20px 60px rgba(52, 152, 219, 0.2);
+        }
+
+        .survey-card:nth-child(6)::after {
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.1), transparent);
+        }
+
+        .survey-card:nth-child(6) .survey-url {
+            color: rgba(52, 152, 219, 0.7);
+        }
+
         .survey-title {
             font-family: 'Crimson Pro', serif;
             font-size: 1.8rem;
@@ -1042,11 +1088,33 @@
             <a href="https://hvs.themovingdot.com" class="survey-card" target="_blank">
                 <div class="survey-card-content">
                     <div class="survey-icon">🏨</div>
-                    <h2 class="survey-title">Hotel Visitor Interview Survey</h2>
+                    <h2 class="survey-title">Hotel Guest Travel Diary Survey</h2>
                     <p class="survey-description">
                         Digital interview survey tool for collecting hotel visitor travel data, guest origin-destination patterns, and accommodation-related trip information.
                     </p>
                     <div class="survey-url">hvs.themovingdot.com</div>
+                </div>
+            </a>
+
+            <a href="https://parkinginterview.themovingdot.com" class="survey-card" target="_blank">
+                <div class="survey-card-content">
+                    <div class="survey-icon">🅿️</div>
+                    <h2 class="survey-title">Parking Interview Survey</h2>
+                    <p class="survey-description">
+                        Digital parking interview survey tool for collecting origin-destination information, parking duration, and trip purpose data from parking facility users.
+                    </p>
+                    <div class="survey-url">parkinginterview.themovingdot.com</div>
+                </div>
+            </a>
+
+            <a href="https://sgi.themovingdot.com" class="survey-card" target="_blank">
+                <div class="survey-card-content">
+                    <div class="survey-icon">🏛️</div>
+                    <h2 class="survey-title">Special Generator Interview Survey</h2>
+                    <p class="survey-description">
+                        Digital interview survey for collecting land use information from special trip generators including hotels, hospitals, universities, workplaces, mosques, malls, and markets.
+                    </p>
+                    <div class="survey-url">sgi.themovingdot.com</div>
                 </div>
             </a>
         </div>
@@ -1054,7 +1122,7 @@
 
     <script>
         // Password Protection
-        const PASSWORD = 'crownconsult';
+        const PASSWORD = '1234';
         const passwordOverlay = document.getElementById('passwordOverlay');
         const passwordForm = document.getElementById('passwordForm');
         const passwordInput = document.getElementById('passwordInput');
