@@ -385,6 +385,31 @@
             box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
         }
 
+        /* Product card image */
+        .product-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .product-card:nth-child(2):hover .product-image {
+            border-color: rgba(52, 152, 219, 0.5);
+            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
+        }
+
+        .product-card:nth-child(3):hover .product-image {
+            border-color: rgba(231, 76, 60, 0.5);
+            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.2);
+        }
+
+        .product-card:nth-child(4):hover .product-image {
+            border-color: rgba(241, 196, 15, 0.5);
+            box-shadow: 0 4px 20px rgba(241, 196, 15, 0.2);
+        }
+
         /* Focus states for keyboard navigation */
         .product-card:focus {
             outline: none;
@@ -1008,6 +1033,7 @@
                 <div class="product-card-content">
                     <div class="product-icon">📝</div>
                     <h2 class="product-title">Transport Survey Forms</h2>
+                    <img src="assets/transport-survey-forms.png" alt="Transport Survey Forms" class="product-image">
                     <p class="product-description">
                         Comprehensive transport survey solutions including roadside interviews and household travel diary surveys for data collection and transportation planning.
                     </p>
@@ -1018,6 +1044,7 @@
                 <div class="product-card-content">
                     <div class="product-icon">🚇</div>
                     <h2 class="product-title">Riyadh Metro Survey</h2>
+                    <img src="assets/riyadh-metro-survey.png" alt="Riyadh Metro Survey" class="product-image">
                     <p class="product-description">
                         Surveyed more than 10 metro stations across Riyadh to understand travel behaviour, metro access patterns, park and ride site usage, and passenger journey characteristics.
                     </p>
@@ -1029,8 +1056,9 @@
                 <div class="product-card-content">
                     <div class="product-icon">📊</div>
                     <h2 class="product-title">ADTGM Demo</h2>
+                    <img src="assets/adtgm-demo.png" alt="ADTGM Demo" class="product-image">
                     <p class="product-description">
-                        Interactive demo of the Average Daily Traffic Growth Model for traffic forecasting and transportation demand analysis.
+                        Demo of the Trip Generation Manual featuring a trip estimation calculator by land use class, built on the Average Daily Traffic Generation Manual for transportation demand analysis.
                     </p>
                     <div class="product-url">adtgmdemo.themovingdot.com</div>
                 </div>
