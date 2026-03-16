@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>· the moving dot</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <meta name="description" content="the moving dot - Interactive digital experiences, innovative products, and experimental lab projects">
     <meta property="og:title" content="· the moving dot">
@@ -43,9 +46,9 @@
         }
 
         body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
             background: var(--bg-primary);
             cursor: none;
             position: relative;
@@ -133,7 +136,7 @@
 
         /* Navigation */
         nav {
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -369,7 +372,7 @@
 
         /* Central pulsing dot */
         .center-dot {
-            position: fixed;
+            position: absolute;
             top: 50%;
             left: 50%;
             width: 6px;
@@ -412,7 +415,7 @@
 
         /* Email contact circles */
         .email-contact {
-            position: fixed;
+            position: absolute;
             bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
@@ -521,6 +524,215 @@
 
         .email-label.visible {
             opacity: 1;
+        }
+
+        /* Hero section */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            z-index: 2;
+        }
+
+        .hero nav {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hero .ring {
+            position: absolute;
+        }
+
+        .hero .center-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .hero .email-contact {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.6;
+            transition: opacity 0.5s ease;
+            animation: scrollFade 3s ease-in-out infinite;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
+        }
+
+        .scroll-indicator span {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: labelColor 8s ease-in-out infinite;
+        }
+
+        .scroll-arrow {
+            width: 20px;
+            height: 20px;
+            border-right: 1.5px solid;
+            border-bottom: 1.5px solid;
+            transform: rotate(45deg);
+            animation: scrollBounce 2s ease-in-out infinite, labelColor 8s ease-in-out infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% { transform: rotate(45deg) translateY(0); }
+            50% { transform: rotate(45deg) translateY(6px); }
+        }
+
+        @keyframes scrollFade {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Philosophy sections */
+        .philosophy {
+            position: relative;
+            z-index: 10;
+            padding: 0 0 120px 0;
+        }
+
+        .philosophy-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+            position: relative;
+        }
+
+        .philosophy-content {
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .philosophy-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .philosophy-numeral {
+            font-family: 'Crimson Pro', serif;
+            font-size: 0.85rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            animation: labelColor 8s ease-in-out infinite;
+        }
+
+        .philosophy-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            line-height: 1.2;
+            letter-spacing: 1px;
+        }
+
+        .philosophy-text {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            margin-bottom: 24px;
+        }
+
+        .philosophy-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .philosophy-quote {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-top: 32px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Philosophy dot divider */
+        .philosophy-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            margin: 0 auto;
+            animation: centerDotColor 8s ease-in-out infinite;
+            opacity: 0;
+            transition: opacity 1s ease 0.4s;
+        }
+
+        .philosophy-dot.visible {
+            opacity: 0.6;
+        }
+
+        /* Section-specific accent lines */
+        .philosophy-accent {
+            width: 40px;
+            height: 1px;
+            margin: 0 auto 40px;
+            opacity: 0.4;
+            animation: labelColor 8s ease-in-out infinite;
+            background: currentColor;
+        }
+
+        /* Final celebration section */
+        .philosophy-section.celebration .philosophy-content {
+            max-width: 640px;
+        }
+
+        .philosophy-final-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin: 48px auto 0;
+            animation: centerDotColor 8s ease-in-out infinite, pulse 3s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .philosophy-section {
+                min-height: auto;
+                padding: 60px 20px;
+            }
+
+            .philosophy-content {
+                max-width: 100%;
+            }
+
+            .scroll-indicator {
+                bottom: 80px;
+            }
+
+            .hero .email-contact {
+                bottom: 20px;
+            }
         }
 
         /* Reduced motion support */
@@ -959,35 +1171,131 @@
     <!-- Canvas for particle effects -->
     <canvas id="canvas"></canvas>
 
-    <!-- Orbiting rings -->
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Orbiting rings -->
+        <div class="ring"></div>
+        <div class="ring"></div>
+        <div class="ring"></div>
 
-    <!-- Central dot -->
-    <div class="center-dot"></div>
+        <!-- Central dot -->
+        <div class="center-dot"></div>
 
-    <!-- Navigation -->
-    <nav aria-label="Main navigation">
-        <a href="product.html" class="nav-link" aria-label="Go to Product page">
-            <div class="nav-circle"></div>
-            <span class="nav-label">PRODUCT</span>
-        </a>
-        <a href="lab.html" class="nav-link" aria-label="Go to Lab page">
-            <div class="nav-circle"></div>
-            <span class="nav-label">LAB</span>
-        </a>
-        <a href="flow.html" class="nav-link" aria-label="Go to Flow page">
-            <div class="nav-circle"></div>
-            <span class="nav-label">FLOW</span>
-        </a>
-    </nav>
+        <!-- Navigation -->
+        <nav aria-label="Main navigation">
+            <a href="product.html" class="nav-link" aria-label="Go to Product page">
+                <div class="nav-circle"></div>
+                <span class="nav-label">PRODUCT</span>
+            </a>
+            <a href="lab.html" class="nav-link" aria-label="Go to Lab page">
+                <div class="nav-circle"></div>
+                <span class="nav-label">LAB</span>
+            </a>
+            <a href="flow.html" class="nav-link" aria-label="Go to Flow page">
+                <div class="nav-circle"></div>
+                <span class="nav-label">FLOW</span>
+            </a>
+        </nav>
 
-    <!-- Email contact -->
-    <div class="email-contact">
-        <a href="mailto:info@themovingdot.com" class="email-circle" aria-label="Contact us by email">
-            <span class="email-label">info@themovingdot.com</span>
-        </a>
+        <!-- Email contact -->
+        <div class="email-contact">
+            <a href="mailto:info@themovingdot.com" class="email-circle" aria-label="Contact us by email">
+                <span class="email-label">info@themovingdot.com</span>
+            </a>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <span>scroll</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- Philosophy -->
+    <div class="philosophy">
+
+        <!-- I. The Dot -->
+        <section class="philosophy-section">
+            <div class="philosophy-content">
+                <div class="philosophy-accent"></div>
+                <div class="philosophy-numeral">I</div>
+                <h2 class="philosophy-title">The Dot</h2>
+                <p class="philosophy-text">At the center of everything, there is a point. No size. No location. No before or after.</p>
+                <p class="philosophy-text">Just — presence.</p>
+                <p class="philosophy-quote">Imagine a single drop of ink, suspended, before it touches water.</p>
+            </div>
+        </section>
+
+        <div class="philosophy-dot"></div>
+
+        <!-- II. The Layers -->
+        <section class="philosophy-section">
+            <div class="philosophy-content">
+                <div class="philosophy-accent"></div>
+                <div class="philosophy-numeral">II</div>
+                <h2 class="philosophy-title">The Layers</h2>
+                <p class="philosophy-text">Around the dot, things accumulate. Roles. Memories. Fears. Names. Each one a ring, like sediment around a pearl.</p>
+                <p class="philosophy-text">The rings are real. But they are not the pearl. They can be added. They can be removed. The pearl remains.</p>
+                <p class="philosophy-quote">"That is not me."</p>
+            </div>
+        </section>
+
+        <div class="philosophy-dot"></div>
+
+        <!-- III. Space and Time -->
+        <section class="philosophy-section">
+            <div class="philosophy-content">
+                <div class="philosophy-accent"></div>
+                <div class="philosophy-numeral">III</div>
+                <h2 class="philosophy-title">Space and Time</h2>
+                <p class="philosophy-text">Place two dots in space — and suddenly there is bigger, smaller, higher, lower. Place one dot on a timeline — and suddenly there is better, worse, before, after.</p>
+                <p class="philosophy-text">Remove space: the dot is incomparable to others. Remove time: the dot is incomparable to itself.</p>
+                <p class="philosophy-quote">Different, yet equal. Like stars — each one burning alone, none more star than another.</p>
+            </div>
+        </section>
+
+        <div class="philosophy-dot"></div>
+
+        <!-- IV. The Sensor -->
+        <section class="philosophy-section">
+            <div class="philosophy-content">
+                <div class="philosophy-accent"></div>
+                <div class="philosophy-numeral">IV</div>
+                <h2 class="philosophy-title">The Sensor</h2>
+                <p class="philosophy-text">But the dot senses. And sensing is the beginning of everything — self, world, distance, relationship, longing, loss.</p>
+                <p class="philosophy-quote">The dot is not the waves. The dot is the water that feels them.</p>
+            </div>
+        </section>
+
+        <div class="philosophy-dot"></div>
+
+        <!-- V. The Choice -->
+        <section class="philosophy-section">
+            <div class="philosophy-content">
+                <div class="philosophy-accent"></div>
+                <div class="philosophy-numeral">V</div>
+                <h2 class="philosophy-title">The Choice</h2>
+                <p class="philosophy-text">Things come. Things go. Layers arrive. Layers dissolve.</p>
+                <p class="philosophy-text">Of all the things beyond the dot's control, one thing remains entirely its own:</p>
+                <p class="philosophy-quote">How to receive this journey.</p>
+            </div>
+        </section>
+
+        <div class="philosophy-dot"></div>
+
+        <!-- VI. Celebration -->
+        <section class="philosophy-section celebration">
+            <div class="philosophy-content">
+                <div class="philosophy-accent"></div>
+                <div class="philosophy-numeral">VI</div>
+                <h2 class="philosophy-title">Celebration</h2>
+                <p class="philosophy-text">Awareness is not a destination. It is the dot, fully here, fully now — watching the waves, holding nothing, missing nothing.</p>
+                <p class="philosophy-text">And finding, in that watching, that to exist, to sense, to move —</p>
+                <p class="philosophy-quote">is already enough to celebrate.</p>
+                <div class="philosophy-final-dot"></div>
+            </div>
+        </section>
+
     </div>
 
     <script>
@@ -1247,6 +1555,40 @@
                         });
                 }
             });
+        }
+    </script>
+
+    <!-- Scroll reveal for philosophy sections -->
+    <script>
+        // Intersection Observer for scroll-triggered reveals
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -60px 0px'
+        });
+
+        document.querySelectorAll('.philosophy-content, .philosophy-dot').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Fade out scroll indicator when user scrolls
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        if (scrollIndicator) {
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                if (scrollY > 100) {
+                    scrollIndicator.style.opacity = '0';
+                    scrollIndicator.style.pointerEvents = 'none';
+                } else {
+                    scrollIndicator.style.opacity = '';
+                    scrollIndicator.style.pointerEvents = '';
+                }
+            }, { passive: true });
         }
     </script>
 
