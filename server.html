@@ -10,7 +10,9 @@
     <meta property="og:title" content="Server · The Moving Dot">
     <meta property="og:description" content="Server infrastructure and services including mapping systems and AI-powered applications">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
     <meta name="twitter:title" content="Server · The Moving Dot">
     <meta name="twitter:description" content="Server infrastructure and services including mapping systems and AI-powered applications">
     <meta name="theme-color" content="#000000">
@@ -144,12 +146,53 @@
             min-height: 100vh;
         }
 
+
+        /* Orbiting-dot icon motif */
+        .orb-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            border: 1.5px solid currentColor;
+            border-radius: 50%;
+            opacity: 0.75;
+            animation: orbSpin 10s linear infinite;
+        }
+
+        .orb-ring::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            margin-left: -2.5px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .orb-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 14px currentColor;
+        }
+
+        @keyframes orbSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Header */
         header {
-            padding: 2rem 0 4rem 0;
+            padding: 2rem 0 3rem 0;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.6rem;
         }
 
         .logo {
@@ -336,7 +379,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            position: relative;
+            color: #8b45c5;
             border-radius: 12px;
             background: rgba(139, 69, 197, 0.1);
             border: 1px solid rgba(139, 69, 197, 0.3);
@@ -1015,7 +1059,7 @@
             <a href="https://map-gcc.themovingdot.com" class="server-card" target="_blank">
                 <div class="server-card-content">
                     <div class="server-badge">Service</div>
-                    <div class="server-icon">🗺️</div>
+                    <div class="server-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
                     <h2 class="server-title">Map GCC</h2>
                     <p class="server-description">
                         Geographic mapping service for GCC region with interactive visualization and location-based features.
@@ -1027,7 +1071,7 @@
             <a href="https://map-en.themovingdot.com" class="server-card" target="_blank">
                 <div class="server-card-content">
                     <div class="server-badge">Service</div>
-                    <div class="server-icon">🌍</div>
+                    <div class="server-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
                     <h2 class="server-title">Map EN</h2>
                     <p class="server-description">
                         International mapping service with comprehensive geographic data and multilingual support capabilities.
@@ -1039,7 +1083,7 @@
             <a href="https://ollama.themovingdot.com/" class="server-card" target="_blank">
                 <div class="server-card-content">
                     <div class="server-badge">Service</div>
-                    <div class="server-icon">🤖</div>
+                    <div class="server-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
                     <h2 class="server-title">Ollama</h2>
                     <p class="server-description">
                         Local large language model inference server for AI-powered applications and natural language processing.
@@ -1051,7 +1095,7 @@
             <a href="https://n8n.themovingdot.com" class="server-card" target="_blank">
                 <div class="server-card-content">
                     <div class="server-badge">Service</div>
-                    <div class="server-icon">⚡</div>
+                    <div class="server-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
                     <h2 class="server-title">n8n</h2>
                     <p class="server-description">
                         Workflow automation platform for connecting apps and services with advanced integration capabilities.
@@ -1152,6 +1196,7 @@
         
         let colorIndex = 0;
         let colorTransition = 0;
+        let themeSoften = 1;
         
         function getCurrentColor() {
             const nextIndex = (colorIndex + 1) % colors.length;
@@ -1200,7 +1245,7 @@
                 // Draw trail
                 for (let i = 0; i < this.history.length; i++) {
                     const point = this.history[i];
-                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3;
+                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3 * themeSoften;
                     ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${trailOpacity})`;
                     ctx.beginPath();
                     ctx.arc(point.x, point.y, this.size * 0.5, 0, Math.PI * 2);
@@ -1208,14 +1253,14 @@
                 }
 
                 // Draw particle
-                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity})`;
+                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * themeSoften})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
 
                 // Draw glow
                 const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
-                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2})`);
+                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2 * themeSoften})`);
                 gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
@@ -1241,7 +1286,7 @@
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < 150) {
-                        const opacity = (1 - distance / 150) * 0.15;
+                        const opacity = (1 - distance / 150) * 0.15 * themeSoften;
                         ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
@@ -1262,7 +1307,9 @@
                 colorIndex = (colorIndex + 1) % colors.length;
             }
             
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+            themeSoften = theme === 'dark' ? 1 : 0.5;
+            ctx.fillStyle = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.16)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             drawConnections();

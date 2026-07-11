@@ -10,7 +10,9 @@
     <meta property="og:title" content="Products · The Moving Dot">
     <meta property="og:description" content="Innovative digital products including vehicle counting systems and transport survey tools for data collection and analysis">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
     <meta name="twitter:title" content="Products · The Moving Dot">
     <meta name="twitter:description" content="Innovative digital products including vehicle counting systems and transport survey tools for data collection and analysis">
     <meta name="theme-color" content="#000000">
@@ -145,12 +147,53 @@
             min-height: 100vh;
         }
 
+
+        /* Orbiting-dot icon motif */
+        .orb-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            border: 1.5px solid currentColor;
+            border-radius: 50%;
+            opacity: 0.75;
+            animation: orbSpin 10s linear infinite;
+        }
+
+        .orb-ring::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            margin-left: -2.5px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .orb-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 14px currentColor;
+        }
+
+        @keyframes orbSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         /* Header */
         header {
-            padding: 2rem 0 4rem 0;
+            padding: 2rem 0 3rem 0;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.6rem;
         }
 
         .logo {
@@ -293,7 +336,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            position: relative;
+            color: #8b45c5;
             border-radius: 12px;
             background: rgba(139, 69, 197, 0.1);
             border: 1px solid rgba(139, 69, 197, 0.3);
@@ -1014,9 +1058,9 @@
         <div class="products-grid">
             <div class="product-card">
                 <div class="product-card-content">
-                    <div class="product-icon">🚗</div>
+                    <div class="product-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
                     <h2 class="product-title">Vehicle Counter</h2>
-                    <video class="product-video" controls loop muted playsinline>
+                    <video class="product-video" controls loop muted playsinline preload="none" poster="assets/vehicle-counter-poster.jpg">
                         <source src="assets/Veh_count_v0.1.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -1031,7 +1075,7 @@
 
             <a href="survey.html" class="product-card">
                 <div class="product-card-content">
-                    <div class="product-icon">📝</div>
+                    <div class="product-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
                     <h2 class="product-title">Transport Survey Forms</h2>
                     <img src="assets/transport-survey-forms.png" alt="Transport Survey Forms" class="product-image">
                     <p class="product-description">
@@ -1042,7 +1086,7 @@
             </a>
             <a href="https://riyadh-metro-survey.themovingdot.com/" class="product-card" target="_blank">
                 <div class="product-card-content">
-                    <div class="product-icon">🚇</div>
+                    <div class="product-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
                     <h2 class="product-title">Riyadh Metro Survey</h2>
                     <img src="assets/riyadh-metro-survey.png" alt="Riyadh Metro Survey" class="product-image">
                     <p class="product-description">
@@ -1054,7 +1098,7 @@
 
             <a href="https://adtgmdemo.themovingdot.com/" class="product-card" target="_blank">
                 <div class="product-card-content">
-                    <div class="product-icon">📊</div>
+                    <div class="product-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
                     <h2 class="product-title">ADTGM Demo</h2>
                     <img src="assets/adtgm-demo.png" alt="ADTGM Demo" class="product-image">
                     <p class="product-description">
@@ -1127,6 +1171,7 @@
 
         let colorIndex = 0;
         let colorTransition = 0;
+        let themeSoften = 1;
 
         function getCurrentColor() {
             const nextIndex = (colorIndex + 1) % colors.length;
@@ -1175,7 +1220,7 @@
                 // Draw trail
                 for (let i = 0; i < this.history.length; i++) {
                     const point = this.history[i];
-                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3;
+                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3 * themeSoften;
                     ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${trailOpacity})`;
                     ctx.beginPath();
                     ctx.arc(point.x, point.y, this.size * 0.5, 0, Math.PI * 2);
@@ -1183,14 +1228,14 @@
                 }
 
                 // Draw particle
-                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity})`;
+                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * themeSoften})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
 
                 // Draw glow
                 const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
-                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2})`);
+                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2 * themeSoften})`);
                 gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
@@ -1216,7 +1261,7 @@
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < 150) {
-                        const opacity = (1 - distance / 150) * 0.15;
+                        const opacity = (1 - distance / 150) * 0.15 * themeSoften;
                         ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
@@ -1237,7 +1282,9 @@
                 colorIndex = (colorIndex + 1) % colors.length;
             }
             
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+            themeSoften = theme === 'dark' ? 1 : 0.5;
+            ctx.fillStyle = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.16)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             drawConnections();
