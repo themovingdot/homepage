@@ -13,9 +13,11 @@
     <meta property="og:title" content="· the moving dot">
     <meta property="og:description" content="Interactive digital experiences, innovative products, and experimental lab projects">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="· the moving dot">
     <meta name="twitter:description" content="Interactive digital experiences, innovative products, and experimental lab projects">
+    <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
     <style>
         :root[data-theme="dark"] {
             --bg-primary: #000000;
@@ -46,7 +48,7 @@
         }
 
         html {
-            scroll-snap-type: y mandatory;
+            scroll-snap-type: y proximity;
             overflow-y: scroll;
             overflow-x: hidden;
         }
@@ -140,6 +142,26 @@
             z-index: 1;
         }
 
+        /* Wordmark */
+        .wordmark {
+            position: fixed;
+            top: 38px;
+            left: 30px;
+            z-index: 10001;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+            opacity: 0.85;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .wordmark .wordmark-dot {
+            animation: labelColor 8s ease-in-out infinite;
+        }
+
         /* Navigation */
         nav {
             position: absolute;
@@ -163,21 +185,18 @@
             cursor: none;
         }
 
+        /* Each destination owns one brand color */
+        .nav-link:nth-child(1) { --accent: #8b45c5; --accent-rgb: 139, 69, 197; }
+        .nav-link:nth-child(2) { --accent: #3498db; --accent-rgb: 52, 152, 219; }
+        .nav-link:nth-child(3) { --accent: #e74c3c; --accent-rgb: 231, 76, 60; }
+
         .nav-circle {
             position: absolute;
             width: 100%;
             height: 100%;
-            border: 2px solid;
+            border: 2px solid rgba(var(--accent-rgb), 0.45);
             border-radius: 50%;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: navColor 8s ease-in-out infinite;
-        }
-
-        @keyframes navColor {
-            0%, 100% { border-color: rgba(139, 69, 197, 0.4); }
-            25% { border-color: rgba(52, 152, 219, 0.4); }
-            50% { border-color: rgba(231, 76, 60, 0.4); }
-            75% { border-color: rgba(241, 196, 15, 0.4); }
         }
 
         .nav-link::before {
@@ -186,62 +205,23 @@
             width: 12px;
             height: 12px;
             border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.6);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: navDotColor 8s ease-in-out infinite;
-        }
-
-        @keyframes navDotColor {
-            0%, 100% { 
-                background: #8b45c5; 
-                box-shadow: 0 0 20px rgba(139, 69, 197, 0.6);
-            }
-            25% { 
-                background: #3498db; 
-                box-shadow: 0 0 20px rgba(52, 152, 219, 0.6);
-            }
-            50% { 
-                background: #e74c3c; 
-                box-shadow: 0 0 20px rgba(231, 76, 60, 0.6);
-            }
-            75% { 
-                background: #f1c40f; 
-                box-shadow: 0 0 20px rgba(241, 196, 15, 0.6);
-            }
         }
 
         .nav-link:hover .nav-circle {
             transform: scale(1.2) rotate(90deg);
-            animation: navColorHover 2s ease-in-out infinite;
-        }
-
-        @keyframes navColorHover {
-            0%, 100% { 
-                border-color: #8b45c5;
-                box-shadow: 0 0 40px rgba(139, 69, 197, 0.4);
-            }
-            50% { 
-                border-color: #3498db;
-                box-shadow: 0 0 40px rgba(52, 152, 219, 0.4);
-            }
+            border-color: var(--accent);
+            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.4);
         }
 
         .nav-link:hover::before {
             transform: scale(2);
-            animation: navDotColorHover 2s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.8);
         }
 
-        @keyframes navDotColorHover {
-            0%, 100% { 
-                background: #8b45c5;
-                box-shadow: 0 0 40px rgba(139, 69, 197, 0.8);
-            }
-            50% { 
-                background: #e74c3c;
-                box-shadow: 0 0 40px rgba(231, 76, 60, 0.8);
-            }
-        }
-
-        /* Label that appears on hover */
+        /* Always-visible label, brightens on hover */
         .nav-label {
             position: absolute;
             bottom: -40px;
@@ -251,11 +231,11 @@
             font-size: 0.9rem;
             font-weight: 300;
             letter-spacing: 2px;
-            opacity: 0;
+            color: var(--accent);
+            opacity: 0.55;
             transition: opacity 0.3s ease, color 0.3s ease;
             white-space: nowrap;
             pointer-events: none;
-            animation: labelColor 8s ease-in-out infinite;
         }
 
         @keyframes labelColor {
@@ -280,14 +260,13 @@
 
         .nav-link:focus .nav-circle {
             transform: scale(1.2) rotate(90deg);
-            border-color: #8b45c5;
-            box-shadow: 0 0 40px rgba(139, 69, 197, 0.6);
+            border-color: var(--accent);
+            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.6);
         }
 
         .nav-link:focus::before {
             transform: scale(2);
-            background: #8b45c5;
-            box-shadow: 0 0 40px rgba(139, 69, 197, 0.8);
+            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.8);
         }
 
         .nav-link:focus .nav-label {
@@ -322,10 +301,15 @@
             cursor: pointer;
         }
 
+        /* No hover on touch: labels are always fully visible */
+        body.touch-device .nav-label {
+            opacity: 1;
+        }
+
         /* Orbiting rings */
         .ring {
             position: absolute;
-            border: 1px solid;
+            border: 1px solid rgba(139, 69, 197, 0.3);
             border-radius: 50%;
             animation: rotate linear infinite, ringColor 8s ease-in-out infinite;
         }
@@ -755,14 +739,25 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .wordmark {
+                top: 42px;
+                left: 20px;
+                font-size: 1.15rem;
+            }
+
             nav {
                 flex-direction: column;
-                gap: 2rem;
+                gap: 2.6rem;
             }
 
             .nav-link {
                 width: 90px;
                 height: 90px;
+            }
+
+            .nav-label {
+                bottom: -32px;
+                font-size: 0.8rem;
             }
 
             .email-contact {
@@ -1168,6 +1163,9 @@
         <span class="theme-icon">☀️</span>
     </button>
 
+    <!-- Wordmark -->
+    <div class="wordmark"><span class="wordmark-dot">·</span> the moving dot</div>
+
     <!-- Flowing gradient background -->
     <div class="bg-gradient"></div>
 
@@ -1323,6 +1321,9 @@
         
         let colorIndex = 0;
         let colorTransition = 0;
+        // Particles are softened on light backgrounds where full-strength
+        // trails read as smudges instead of a star field
+        let themeSoften = 1;
         
         function getCurrentColor() {
             const nextIndex = (colorIndex + 1) % colors.length;
@@ -1371,7 +1372,7 @@
                 // Draw trail
                 for (let i = 0; i < this.history.length; i++) {
                     const point = this.history[i];
-                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3;
+                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3 * themeSoften;
                     ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${trailOpacity})`;
                     ctx.beginPath();
                     ctx.arc(point.x, point.y, this.size * 0.5, 0, Math.PI * 2);
@@ -1379,14 +1380,14 @@
                 }
 
                 // Draw particle
-                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity})`;
+                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * themeSoften})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
 
                 // Draw glow
                 const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
-                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2})`);
+                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2 * themeSoften})`);
                 gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
@@ -1395,9 +1396,10 @@
             }
         }
 
-        // Create particles
+        // Create particles — density scales with viewport area so phones
+        // get a calm field instead of a dense web (and save battery)
         const particles = [];
-        const particleCount = 80;
+        const particleCount = Math.round(Math.min(80, Math.max(24, (window.innerWidth * window.innerHeight) / 18000)));
         for (let i = 0; i < particleCount; i++) {
             particles.push(new Particle());
         }
@@ -1412,7 +1414,7 @@
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < 150) {
-                        const opacity = (1 - distance / 150) * 0.15;
+                        const opacity = (1 - distance / 150) * 0.15 * themeSoften;
                         ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
@@ -1435,7 +1437,8 @@
 
             // Use theme-appropriate canvas background
             const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-            ctx.fillStyle = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
+            themeSoften = theme === 'dark' ? 1 : 0.5;
+            ctx.fillStyle = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.16)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             drawConnections();
