@@ -10,7 +10,9 @@
     <meta property="og:title" content="Flow · The Moving Dot">
     <meta property="og:description" content="Perspectives on transport and urban movement — positions, evidence, and shareable artifacts on how cities flow">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
     <meta name="twitter:title" content="Flow · The Moving Dot">
     <meta name="twitter:description" content="Perspectives on transport and urban movement — positions, evidence, and shareable artifacts on how cities flow">
     <meta name="theme-color" content="#000000">
@@ -147,10 +149,11 @@
 
         /* Header */
         header {
-            padding: 2rem 0 4rem 0;
+            padding: 2rem 0 3rem 0;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.6rem;
         }
 
         .logo {
@@ -462,36 +465,65 @@
             border-color: rgba(155, 89, 182, 0.2);
         }
 
-        /* Empty state */
-        .flow-empty {
+        /* Teaser shown until the first perspectives land */
+        .flow-teaser {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 4rem 2rem 6rem;
             text-align: center;
-            padding: 6rem 2rem;
-            color: var(--text-secondary);
-            transition: color 0.3s ease;
         }
 
-        .flow-empty-icon {
-            font-size: 3rem;
-            margin-bottom: 2rem;
+        .flow-teaser-accent {
+            width: 40px;
+            height: 1px;
+            margin: 0 auto 40px;
             opacity: 0.4;
-            animation: emptyPulse 4s ease-in-out infinite;
+            background: currentColor;
+            color: #8b45c5;
         }
 
-        @keyframes emptyPulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.05); }
-        }
-
-        .flow-empty-text {
+        .flow-teaser-title {
             font-family: 'Crimson Pro', serif;
-            font-size: 1.4rem;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
             font-weight: 300;
-            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            margin-bottom: 28px;
+            line-height: 1.25;
+            letter-spacing: 1px;
         }
 
-        .flow-empty-sub {
-            font-size: 0.9rem;
-            opacity: 0.7;
+        .flow-teaser-text {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            color: var(--text-secondary);
+            line-height: 1.9;
+            margin-bottom: 20px;
+        }
+
+        .flow-teaser-quote {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-primary);
+            opacity: 0.8;
+            margin-top: 28px;
+            line-height: 1.6;
+        }
+
+        .flow-teaser-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin: 44px auto 0;
+            background: #8b45c5;
+            box-shadow: 0 0 20px rgba(139, 69, 197, 0.8);
+            animation: teaserPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes teaserPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.8); opacity: 0.5; }
         }
 
         /* Focus states for keyboard navigation */
@@ -973,11 +1005,13 @@
 
         <!-- Flow Grid — topic cards will be added here -->
         <div class="flow-grid">
-            <!-- Empty state shown when no topic cards yet -->
-            <div class="flow-empty" style="grid-column: 1 / -1;">
-                <div class="flow-empty-icon">~</div>
-                <div class="flow-empty-text">Perspectives arriving soon</div>
-                <div class="flow-empty-sub">Infographics, slide decks, and positions on how cities move</div>
+            <!-- Teaser shown until the first topic cards land -->
+            <div class="flow-teaser" style="grid-column: 1 / -1;">
+                <div class="flow-teaser-accent"></div>
+                <h2 class="flow-teaser-title">The first perspectives are forming</h2>
+                <p class="flow-teaser-text">Positions, evidence, and shareable artifacts on how cities move &mdash; infographics and slide decks that take a side, arriving soon.</p>
+                <p class="flow-teaser-quote">A city is not a place. It is a pattern of movement.</p>
+                <div class="flow-teaser-dot"></div>
             </div>
 
             <!--
@@ -1032,6 +1066,7 @@
 
         let colorIndex = 0;
         let colorTransition = 0;
+        let themeSoften = 1;
 
         function getCurrentColor() {
             const nextIndex = (colorIndex + 1) % colors.length;
@@ -1080,7 +1115,7 @@
                 // Draw trail
                 for (let i = 0; i < this.history.length; i++) {
                     const point = this.history[i];
-                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3;
+                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3 * themeSoften;
                     ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${trailOpacity})`;
                     ctx.beginPath();
                     ctx.arc(point.x, point.y, this.size * 0.5, 0, Math.PI * 2);
@@ -1088,14 +1123,14 @@
                 }
 
                 // Draw particle
-                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity})`;
+                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * themeSoften})`;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
 
                 // Draw glow
                 const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
-                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2})`);
+                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2 * themeSoften})`);
                 gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
                 ctx.fillStyle = gradient;
                 ctx.beginPath();
@@ -1121,7 +1156,7 @@
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < 150) {
-                        const opacity = (1 - distance / 150) * 0.15;
+                        const opacity = (1 - distance / 150) * 0.15 * themeSoften;
                         ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
@@ -1142,7 +1177,9 @@
                 colorIndex = (colorIndex + 1) % colors.length;
             }
 
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+            themeSoften = theme === 'dark' ? 1 : 0.5;
+            ctx.fillStyle = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.16)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             drawConnections();
