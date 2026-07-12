@@ -23,7 +23,8 @@
         product: 'product.html',
         lab: 'lab.html',
         flow: 'flow.html',
-        survey: 'survey.html'
+        survey: 'survey.html',
+        server: 'server.html'
     };
 
     var SITE = {
@@ -60,10 +61,12 @@
         ]
     };
 
+    // Works for both hosting styles: /product.html (local) and the clean
+    // /product URLs Cloudflare Pages redirects to in production.
     function currentPage() {
-        var path = location.pathname.split('/').pop() || 'index.html';
-        for (var key in PAGE_FILES) if (PAGE_FILES[key] === path) return key;
-        return 'home';
+        var seg = (location.pathname.split('/').pop() || 'index').replace(/\.html$/, '') || 'index';
+        if (seg === 'index') return 'home';
+        return Object.prototype.hasOwnProperty.call(PAGE_FILES, seg) ? seg : 'home';
     }
 
     // Pages behind the site's client-side password gate. The agent never
@@ -455,7 +458,12 @@
                             addMessage('"' + card.title + '" lives on the password-protected ' + card.page + ' page. I can tell you about it here — or unlock that page and ask me again.', 'bot');
                             break;
                         }
-                        stashAndGo(card.page, actions.slice(i)); // retry this card there
+                        // navigate at most once per card — if we already
+                        // navigated for it, never bounce again
+                        if (a.__retried) break;
+                        var rest = actions.slice(i);
+                        rest[0] = { tool: a.tool, args: args, __retried: true };
+                        stashAndGo(card.page, rest);
                         return;
                     }
                     spotlight(card.id);
