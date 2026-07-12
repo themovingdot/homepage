@@ -31,10 +31,10 @@
         contact: 'info@themovingdot.com',
         pages: {
             home: 'Landing page: three circles navigate to Product, Lab and Flow. Scrolling down reveals a six-part philosophy (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) about awareness and presence.',
-            product: 'Client-facing products for transport planning.',
-            lab: 'Experimental projects and creative explorations.',
-            flow: 'Perspectives on transport and urban movement (first pieces arriving soon).',
-            survey: 'Six digital transport survey tools (linked from the Transport Survey Forms product).'
+            product: 'Client-facing products for transport planning. PASSWORD-PROTECTED.',
+            lab: 'Experimental projects and creative explorations. Open to everyone.',
+            flow: 'Perspectives on transport and urban movement (first pieces arriving soon). Open to everyone.',
+            survey: 'Six digital transport survey tools (linked from the Transport Survey Forms product). PASSWORD-PROTECTED.'
         },
         cards: [
             { id: 'vehicle-counter', page: 'product', title: 'Vehicle Counter', url: 'https://vehcount.themovingdot.com', desc: 'Real-time vehicle counting and traffic flow analysis for transportation planning.' },
@@ -64,6 +64,17 @@
         var path = location.pathname.split('/').pop() || 'index.html';
         for (var key in PAGE_FILES) if (PAGE_FILES[key] === path) return key;
         return 'home';
+    }
+
+    // Pages behind the site's client-side password gate. The agent never
+    // leads a visitor into a locked page; it only enters once the visitor
+    // has unlocked it themselves in this session.
+    var PROTECTED_PAGES = { product: 'productAuthenticated', survey: 'surveyAuthenticated' };
+
+    function pageUnlocked(page) {
+        var key = PROTECTED_PAGES[page];
+        if (!key) return true;
+        try { return sessionStorage.getItem(key) === 'true'; } catch (e) { return false; }
     }
 
     /* ------------------------------------------------------------------ *
@@ -98,7 +109,7 @@
             '- For a tour: chain show_card actions (max 4) across the most relevant cards and describe them briefly in "say".',
             '- Never invent card ids or urls; only those in the site map.',
             '- Pure knowledge questions: answer in "say" with "actions": [].',
-            '- The product and survey pages ask visitors for a password; if you send someone there, they may need to unlock it first — you will automatically continue after they do.',
+            '- The product and survey pages are PASSWORD-PROTECTED. Never target them with go_to_page or show_card unless the visitor is already on that page or says they have unlocked it — the site will block such actions anyway. You may always DESCRIBE their projects in "say", and you can add that the details live behind a password. Prefer touring the lab and flow pages.',
             '- Stay concise, warm, a little poetic — like the philosophy pages. Never break character. Never output anything before or after the JSON object.',
             '',
             'Examples:',
@@ -428,16 +439,22 @@
             switch (a.tool) {
                 case 'go_to_page': {
                     var page = args.page;
-                    if (PAGE_FILES[page] && page !== currentPage()) {
-                        stashAndGo(page, actions.slice(i + 1));
-                        return;
+                    if (!PAGE_FILES[page] || page === currentPage()) break;
+                    if (!pageUnlocked(page)) {
+                        addMessage('The ' + page + ' page is password-protected, so I won\'t take you there myself. Unlock it and I\'ll gladly show you around.', 'bot');
+                        break;
                     }
-                    break;
+                    stashAndGo(page, actions.slice(i + 1));
+                    return;
                 }
                 case 'show_card': {
                     var card = cardById(args.card);
                     if (!card) break;
                     if (card.page !== currentPage()) {
+                        if (!pageUnlocked(card.page)) {
+                            addMessage('"' + card.title + '" lives on the password-protected ' + card.page + ' page. I can tell you about it here — or unlock that page and ask me again.', 'bot');
+                            break;
+                        }
                         stashAndGo(card.page, actions.slice(i)); // retry this card there
                         return;
                     }
