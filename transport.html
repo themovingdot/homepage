@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport · The Moving Dot</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="description" content="Transport planning by the moving dot — surveys, traffic analysis, and living maps of how cities move. Work across Birmingham, Riyadh, Abu Dhabi and Dubai.">
+    <meta property="og:title" content="Transport · The Moving Dot">
+    <meta property="og:description" content="Surveys, traffic analysis, and living maps of how cities move.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
+    <style>
+        :root[data-theme="dark"] {
+            --bg-primary: #000000;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a8;
+            --card-bg: rgba(19, 19, 26, 0.6);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --chat-bg: rgba(20, 20, 20, 0.98);
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --card-bg: rgba(249, 249, 251, 0.8);
+            --card-border: rgba(0, 0, 0, 0.1);
+            --chat-bg: rgba(255, 255, 255, 0.98);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', system-ui, sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ---------- Hero with the globe ---------- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 560px;
+            overflow: hidden;
+        }
+
+        #globe-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
+        }
+
+        #globe-canvas:active {
+            cursor: grabbing;
+        }
+
+        .hero-copy {
+            position: absolute;
+            left: 50%;
+            top: 16%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 2;
+            pointer-events: none;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        .hero-title {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 300;
+            font-size: clamp(2.6rem, 7vw, 4.6rem);
+            letter-spacing: 2px;
+            line-height: 1.1;
+        }
+
+        .hero-sub {
+            margin-top: 18px;
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-cities {
+            position: absolute;
+            bottom: 96px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-size: 0.78rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .hero-cities span::before {
+            content: '·';
+            margin-right: 6px;
+        }
+
+        .hero-cities span:nth-child(1)::before { color: #8b45c5; }
+        .hero-cities span:nth-child(2)::before { color: #3498db; }
+        .hero-cities span:nth-child(3)::before { color: #e74c3c; }
+        .hero-cities span:nth-child(4)::before { color: #f1c40f; }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 34px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            width: 18px;
+            height: 18px;
+            border-right: 1.5px solid var(--text-secondary);
+            border-bottom: 1.5px solid var(--text-secondary);
+            opacity: 0.6;
+            transform-origin: center;
+            animation: heroScroll 2s ease-in-out infinite;
+        }
+
+        @keyframes heroScroll {
+            0%, 100% { transform: translateX(-50%) rotate(45deg) translate(0, 0); }
+            50% { transform: translateX(-50%) rotate(45deg) translate(4px, 4px); }
+        }
+
+        /* ---------- Header ---------- */
+        .site-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 5;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .logo {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo .dot-accent {
+            color: #f1c40f;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .back-link:hover {
+            color: #f1c40f;
+        }
+
+        /* ---------- Theme toggle ---------- */
+        #theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 10001;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(241, 196, 15, 0.15);
+            border: 2px solid rgba(241, 196, 15, 0.35);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        #theme-toggle:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .theme-icon {
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ---------- Sections ---------- */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 90px 24px 30px;
+        }
+
+        .section-kicker {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #f1c40f;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 300;
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            margin-bottom: 12px;
+        }
+
+        .section-sub {
+            color: var(--text-secondary);
+            max-width: 640px;
+            line-height: 1.7;
+            margin-bottom: 44px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .t-card {
+            position: relative;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .t-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(var(--acc), 0.55);
+            box-shadow: 0 16px 50px rgba(var(--acc), 0.18);
+        }
+
+        .t-card:nth-child(4n+1) { --acc: 139, 69, 197; --acc-solid: #8b45c5; }
+        .t-card:nth-child(4n+2) { --acc: 52, 152, 219; --acc-solid: #3498db; }
+        .t-card:nth-child(4n+3) { --acc: 231, 76, 60; --acc-solid: #e74c3c; }
+        .t-card:nth-child(4n+4) { --acc: 241, 196, 15; --acc-solid: #f1c40f; }
+
+        .t-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: rgba(var(--acc), 0.1);
+            border: 1px solid rgba(var(--acc), 0.3);
+            color: var(--acc-solid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+            transition: transform 0.35s ease;
+        }
+
+        .t-card:hover .t-icon {
+            transform: scale(1.08) rotate(5deg);
+        }
+
+        .orb-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 26px;
+            height: 26px;
+            margin: -13px 0 0 -13px;
+            border: 1.5px solid currentColor;
+            border-radius: 50%;
+            opacity: 0.75;
+            animation: orbSpin 10s linear infinite;
+        }
+
+        .orb-ring::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            margin-left: -2.5px;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .orb-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 12px currentColor;
+        }
+
+        @keyframes orbSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .t-title {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 400;
+            font-size: 1.45rem;
+            margin-bottom: 10px;
+            line-height: 1.25;
+        }
+
+        .t-desc {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.65;
+            margin-bottom: 16px;
+        }
+
+        .t-link {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.78rem;
+            color: var(--acc-solid);
+            opacity: 0.9;
+        }
+
+        .t-tag {
+            position: absolute;
+            top: 22px;
+            right: 22px;
+            font-size: 0.66rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            padding: 4px 10px;
+        }
+
+        /* ---------- Contact band ---------- */
+        .contact-band {
+            max-width: 760px;
+            margin: 40px auto 0;
+            padding: 80px 24px 110px;
+            text-align: center;
+        }
+
+        .contact-band h2 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 300;
+            font-size: clamp(1.7rem, 4vw, 2.4rem);
+            margin-bottom: 14px;
+        }
+
+        .contact-band p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            padding: 14px 30px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #8b45c5, #3498db);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 34px rgba(139, 69, 197, 0.4);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .site-header { padding: 24px 20px; }
+            .section { padding: 64px 20px 20px; }
+            .hero-cities { bottom: 84px; gap: 12px; padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="theme-icon">☀️</span>
+    </button>
+
+    <!-- Hero -->
+    <section class="hero">
+        <canvas id="globe-canvas" aria-hidden="true"></canvas>
+
+        <header class="site-header">
+            <a href="index.html" class="logo"><span class="dot-accent">·</span> the moving dot</a>
+            <a href="index.html" class="back-link">← home</a>
+        </header>
+
+        <div class="hero-copy">
+            <h1 class="hero-title">Transport</h1>
+            <p class="hero-sub">Surveys, traffic analysis, and living maps of how cities move.</p>
+        </div>
+
+        <div class="hero-cities" aria-label="Cities we have worked in">
+            <span>Birmingham</span>
+            <span>Riyadh</span>
+            <span>Abu Dhabi</span>
+            <span>Dubai</span>
+        </div>
+
+        <div class="hero-scroll" aria-hidden="true"></div>
+    </section>
+
+    <!-- Products -->
+    <section class="section" id="products">
+        <div class="section-kicker">Products</div>
+        <h2 class="section-title">Tools built for real projects</h2>
+        <p class="section-sub">Systems we run on live engagements — from roadside counts to metro-station surveys.</p>
+        <div class="grid">
+            <a class="t-card" href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter">
+                <span class="t-tag">Live</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Vehicle Counter</h3>
+                <p class="t-desc">Real-time vehicle counting and traffic flow analysis for transportation planning and road usage studies.</p>
+                <span class="t-link">vehcount.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="survey.html" data-agent-id="transport-survey-forms">
+                <span class="t-tag">6 tools · gated</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Transport Survey Forms</h3>
+                <p class="t-desc">A suite of six digital survey tools: roadside interviews, household travel diaries, public transport, hotel guest, parking, and special generator surveys.</p>
+                <span class="t-link">survey details →</span>
+            </a>
+            <a class="t-card" href="https://riyadh-metro-survey.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="riyadh-metro-survey">
+                <span class="t-tag">Case study</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Riyadh Metro Survey</h3>
+                <p class="t-desc">Surveyed more than 10 metro stations across Riyadh: travel behaviour, access patterns, park &amp; ride usage, and passenger journey characteristics.</p>
+                <span class="t-link">riyadh-metro-survey.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://adtgmdemo.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="adtgm-demo">
+                <span class="t-tag">Demo</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">ADTGM Demo</h3>
+                <p class="t-desc">Trip Generation Manual demo with a trip estimation calculator by land use class, built on the Average Daily Traffic Generation Manual.</p>
+                <span class="t-link">adtgmdemo.themovingdot.com →</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Living maps -->
+    <section class="section" id="maps">
+        <div class="section-kicker">Living maps &amp; analysis</div>
+        <h2 class="section-title">Watching cities move</h2>
+        <p class="section-sub">Interactive visualizations of transit networks, accessibility, and routing — every dot on these maps is a vehicle, a journey, or a person.</p>
+        <div class="grid">
+            <a class="t-card" href="https://uaetransit.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="uae-transit-animation">
+                <span class="t-tag">3D</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">UAE Transit Animation</h3>
+                <p class="t-desc">Ride along 670+ bus and metro routes in 3D — driver view, upper deck, or aerial — through real UAE streets and buildings.</p>
+                <span class="t-link">uaetransit.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://riyadh-transit-animation.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="riyadh-transit-animation">
+                <span class="t-tag">Animation</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Riyadh Transit Animation</h3>
+                <p class="t-desc">Dynamic visualization of Riyadh's expanding metro system: animated routes and stations across the network.</p>
+                <span class="t-link">riyadh-transit-animation.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://wmbusflow.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="bus-flow-analyzer">
+                <span class="t-tag">Analysis</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Bus Flow Analyzer</h3>
+                <p class="t-desc">Urban bus network flow patterns for the West Midlands — service frequencies and corridors, visualized.</p>
+                <span class="t-link">wmbusflow.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://mismatch.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="mismatch">
+                <span class="t-tag">Accessibility</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Mismatch</h3>
+                <p class="t-desc">Where car-free households face poor public transport access to essential services — a West Midlands connectivity analysis.</p>
+                <span class="t-link">mismatch.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://one2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="one2many">
+                <span class="t-tag">Routing</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">One2Many</h3>
+                <p class="t-desc">Multi-origin route planning with bidirectional modes — logistics, commutes, and delivery coordination.</p>
+                <span class="t-link">one2many.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://many2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="many2many">
+                <span class="t-tag">Routing</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Many2Many</h3>
+                <p class="t-desc">Multiple origin–destination pairs on a single map for comprehensive journey analysis.</p>
+                <span class="t-link">many2many.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://whereistherainbowbus.netlify.app/" target="_blank" rel="noopener" data-agent-id="rainbow-bus-tracker">
+                <span class="t-tag">Live tracking</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Rainbow Bus Tracker</h3>
+                <p class="t-desc">Real-time location tracking for Birmingham's iconic rainbow bus.</p>
+                <span class="t-link">whereistherainbowbus.netlify.app →</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact-band">
+        <h2>Planning a survey, a count, or a model?</h2>
+        <p>From roadside interviews in Riyadh to accessibility analysis in the West Midlands — if it moves through a city, we can measure it, model it, and make it visible.</p>
+        <a class="contact-btn" href="mailto:info@themovingdot.com?subject=Transport%20project%20enquiry">Start a conversation</a>
+    </section>
+
+    <!-- Globe -->
+    <script type="module">
+        import * as THREE from './assets/three.module.min.js';
+
+        const canvas = document.getElementById('globe-canvas');
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let renderer;
+        try {
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        } catch (e) {
+            canvas.style.display = 'none';
+        }
+
+        if (renderer) {
+            const BRAND = [0x8b45c5, 0x3498db, 0xe74c3c, 0xf1c40f];
+            const R = 10;
+
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 200);
+            camera.position.set(0, 3, 33);
+            camera.lookAt(0, -1, 0);
+
+            const globe = new THREE.Group();
+            globe.position.y = -4.6;
+            scene.add(globe);
+            window.__tmdGlobe = { group: globe }; // debug/test handle
+
+            // --- particle sphere (fibonacci distribution) ---
+            const N = 1100;
+            const pos = new Float32Array(N * 3);
+            const golden = Math.PI * (3 - Math.sqrt(5));
+            for (let i = 0; i < N; i++) {
+                const y = 1 - (i / (N - 1)) * 2;
+                const rad = Math.sqrt(1 - y * y);
+                const th = golden * i;
+                pos[i * 3] = Math.cos(th) * rad * R;
+                pos[i * 3 + 1] = y * R;
+                pos[i * 3 + 2] = Math.sin(th) * rad * R;
+            }
+            const sphereGeo = new THREE.BufferGeometry();
+            sphereGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const sphereMat = new THREE.PointsMaterial({
+                size: 0.075, transparent: true, opacity: 0.55,
+                color: 0x8b7fa8, depthWrite: false,
+            });
+            globe.add(new THREE.Points(sphereGeo, sphereMat));
+
+            // faint wire shell
+            const wireMat = new THREE.MeshBasicMaterial({
+                color: 0x8b45c5, wireframe: true, transparent: true, opacity: 0.045,
+            });
+            globe.add(new THREE.Mesh(new THREE.SphereGeometry(R, 28, 28), wireMat));
+
+            // --- glow sprite texture (shared) ---
+            function glowTexture() {
+                const c = document.createElement('canvas');
+                c.width = c.height = 64;
+                const x = c.getContext('2d');
+                const g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+                g.addColorStop(0, 'rgba(255,255,255,1)');
+                g.addColorStop(0.35, 'rgba(255,255,255,0.6)');
+                g.addColorStop(1, 'rgba(255,255,255,0)');
+                x.fillStyle = g;
+                x.fillRect(0, 0, 64, 64);
+                return new THREE.CanvasTexture(c);
+            }
+            const glowTex = glowTexture();
+
+            // --- cities ---
+            const latLon = (lat, lon, r = R) => {
+                const phi = (90 - lat) * Math.PI / 180;
+                const theta = (lon + 180) * Math.PI / 180;
+                return new THREE.Vector3(
+                    -r * Math.sin(phi) * Math.cos(theta),
+                    r * Math.cos(phi),
+                    r * Math.sin(phi) * Math.sin(theta)
+                );
+            };
+            const cities = [
+                { name: 'Birmingham', v: latLon(52.48, -1.90), color: BRAND[0] },
+                { name: 'Riyadh', v: latLon(24.71, 46.68), color: BRAND[1] },
+                { name: 'Abu Dhabi', v: latLon(24.45, 54.38), color: BRAND[2] },
+                { name: 'Dubai', v: latLon(25.20, 55.27), color: BRAND[3] },
+            ];
+            const glowMats = []; // additive in dark, normal in light (additive vanishes on white)
+            cities.forEach(c => {
+                const mat = new THREE.SpriteMaterial({
+                    map: glowTex, color: c.color, transparent: true,
+                    blending: THREE.AdditiveBlending, depthWrite: false,
+                });
+                glowMats.push(mat);
+                const spr = new THREE.Sprite(mat);
+                spr.position.copy(c.v.clone().multiplyScalar(1.012));
+                spr.scale.setScalar(1.15);
+                globe.add(spr);
+            });
+
+            // --- arcs with traveling pulses ---
+            const routes = [[0, 1], [1, 2], [1, 3], [0, 3], [2, 3]];
+            const pulses = [];
+            routes.forEach(([a, b], ri) => {
+                const va = cities[a].v, vb = cities[b].v;
+                const dist = va.distanceTo(vb);
+                const mid = va.clone().add(vb).multiplyScalar(0.5).normalize()
+                    .multiplyScalar(R + dist * 0.32);
+                const curve = new THREE.QuadraticBezierCurve3(va.clone().multiplyScalar(1.005), mid, vb.clone().multiplyScalar(1.005));
+                const color = cities[b].color;
+
+                const tubeMat = new THREE.MeshBasicMaterial({
+                    color, transparent: true, opacity: 0.32,
+                    blending: THREE.AdditiveBlending, depthWrite: false,
+                });
+                glowMats.push(tubeMat);
+                globe.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 48, 0.028, 6, false), tubeMat));
+
+                for (let k = 0; k < 2; k++) {
+                    const pmat = new THREE.SpriteMaterial({
+                        map: glowTex, color, transparent: true,
+                        blending: THREE.AdditiveBlending, depthWrite: false,
+                    });
+                    glowMats.push(pmat);
+                    const spr = new THREE.Sprite(pmat);
+                    spr.scale.setScalar(0.6);
+                    globe.add(spr);
+                    pulses.push({ spr, curve, offset: (ri * 0.23 + k * 0.5) % 1, speed: 0.06 + (ri % 3) * 0.016 });
+                }
+            });
+
+            // --- starfield backdrop ---
+            const SN = 700;
+            const spos = new Float32Array(SN * 3);
+            for (let i = 0; i < SN; i++) {
+                const v = new THREE.Vector3().randomDirection().multiplyScalar(55 + Math.random() * 25);
+                spos.set([v.x, v.y, v.z], i * 3);
+            }
+            const starGeo = new THREE.BufferGeometry();
+            starGeo.setAttribute('position', new THREE.BufferAttribute(spos, 3));
+            const starMat = new THREE.PointsMaterial({
+                size: 0.14, transparent: true, opacity: 0.5, color: 0x9b8fc0, depthWrite: false,
+            });
+            scene.add(new THREE.Points(starGeo, starMat));
+
+            // --- theme awareness ---
+            function applyGlobeTheme() {
+                const light = document.documentElement.getAttribute('data-theme') === 'light';
+                sphereMat.color.set(light ? 0x6a5a8a : 0x8b7fa8);
+                sphereMat.opacity = light ? 0.5 : 0.55;
+                starMat.color.set(light ? 0x7a6aa0 : 0x9b8fc0);
+                starMat.opacity = light ? 0.35 : 0.5;
+                wireMat.opacity = light ? 0.06 : 0.045;
+                glowMats.forEach(m => {
+                    m.blending = light ? THREE.NormalBlending : THREE.AdditiveBlending;
+                    m.needsUpdate = true;
+                });
+            }
+            applyGlobeTheme();
+            new MutationObserver(applyGlobeTheme)
+                .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+            // --- drag to rotate, with inertia ---
+            let targetRotY = 1.42, targetRotX = 0.55, dragging = false, px = 0, py = 0;
+            globe.rotation.y = targetRotY;
+            globe.rotation.x = targetRotX;
+            canvas.addEventListener('pointerdown', e => { dragging = true; px = e.clientX; py = e.clientY; });
+            window.addEventListener('pointermove', e => {
+                if (!dragging) return;
+                targetRotY += (e.clientX - px) * 0.005;
+                targetRotX += (e.clientY - py) * 0.003;
+                targetRotX = Math.max(-0.9, Math.min(0.9, targetRotX));
+                px = e.clientX; py = e.clientY;
+            });
+            window.addEventListener('pointerup', () => { dragging = false; });
+
+            // --- resize ---
+            function resize() {
+                const w = canvas.clientWidth, h = canvas.clientHeight;
+                if (canvas.width !== w || canvas.height !== h) {
+                    renderer.setSize(w, h, false);
+                    camera.aspect = w / h;
+                    camera.updateProjectionMatrix();
+                }
+            }
+
+            // --- animate ---
+            const clock = new THREE.Clock();
+            function frame() {
+                resize();
+                const t = clock.getElapsedTime();
+                if (!dragging) targetRotY += 0.0011;
+                globe.rotation.y += (targetRotY - globe.rotation.y) * 0.06;
+                globe.rotation.x += (targetRotX - globe.rotation.x) * 0.06;
+                pulses.forEach(p => {
+                    const u = (t * p.speed + p.offset) % 1;
+                    p.spr.position.copy(p.curve.getPoint(u));
+                    const s = 0.45 + 0.3 * Math.sin(u * Math.PI);
+                    p.spr.scale.setScalar(s);
+                });
+                renderer.render(scene, camera);
+                if (!reduced) requestAnimationFrame(frame);
+            }
+            frame();
+        }
+    </script>
+
+    <!-- Agent chat widget (shared) -->
+    <script src="chat.js" defer></script>
+
+    <!-- Theme Toggle Script -->
+    <script src="theme.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Cloudflare Pages redirects
+# Tidy professional aliases: themovingdot.com/transport/<app> -> app subdomain
+
+/transport/vehcount https://vehcount.themovingdot.com 302
+/transport/riyadh-metro https://riyadh-metro-survey.themovingdot.com 302
+/transport/adtgm https://adtgmdemo.themovingdot.com 302
+/transport/uae https://uaetransit.themovingdot.com 302
+/transport/riyadh https://riyadh-transit-animation.themovingdot.com 302
+/transport/busflow https://wmbusflow.themovingdot.com 302
+/transport/mismatch https://mismatch.themovingdot.com 302
+/transport/one2many https://one2many.themovingdot.com 302
+/transport/many2many https://many2many.themovingdot.com 302
+/transport/rainbowbus https://whereistherainbowbus.netlify.app 302

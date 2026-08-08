@@ -19,7 +19,7 @@ const MODELS = [
   '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
 ];
 
-const PAGES = ['home', 'product', 'lab', 'flow', 'survey'];
+const PAGES = ['home', 'product', 'lab', 'flow', 'survey', 'transport'];
 const PROJECT_HOSTS = ['themovingdot.com', 'whereistherainbowbus.netlify.app'];
 
 const MAX_MESSAGES = 24;

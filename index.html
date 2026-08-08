@@ -189,6 +189,10 @@
         .nav-link:nth-child(1) { --accent: #8b45c5; --accent-rgb: 139, 69, 197; }
         .nav-link:nth-child(2) { --accent: #3498db; --accent-rgb: 52, 152, 219; }
         .nav-link:nth-child(3) { --accent: #e74c3c; --accent-rgb: 231, 76, 60; }
+        .nav-link:nth-child(4) { --accent: #f1c40f; --accent-rgb: 241, 196, 15; }
+
+        /* yellow needs a deeper tone to stay readable on white */
+        [data-theme="light"] .nav-link:nth-child(4) { --accent: #c8990b; --accent-rgb: 200, 153, 11; }
 
         .nav-circle {
             position: absolute;
@@ -862,6 +866,10 @@
             <a href="flow.html" class="nav-link" aria-label="Go to Flow page">
                 <div class="nav-circle"></div>
                 <span class="nav-label">FLOW</span>
+            </a>
+            <a href="transport.html" class="nav-link" aria-label="Go to Transport page">
+                <div class="nav-circle"></div>
+                <span class="nav-label">TRANSPORT</span>
             </a>
         </nav>
 

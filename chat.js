@@ -24,7 +24,8 @@
         lab: 'lab.html',
         flow: 'flow.html',
         survey: 'survey.html',
-        server: 'server.html'
+        server: 'server.html',
+        transport: 'transport.html'
     };
 
     var SITE = {
@@ -35,7 +36,8 @@
             product: 'Client-facing products for transport planning. PASSWORD-PROTECTED.',
             lab: 'Experimental projects and creative explorations. Open to everyone.',
             flow: 'Perspectives on transport and urban movement (first pieces arriving soon). Open to everyone.',
-            survey: 'Six digital transport survey tools (linked from the Transport Survey Forms product). PASSWORD-PROTECTED.'
+            survey: 'Six digital transport survey tools (linked from the Transport Survey Forms product). PASSWORD-PROTECTED.',
+            transport: 'The professional transport hub — OPEN to everyone, no password. A 3D globe of our cities plus every product and living map in one place. The BEST destination for visitors interested in the professional transport work.'
         },
         cards: [
             { id: 'vehicle-counter', page: 'product', title: 'Vehicle Counter', url: 'https://vehcount.themovingdot.com', desc: 'Real-time vehicle counting and traffic flow analysis for transportation planning.' },
@@ -99,7 +101,7 @@
             '{"say": "<your short reply, max ~40 words>", "actions": [<0 to 4 actions>]}',
             '',
             'Available actions ("tool" + "args"):',
-            '- go_to_page {"page": "home"|"product"|"lab"|"flow"|"survey"} — navigate.',
+            '- go_to_page {"page": "home"|"product"|"lab"|"flow"|"survey"|"transport"} — navigate.',
             '- show_card {"card": "<card id from the site map>"} — navigate if needed, scroll to the card and spotlight it. Preferred way to show any project.',
             '- open_project {"url": "<https url from the site map>"} — open a live demo in a new tab. Only when the visitor asks to open/try it.',
             '- set_theme {"theme": "light"|"dark"}',
@@ -112,7 +114,7 @@
             '- For a tour: chain show_card actions (max 4) across the most relevant cards and describe them briefly in "say".',
             '- Never invent card ids or urls; only those in the site map.',
             '- Pure knowledge questions: answer in "say" with "actions": [].',
-            '- The product and survey pages are PASSWORD-PROTECTED. Never target them with go_to_page or show_card unless the visitor is already on that page or says they have unlocked it — the site will block such actions anyway. You may always DESCRIBE their projects in "say", and you can add that the details live behind a password. Prefer touring the lab and flow pages.',
+            '- The product and survey pages are PASSWORD-PROTECTED. Never target them with go_to_page or show_card unless the visitor is already on that page or says they have unlocked it — the site will block such actions anyway. You may always DESCRIBE their projects in "say", and you can add that the details live behind a password. For professional transport interest, prefer touring the OPEN transport page — every transport project is showable there without a password.',
             '- Stay concise, warm, a little poetic — like the philosophy pages. Never break character. Never output anything before or after the JSON object.',
             '',
             'Examples:',
@@ -453,6 +455,12 @@
                 case 'show_card': {
                     var card = cardById(args.card);
                     if (!card) break;
+                    // spotlight locally when the card exists on this page
+                    // (transport hub mirrors cards that also live elsewhere)
+                    if (spotlight(card.id)) {
+                        await delay(2400);
+                        continue;
+                    }
                     if (card.page !== currentPage()) {
                         if (!pageUnlocked(card.page)) {
                             addMessage('"' + card.title + '" lives on the password-protected ' + card.page + ' page. I can tell you about it here — or unlock that page and ask me again.', 'bot');
@@ -466,9 +474,7 @@
                         stashAndGo(card.page, rest);
                         return;
                     }
-                    spotlight(card.id);
-                    await delay(2400); // let the visitor see it before the next one
-                    continue;
+                    break;
                 }
                 case 'open_project': openProject(args.url); break;
                 case 'set_theme': applyTheme(args.theme); break;
