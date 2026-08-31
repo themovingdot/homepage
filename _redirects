@@ -1,0 +1,3 @@
+# The root URL now lives at the transport subdomain.
+# Only "/" is matched — product, lab, flow, survey and 404 stay where they are.
+/    https://transport.themovingdot.com/    302
