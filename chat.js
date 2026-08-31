@@ -30,7 +30,7 @@
         name: 'the moving dot',
         contact: 'info@themovingdot.com',
         pages: {
-            home: 'Landing page: three circles navigate to Product, Lab and Flow. Scrolling down reveals a six-part philosophy (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) about awareness and presence.',
+            home: 'Landing page: a single dot at the centre of the rings links to https://transport.themovingdot.com/, and clicking anywhere else on the page goes there too. Scrolling down still reveals a six-part philosophy (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) about awareness and presence.',
             product: 'Client-facing products for transport planning. PASSWORD-PROTECTED.',
             lab: 'Experimental projects and creative explorations. Open to everyone.',
             flow: 'Perspectives on transport and urban movement (first pieces arriving soon). Open to everyone.',
