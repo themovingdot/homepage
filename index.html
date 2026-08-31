@@ -162,80 +162,20 @@
             animation: labelColor 8s ease-in-out infinite;
         }
 
-        /* Navigation */
-        nav {
+        /* Central link — the one destination, at the heart of the rings */
+        .center-link {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 100;
-            display: flex;
-            gap: 4rem;
-        }
-
-        .nav-link {
-            position: relative;
             width: 120px;
             height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            color: transparent;
+            z-index: 100;
             cursor: none;
-        }
-
-        /* Each destination owns one brand color */
-        .nav-link:nth-child(1) { --accent: #8b45c5; --accent-rgb: 139, 69, 197; }
-        .nav-link:nth-child(2) { --accent: #3498db; --accent-rgb: 52, 152, 219; }
-        .nav-link:nth-child(3) { --accent: #e74c3c; --accent-rgb: 231, 76, 60; }
-
-        .nav-circle {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid rgba(var(--accent-rgb), 0.45);
-            border-radius: 50%;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.6);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .nav-link:hover .nav-circle {
-            transform: scale(1.2) rotate(90deg);
-            border-color: var(--accent);
-            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.4);
-        }
-
-        .nav-link:hover::before {
-            transform: scale(2);
-            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.8);
-        }
-
-        /* Always-visible label, brightens on hover */
-        .nav-label {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: 0.9rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            color: var(--accent);
-            opacity: 0.55;
-            transition: opacity 0.3s ease, color 0.3s ease;
-            white-space: nowrap;
-            pointer-events: none;
         }
 
         @keyframes labelColor {
@@ -245,32 +185,33 @@
             75% { color: #f1c40f; }
         }
 
-        [data-theme="light"] .nav-label {
+        .center-label {
+            position: absolute;
+            bottom: -44px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: system-ui, -apple-system, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            opacity: 0.55;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            pointer-events: none;
+            animation: labelColor 8s ease-in-out infinite;
+        }
+
+        [data-theme="light"] .center-label {
             font-weight: 500;
         }
 
-        .nav-link:hover .nav-label {
+        .center-link:hover .center-label,
+        .center-link:focus .center-label {
             opacity: 1;
         }
 
-        /* Focus states for keyboard navigation */
-        .nav-link:focus {
+        .center-link:focus {
             outline: none;
-        }
-
-        .nav-link:focus .nav-circle {
-            transform: scale(1.2) rotate(90deg);
-            border-color: var(--accent);
-            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.6);
-        }
-
-        .nav-link:focus::before {
-            transform: scale(2);
-            box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.8);
-        }
-
-        .nav-link:focus .nav-label {
-            opacity: 1;
         }
 
         .email-circle:focus {
@@ -296,13 +237,13 @@
             display: none;
         }
 
-        body.touch-device .nav-link,
+        body.touch-device .center-link,
         body.touch-device .email-circle {
             cursor: pointer;
         }
 
-        /* No hover on touch: labels are always fully visible */
-        body.touch-device .nav-label {
+        /* No hover on touch: the label is always fully visible */
+        body.touch-device .center-label {
             opacity: 1;
         }
 
@@ -362,15 +303,15 @@
 
         /* Central pulsing dot */
         .center-dot {
-            position: absolute;
-            top: 50%;
-            left: 50%;
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
             animation: pulse 3s ease-in-out infinite, centerDotColor 8s ease-in-out infinite;
+        }
+
+        .center-link:hover .center-dot,
+        .center-link:focus .center-dot {
+            animation: pulseHover 1.6s ease-in-out infinite, centerDotColor 8s ease-in-out infinite;
         }
 
         @keyframes centerDotColor {
@@ -393,14 +334,13 @@
         }
 
         @keyframes pulse {
-            0%, 100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(2);
-                opacity: 0.5;
-            }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(2); opacity: 0.5; }
+        }
+
+        @keyframes pulseHover {
+            0%, 100% { transform: scale(1.6); opacity: 1; }
+            50% { transform: scale(3); opacity: 0.6; }
         }
 
         /* Email contact circles */
@@ -525,21 +465,8 @@
             scroll-snap-align: start;
         }
 
-        .hero nav {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
         .hero .ring {
             position: absolute;
-        }
-
-        .hero .center-dot {
-            position: absolute;
-            top: 50%;
-            left: 50%;
         }
 
         .hero .email-contact {
@@ -745,18 +672,13 @@
                 font-size: 1.15rem;
             }
 
-            nav {
-                flex-direction: column;
-                gap: 2.6rem;
-            }
-
-            .nav-link {
+            .center-link {
                 width: 90px;
                 height: 90px;
             }
 
-            .nav-label {
-                bottom: -32px;
+            .center-label {
+                bottom: -36px;
                 font-size: 0.8rem;
             }
 
@@ -846,24 +768,12 @@
         <div class="ring"></div>
         <div class="ring"></div>
 
-        <!-- Central dot -->
-        <div class="center-dot"></div>
-
-        <!-- Navigation -->
-        <nav aria-label="Main navigation">
-            <a href="product.html" class="nav-link" aria-label="Go to Product page">
-                <div class="nav-circle"></div>
-                <span class="nav-label">PRODUCT</span>
-            </a>
-            <a href="lab.html" class="nav-link" aria-label="Go to Lab page">
-                <div class="nav-circle"></div>
-                <span class="nav-label">LAB</span>
-            </a>
-            <a href="flow.html" class="nav-link" aria-label="Go to Flow page">
-                <div class="nav-circle"></div>
-                <span class="nav-label">FLOW</span>
-            </a>
-        </nav>
+        <!-- Central link. Clicking anywhere else on the page goes here too;
+             see the page-wide click handler at the bottom of this file. -->
+        <a href="https://transport.themovingdot.com/" class="center-link" aria-label="Go to transport.themovingdot.com">
+            <span class="center-dot"></span>
+            <span class="center-label">TRANSPORT</span>
+        </a>
 
         <!-- Email contact -->
         <div class="email-contact">
@@ -1167,16 +1077,16 @@
             });
         }
 
-        // Cursor hover effects
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => {
+        // Cursor hover effect over the central link
+        const centerLink = document.querySelector('.center-link');
+        if (centerLink) {
+            centerLink.addEventListener('mouseenter', () => {
                 cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
             });
-            link.addEventListener('mouseleave', () => {
+            centerLink.addEventListener('mouseleave', () => {
                 cursor.style.transform = 'translate(-50%, -50%) scale(1)';
             });
-        });
+        }
 
         // Cursor hover effects for email circle
         const emailCircle = document.querySelector('.email-circle');
@@ -1238,6 +1148,45 @@
         document.querySelectorAll('.philosophy-content').forEach(el => {
             revealObserver.observe(el);
         });
+
+        /* ------------------------------------------------------------------
+           The whole page is a doorway. Any click that is not on something
+           that owns its own click — a link, a button, the scroll cue, the
+           theme toggle, the chat widget — follows the central link.
+           Scrolling is untouched: only clicks navigate.
+           ------------------------------------------------------------------ */
+        const DESTINATION = 'https://transport.themovingdot.com/';
+        const KEEPS_ITS_CLICK = [
+            'a', 'button', 'input', 'textarea', 'select', 'label',
+            '.scroll-indicator', '#theme-toggle',
+            '#chat-widget-container', '#chat-window'
+        ].join(', ');
+
+        document.addEventListener('click', (e) => {
+            if (e.defaultPrevented || e.button !== 0) return;
+            // Let modified clicks (new tab, download, …) behave normally.
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+            const target = e.target;
+            if (!target || typeof target.closest !== 'function') return;
+            if (target.closest(KEEPS_ITS_CLICK)) return;
+
+            // A click that finished a text selection is not a click-through.
+            const selection = window.getSelection && window.getSelection().toString();
+            if (selection) return;
+
+            window.location.href = DESTINATION;
+        });
+
+        // The one way down: the scroll cue scrolls instead of navigating.
+        const scrollCue = document.querySelector('.scroll-indicator');
+        if (scrollCue) {
+            scrollCue.style.cursor = 'pointer';
+            scrollCue.addEventListener('click', () => {
+                const firstSection = document.querySelector('.philosophy-section');
+                if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth' });
+            });
+        }
 
         // Fade out scroll indicator when user scrolls
         const scrollIndicator = document.querySelector('.scroll-indicator');
