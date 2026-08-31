@@ -1,7 +1,7 @@
 {
   "name": "the moving dot",
   "short_name": "TMD",
-  "description": "Interactive digital experiences, innovative products, and experimental lab projects",
+  "description": "Transport planning studio: surveys, vehicle counting, accessibility analysis and the digital tools that carry them",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
@@ -21,6 +21,6 @@
       "purpose": "any maskable"
     }
   ],
-  "categories": ["technology", "productivity", "utilities"],
+  "categories": ["business", "productivity", "utilities"],
   "screenshots": []
 }

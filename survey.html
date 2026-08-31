@@ -19,6 +19,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        // Applied before first paint so the page never flashes the wrong theme.
+        (function () {
+            var t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
     <style>
         :root[data-theme="dark"] {
             --bg-primary: #000000;
@@ -51,7 +59,6 @@
             min-height: 100vh;
             overflow-x: hidden;
             background: var(--bg-primary);
-            cursor: none;
             font-family: 'DM Sans', sans-serif;
             color: var(--text-primary);
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -87,9 +94,10 @@
 
         /* Custom cursor */
         .cursor {
-            width: 40px;
-            height: 40px;
-            border: 2px solid;
+            width: 36px;
+            height: 36px;
+            opacity: 0.5;
+            border: 1px solid;
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
@@ -107,6 +115,7 @@
         }
 
         .cursor-dot {
+            display: none;
             width: 8px;
             height: 8px;
             border-radius: 50%;

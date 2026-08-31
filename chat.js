@@ -23,18 +23,20 @@
         product: 'product.html',
         lab: 'lab.html',
         flow: 'flow.html',
-        survey: 'survey.html'
+        survey: 'survey.html',
+        philosophy: 'philosophy.html'
     };
 
     var SITE = {
         name: 'the moving dot',
         contact: 'info@themovingdot.com',
         pages: {
-            home: 'Landing page: three circles navigate to Product, Lab and Flow. Scrolling down reveals a six-part philosophy (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) about awareness and presence.',
+            home: 'Company home: what the studio does (transport surveys, vehicle counting and flow analysis, analysis and appraisal, visualisation and web tools), selected live work, the three destinations (Product, Lab, Flow), an ethos teaser and contact. Section anchors: #services, #work, #explore, #ethos, #contact.',
             product: 'Client-facing products for transport planning. PASSWORD-PROTECTED.',
             lab: 'Experimental projects and creative explorations. Open to everyone.',
             flow: 'Perspectives on transport and urban movement (first pieces arriving soon). Open to everyone.',
-            survey: 'Six digital transport survey tools (linked from the Transport Survey Forms product). PASSWORD-PROTECTED.'
+            survey: 'Six digital transport survey tools (linked from the Transport Survey Forms product). PASSWORD-PROTECTED.',
+            philosophy: 'The ethos page: a six-part reflection (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) on presence and awareness, behind the studio name. Open to everyone.'
         },
         cards: [
             { id: 'vehicle-counter', page: 'product', title: 'Vehicle Counter', url: 'https://vehcount.themovingdot.com', desc: 'Real-time vehicle counting and traffic flow analysis for transportation planning.' },
@@ -96,7 +98,7 @@
             '{"say": "<your short reply, max ~40 words>", "actions": [<0 to 4 actions>]}',
             '',
             'Available actions ("tool" + "args"):',
-            '- go_to_page {"page": "home"|"product"|"lab"|"flow"|"survey"} — navigate.',
+            '- go_to_page {"page": "home"|"product"|"lab"|"flow"|"survey"|"philosophy"} — navigate.',
             '- show_card {"card": "<card id from the site map>"} — navigate if needed, scroll to the card and spotlight it. Preferred way to show any project.',
             '- open_project {"url": "<https url from the site map>"} — open a live demo in a new tab. Only when the visitor asks to open/try it.',
             '- set_theme {"theme": "light"|"dark"}',

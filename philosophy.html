@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethos — The Moving Dot</title>
+    <meta name="description" content="Why the studio is called the moving dot: a six-part reflection on presence, layers, space and time, sensing, choice and celebration.">
+    <link rel="canonical" href="https://themovingdot.com/philosophy.html">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <meta property="og:title" content="Ethos — The Moving Dot">
+    <meta property="og:description" content="A six-part reflection on the dot: presence, layers, space and time, sensing, choice and celebration.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://themovingdot.com/philosophy.html">
+    <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ethos — The Moving Dot">
+    <meta name="twitter:description" content="A six-part reflection on the dot: presence, layers, space and time, sensing, choice and celebration.">
+    <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
+
+    <script>
+        // Applied before first paint so the page never flashes the wrong theme.
+        (function () {
+            var t = 'dark';
+            try { t = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <style>
+        :root,
+        :root[data-theme="dark"] {
+            --bg-primary: #000000;
+            --bg-secondary: rgba(19, 19, 26, 0.8);
+            --surface: rgba(255, 255, 255, 0.03);
+            --text-primary: #e8e8e8;
+            --text-secondary: #a0a0a8;
+            --gradient-opacity: 0.15;
+            --card-border: rgba(255, 255, 255, 0.1);
+            --hairline: rgba(255, 255, 255, 0.08);
+            --header-bg: rgba(0, 0, 0, 0.72);
+            --chat-bg: rgba(20, 20, 20, 0.98);
+            --particle-opacity: 0.55;
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: rgba(249, 249, 251, 0.9);
+            --surface: rgba(0, 0, 0, 0.02);
+            --text-primary: #1a1a1a;
+            --text-secondary: #5b5b66;
+            --gradient-opacity: 0.08;
+            --card-border: rgba(0, 0, 0, 0.1);
+            --hairline: rgba(0, 0, 0, 0.08);
+            --header-bg: rgba(255, 255, 255, 0.78);
+            --chat-bg: rgba(255, 255, 255, 0.98);
+            --particle-opacity: 0.3;
+        }
+
+        :root {
+            --purple: #8b45c5;
+            --blue: #3498db;
+            --maxw: 1180px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { overflow-x: hidden; scroll-behavior: smooth; }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a { color: inherit; }
+
+        :focus-visible {
+            outline: 2px solid var(--blue);
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 16px;
+            z-index: 10002;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: top 0.2s ease;
+        }
+        .skip-link:focus { top: 16px; }
+
+        .bg-gradient {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(139, 69, 197, var(--gradient-opacity)) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(52, 152, 219, var(--gradient-opacity)) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(231, 76, 60, calc(var(--gradient-opacity) * 0.8)) 0%, transparent 50%),
+                radial-gradient(circle at 60% 60%, rgba(241, 196, 15, calc(var(--gradient-opacity) * 0.67)) 0%, transparent 50%);
+            animation: flow 20s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes flow {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(10%, 10%) rotate(120deg); }
+            66% { transform: translate(-5%, 5%) rotate(240deg); }
+        }
+
+        @keyframes labelColor {
+            0%, 100% { color: #8b45c5; }
+            25% { color: #3498db; }
+            50% { color: #e74c3c; }
+            75% { color: #f1c40f; }
+        }
+
+        @keyframes centerDotColor {
+            0%, 100% { background: #8b45c5; box-shadow: 0 0 30px rgba(139, 69, 197, 0.8); }
+            25% { background: #3498db; box-shadow: 0 0 30px rgba(52, 152, 219, 0.8); }
+            50% { background: #e74c3c; box-shadow: 0 0 30px rgba(231, 76, 60, 0.8); }
+            75% { background: #f1c40f; box-shadow: 0 0 30px rgba(241, 196, 15, 0.8); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(2); opacity: 0.5; }
+        }
+
+        /* ----------------------------- Header ----------------------------- */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--header-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .site-header.scrolled { border-bottom-color: var(--hairline); }
+
+        .header-inner {
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .wordmark {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.4rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .wordmark-dot { animation: labelColor 8s ease-in-out infinite; }
+
+        .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+        .back-link {
+            font-size: 0.85rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-secondary);
+            transition: color 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .back-link:hover { color: var(--text-primary); }
+
+        #theme-toggle {
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            line-height: 1;
+            transition: border-color 0.25s ease, background 0.25s ease;
+        }
+
+        #theme-toggle:hover {
+            border-color: rgba(139, 69, 197, 0.6);
+            background: rgba(139, 69, 197, 0.1);
+        }
+
+        .theme-icon { user-select: none; pointer-events: none; }
+
+        /* ------------------------------ Intro ----------------------------- */
+        main { position: relative; z-index: 2; }
+
+        .page-intro {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 4.5rem 2rem 0;
+            text-align: center;
+        }
+
+        .eyebrow {
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+            animation: labelColor 8s ease-in-out infinite;
+            margin-bottom: 1.25rem;
+        }
+
+        .page-intro h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+            font-weight: 300;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 1.25rem;
+        }
+
+        .page-intro p {
+            color: var(--text-secondary);
+            font-size: 1.02rem;
+        }
+
+        /* --------------------------- Philosophy --------------------------- */
+        .philosophy { position: relative; z-index: 2; }
+
+        .philosophy-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+            position: relative;
+        }
+
+        .philosophy-content {
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .philosophy-content.visible { opacity: 1; transform: translateY(0); }
+
+        .philosophy-accent {
+            width: 40px;
+            height: 1px;
+            margin: 0 auto 40px;
+            opacity: 0.4;
+            animation: labelColor 8s ease-in-out infinite;
+            background: currentColor;
+        }
+
+        .philosophy-numeral {
+            font-family: 'Crimson Pro', serif;
+            font-size: 0.85rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            animation: labelColor 8s ease-in-out infinite;
+        }
+
+        .philosophy-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            line-height: 1.2;
+            letter-spacing: 1px;
+        }
+
+        .philosophy-text {
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            margin-bottom: 24px;
+        }
+
+        .philosophy-text:last-child { margin-bottom: 0; }
+
+        .philosophy-quote {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-primary);
+            margin-top: 32px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .philosophy-section.celebration .philosophy-content { max-width: 640px; }
+
+        .philosophy-final-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin: 48px auto 0;
+            animation: centerDotColor 8s ease-in-out infinite, pulse 3s ease-in-out infinite;
+        }
+
+        /* ------------------------------ Outro ----------------------------- */
+        .outro {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 2rem 2rem 6rem;
+            text-align: center;
+        }
+
+        .outro h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .outro p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.7rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            letter-spacing: 0.6px;
+            font-weight: 500;
+            text-decoration: none;
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(52, 152, 219, 0.7);
+            background: rgba(52, 152, 219, 0.08);
+        }
+
+        /* ----------------------------- Footer ----------------------------- */
+        .site-footer {
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid var(--hairline);
+            background: var(--bg-secondary);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-bottom {
+            max-width: var(--maxw);
+            margin: 0 auto;
+            padding: 1.75rem 2rem 6rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-bottom a { text-decoration: none; }
+        .footer-bottom a:hover { color: var(--purple); }
+
+        @media (max-width: 760px) {
+            .header-inner { padding: 0.85rem 1.25rem; }
+            .page-intro { padding: 3rem 1.25rem 0; }
+            .philosophy-section { min-height: auto; padding: 60px 20px; }
+            .philosophy-content { max-width: 100%; }
+            .outro { padding: 1.5rem 1.25rem 4rem; }
+            .footer-bottom { padding: 1.75rem 1.25rem 6rem; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .philosophy-content { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="bg-gradient"></div>
+
+    <header class="site-header" id="siteHeader">
+        <div class="header-inner">
+            <a class="wordmark" href="/" aria-label="the moving dot — home"><span class="wordmark-dot">·</span> the moving dot</a>
+            <div class="header-actions">
+                <a class="back-link" href="/">← Back to home</a>
+                <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span class="theme-icon">☀️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+        <div class="page-intro">
+            <p class="eyebrow">Ethos</p>
+            <h1>Why the moving dot</h1>
+            <p>
+                Every journey in a network is one dot, moving. The name came from that idea — and
+                then kept going. What follows is the longer version, in six parts.
+            </p>
+        </div>
+
+        <div class="philosophy">
+
+            <!-- I. The Dot -->
+            <section class="philosophy-section">
+                <div class="philosophy-content">
+                    <div class="philosophy-accent"></div>
+                    <div class="philosophy-numeral">I</div>
+                    <h2 class="philosophy-title">The Dot</h2>
+                    <p class="philosophy-text">At the center of everything, there is a point. No size. No location. No before or after.</p>
+                    <p class="philosophy-text">Just — presence.</p>
+                    <p class="philosophy-quote">Imagine a single drop of ink, suspended, before it touches water.</p>
+                </div>
+            </section>
+
+            <!-- II. The Layers -->
+            <section class="philosophy-section">
+                <div class="philosophy-content">
+                    <div class="philosophy-accent"></div>
+                    <div class="philosophy-numeral">II</div>
+                    <h2 class="philosophy-title">The Layers</h2>
+                    <p class="philosophy-text">Around the dot, things accumulate. Roles. Memories. Fears. Names. Each one a ring, like sediment around a pearl.</p>
+                    <p class="philosophy-text">The rings are real. But they are not the pearl. They can be added. They can be removed. The pearl remains.</p>
+                    <p class="philosophy-quote">"That is not me."</p>
+                </div>
+            </section>
+
+            <!-- III. Space and Time -->
+            <section class="philosophy-section">
+                <div class="philosophy-content">
+                    <div class="philosophy-accent"></div>
+                    <div class="philosophy-numeral">III</div>
+                    <h2 class="philosophy-title">Space and Time</h2>
+                    <p class="philosophy-text">Place two dots in space — and suddenly there is bigger, smaller, higher, lower. Place one dot on a timeline — and suddenly there is better, worse, before, after.</p>
+                    <p class="philosophy-text">Remove space: the dot is incomparable to others. Remove time: the dot is incomparable to itself.</p>
+                    <p class="philosophy-quote">Different, yet equal. Like stars — each one burning alone, none more star than another.</p>
+                </div>
+            </section>
+
+            <!-- IV. The Sensor -->
+            <section class="philosophy-section">
+                <div class="philosophy-content">
+                    <div class="philosophy-accent"></div>
+                    <div class="philosophy-numeral">IV</div>
+                    <h2 class="philosophy-title">The Sensor</h2>
+                    <p class="philosophy-text">But the dot senses. And sensing is the beginning of everything — self, world, distance, relationship, longing, loss.</p>
+                    <p class="philosophy-quote">The dot is not the waves. The dot is the water that feels them.</p>
+                </div>
+            </section>
+
+            <!-- V. The Choice -->
+            <section class="philosophy-section">
+                <div class="philosophy-content">
+                    <div class="philosophy-accent"></div>
+                    <div class="philosophy-numeral">V</div>
+                    <h2 class="philosophy-title">The Choice</h2>
+                    <p class="philosophy-text">Things come. Things go. Layers arrive. Layers dissolve.</p>
+                    <p class="philosophy-text">Of all the things beyond the dot's control, one thing remains entirely its own:</p>
+                    <p class="philosophy-quote">How to receive this journey.</p>
+                </div>
+            </section>
+
+            <!-- VI. Celebration -->
+            <section class="philosophy-section celebration">
+                <div class="philosophy-content">
+                    <div class="philosophy-accent"></div>
+                    <div class="philosophy-numeral">VI</div>
+                    <h2 class="philosophy-title">Celebration</h2>
+                    <p class="philosophy-text">Awareness is not a destination. It is the dot, fully here, fully now — watching the waves, holding nothing, missing nothing.</p>
+                    <p class="philosophy-text">And finding, in that watching, that to exist, to sense, to move —</p>
+                    <p class="philosophy-quote">is already enough to celebrate.</p>
+                    <div class="philosophy-final-dot"></div>
+                </div>
+            </section>
+
+        </div>
+
+        <div class="outro">
+            <h2>And then there is the work.</h2>
+            <p>Surveys, counting, accessibility analysis, and the tools that carry them.</p>
+            <a class="btn" href="/#work">See our work</a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-bottom">
+            <span>© <span id="year">2026</span> the moving dot. All rights reserved.</span>
+            <span><a href="mailto:info@themovingdot.com">info@themovingdot.com</a></span>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const siteHeader = document.getElementById('siteHeader');
+        window.addEventListener('scroll', () => {
+            siteHeader.classList.toggle('scrolled', window.scrollY > 8);
+        }, { passive: true });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+        document.querySelectorAll('.philosophy-content').forEach((el) => revealObserver.observe(el));
+    </script>
+
+    <!-- Agent chat widget (shared) -->
+    <script src="chat.js" defer></script>
+
+    <!-- Theme Toggle Script -->
+    <script src="theme.js"></script>
+</body>
+</html>
