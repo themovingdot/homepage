@@ -32,9 +32,9 @@ const msgs = [{ role: 'user', content: 'show me riyadh work' }];
 {
   calls = [];
   const env = makeEnv([{
-    response: 'Sure! ```json\n{"say":"Here is the Riyadh survey.","actions":[' +
-      '{"tool":"go_to_page","args":{"page":"product"}},' +
-      '{"tool":"show_card","args":{"card":"riyadh-metro-survey"}},' +
+    response: 'Sure! ```json\n{"say":"Here is the Riyadh transit map.","actions":[' +
+      '{"tool":"go_to_page","args":{"page":"lab"}},' +
+      '{"tool":"show_card","args":{"card":"riyadh-transit-animation"}},' +
       '{"tool":"show_card","args":{"card":"<script>alert(1)</script>"}},' +
       '{"tool":"open_project","args":{"url":"http://evil.example.com"}},' +
       '{"tool":"set_theme","args":{"theme":"light"}}]}\n```',
@@ -42,7 +42,7 @@ const msgs = [{ role: 'user', content: 'show me riyadh work' }];
   const res = await worker.fetch(req({ messages: msgs }), env);
   const out = await res.json();
   assert.equal(res.status, 200);
-  assert.equal(out.reply, 'Here is the Riyadh survey.');
+  assert.equal(out.reply, 'Here is the Riyadh transit map.');
   assert.deepEqual(out.actions.map(a => a.tool), ['go_to_page', 'show_card', 'set_theme']);
   assert.equal(out.response, out.reply); // legacy field
   console.log('ok 1: envelope parsing + action whitelist');

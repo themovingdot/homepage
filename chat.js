@@ -22,8 +22,7 @@
         home: 'index.html',
         product: 'product.html',
         lab: 'lab.html',
-        flow: 'flow.html',
-        survey: 'survey.html'
+        flow: 'flow.html'
     };
 
     var SITE = {
@@ -33,14 +32,10 @@
             home: 'Landing page: a single dot at the centre of the rings links to https://transport.themovingdot.com/, and clicking anywhere else on the page goes there too. Scrolling down still reveals a six-part philosophy (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) about awareness and presence.',
             product: 'Client-facing products for transport planning. PASSWORD-PROTECTED.',
             lab: 'Experimental projects and creative explorations. Open to everyone.',
-            flow: 'Perspectives on transport and urban movement (first pieces arriving soon). Open to everyone.',
-            survey: 'Six digital transport survey tools (linked from the Transport Survey Forms product). PASSWORD-PROTECTED.'
+            flow: 'Perspectives on transport and urban movement (first pieces arriving soon). Open to everyone.'
         },
         cards: [
             { id: 'vehicle-counter', page: 'product', title: 'Vehicle Counter', url: 'https://vehcount.themovingdot.com', desc: 'Real-time vehicle counting and traffic flow analysis for transportation planning.' },
-            { id: 'transport-survey-forms', page: 'product', title: 'Transport Survey Forms', url: null, desc: 'Suite of six survey tools; details on the survey page.' },
-            { id: 'riyadh-metro-survey', page: 'product', title: 'Riyadh Metro Survey', url: 'https://riyadh-metro-survey.themovingdot.com', desc: 'Surveyed 10+ Riyadh metro stations: travel behaviour, access patterns, park & ride, journey characteristics.' },
-            { id: 'adtgm-demo', page: 'product', title: 'ADTGM Demo', url: 'https://adtgmdemo.themovingdot.com', desc: 'Trip Generation Manual demo with a trip estimation calculator by land use class.' },
             { id: 'bus-flow-analyzer', page: 'lab', title: 'Bus Flow Analyzer', url: 'https://wmbusflow.themovingdot.com', desc: 'Visualization of urban bus network flow patterns (West Midlands).' },
             { id: 'time-compare', page: 'lab', title: 'Time Compare', url: 'https://timecompare.themovingdot.com', desc: 'Multi-timezone comparison utility.' },
             { id: 'life', page: 'lab', title: 'Life', url: 'https://life.themovingdot.com', desc: 'Contemplative interface for exploring life patterns and reflection.' },
@@ -50,13 +45,7 @@
             { id: 'dots', page: 'lab', title: 'Dots', url: 'https://dots.themovingdot.com', desc: 'Collaborative experiment: every connected user is a dot of color and sound.' },
             { id: 'many2many', page: 'lab', title: 'Many2Many', url: 'https://many2many.themovingdot.com', desc: 'Multiple origin-destination pairs visualized on one map.' },
             { id: 'riyadh-transit-animation', page: 'lab', title: 'Riyadh Transit Animation', url: 'https://riyadh-transit-animation.themovingdot.com', desc: "Animated visualization of Riyadh's expanding transit network." },
-            { id: 'uae-transit-animation', page: 'lab', title: 'UAE Transit Animation', url: 'https://uaetransit.themovingdot.com', desc: "3D ride-along across UAE's 670+ bus and metro routes." },
-            { id: 'road-side-interview', page: 'survey', title: 'Road Side Interview', url: 'https://rsi.themovingdot.com', desc: 'Roadside origin-destination, trip purpose and occupancy surveys.' },
-            { id: 'household-travel-diary', page: 'survey', title: 'Household Travel Diary Survey', url: 'https://hhs.themovingdot.com', desc: 'Daily travel patterns, mode choices and activity schedules.' },
-            { id: 'public-transport-interview', page: 'survey', title: 'Public Transport Interview Survey', url: 'https://pts.themovingdot.com', desc: 'Passenger travel patterns and service feedback.' },
-            { id: 'hotel-guest-travel-diary', page: 'survey', title: 'Hotel Guest Travel Diary Survey', url: 'https://hvs.themovingdot.com', desc: 'Visitor travel behaviour and hotel guest journeys.' },
-            { id: 'parking-interview', page: 'survey', title: 'Parking Interview Survey', url: 'https://parkinginterview.themovingdot.com', desc: 'Parking behaviour, duration and turnover surveys.' },
-            { id: 'special-generator-interview', page: 'survey', title: 'Special Generator Interview Survey', url: 'https://sgi.themovingdot.com', desc: 'Trip generation surveys at special generators (malls, hospitals, campuses).' }
+            { id: 'uae-transit-animation', page: 'lab', title: 'UAE Transit Animation', url: 'https://uaetransit.themovingdot.com', desc: "3D ride-along across UAE's 670+ bus and metro routes." }
         ]
     };
 
@@ -69,7 +58,7 @@
     // Pages behind the site's client-side password gate. The agent never
     // leads a visitor into a locked page; it only enters once the visitor
     // has unlocked it themselves in this session.
-    var PROTECTED_PAGES = { product: 'productAuthenticated', survey: 'surveyAuthenticated' };
+    var PROTECTED_PAGES = { product: 'productAuthenticated' };
 
     function pageUnlocked(page) {
         var key = PROTECTED_PAGES[page];
@@ -96,7 +85,7 @@
             '{"say": "<your short reply, max ~40 words>", "actions": [<0 to 4 actions>]}',
             '',
             'Available actions ("tool" + "args"):',
-            '- go_to_page {"page": "home"|"product"|"lab"|"flow"|"survey"} — navigate.',
+            '- go_to_page {"page": "home"|"product"|"lab"|"flow"} — navigate.',
             '- show_card {"card": "<card id from the site map>"} — navigate if needed, scroll to the card and spotlight it. Preferred way to show any project.',
             '- open_project {"url": "<https url from the site map>"} — open a live demo in a new tab. Only when the visitor asks to open/try it.',
             '- set_theme {"theme": "light"|"dark"}',
@@ -109,11 +98,11 @@
             '- For a tour: chain show_card actions (max 4) across the most relevant cards and describe them briefly in "say".',
             '- Never invent card ids or urls; only those in the site map.',
             '- Pure knowledge questions: answer in "say" with "actions": [].',
-            '- The product and survey pages are PASSWORD-PROTECTED. Never target them with go_to_page or show_card unless the visitor is already on that page or says they have unlocked it — the site will block such actions anyway. You may always DESCRIBE their projects in "say", and you can add that the details live behind a password. Prefer touring the lab and flow pages.',
+            '- The product page is PASSWORD-PROTECTED. Never target it with go_to_page or show_card unless the visitor is already on that page or says they have unlocked it — the site will block such actions anyway. You may always DESCRIBE its projects in "say", and you can add that the details live behind a password. Prefer touring the lab and flow pages.',
             '- Stay concise, warm, a little poetic — like the philosophy pages. Never break character. Never output anything before or after the JSON object.',
             '',
             'Examples:',
-            'Visitor: "what have you done in riyadh?" -> {"say":"Two Riyadh stories — the metro survey and the living map of its transit. Look.","actions":[{"tool":"show_card","args":{"card":"riyadh-metro-survey"}},{"tool":"show_card","args":{"card":"riyadh-transit-animation"}}]}',
+            'Visitor: "what have you done in riyadh?" -> {"say":"Riyadh, in motion — the living map of its expanding transit. Look.","actions":[{"tool":"show_card","args":{"card":"riyadh-transit-animation"}}]}',
             'Visitor: "write Sara in the stars" -> {"say":"For Sara — watch the sky.","actions":[{"tool":"constellation","args":{"text":"SARA"}}]}',
             'Visitor: "this is too dark" -> {"say":"Let there be light.","actions":[{"tool":"set_theme","args":{"theme":"light"}}]}'
         ].join('\n');
