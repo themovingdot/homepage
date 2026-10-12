@@ -3,42 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>· the moving dot</title>
+    <title>The Moving Dot · Transport software &amp; consultancy</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
-    <meta name="description" content="the moving dot - Interactive digital experiences, innovative products, and experimental lab projects">
-    <meta property="og:title" content="· the moving dot">
-    <meta property="og:description" content="Interactive digital experiences, innovative products, and experimental lab projects">
+    <meta name="description" content="The Moving Dot builds transport software and advises on the questions behind it: transport surveys, planning and modelling, and the software behind them, from field data to live platforms. Working with clients worldwide.">
+    <meta name="author" content="The Moving Dot Ltd">
+    <meta name="copyright" content="Platform software © 2022-2026 The Moving Dot Ltd. All rights reserved.">
+    <meta property="og:title" content="The Moving Dot · Transport software &amp; consultancy">
+    <meta property="og:description" content="Transport surveys, modelling and the software behind them, delivered by one team from the planning question to the live platform. Working with clients worldwide.">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://themovingdot.com/">
+    <link rel="canonical" href="https://themovingdot.com/">
     <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="· the moving dot">
-    <meta name="twitter:description" content="Interactive digital experiences, innovative products, and experimental lab projects">
     <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
     <style>
         :root[data-theme="dark"] {
             --bg-primary: #000000;
-            --bg-secondary: rgba(19, 19, 26, 0.8);
             --text-primary: #e8e8e8;
             --text-secondary: #a0a0a8;
-            --gradient-opacity: 0.15;
-            --cursor-display: block;
+            --card-bg: rgba(19, 19, 26, 0.6);
             --card-border: rgba(255, 255, 255, 0.1);
             --chat-bg: rgba(20, 20, 20, 0.98);
+            --scrim: rgba(0, 0, 0, 0.78);
+            --nav-bg: rgba(0, 0, 0, 0.72);
         }
 
         :root[data-theme="light"] {
             --bg-primary: #ffffff;
-            --bg-secondary: rgba(249, 249, 251, 0.9);
             --text-primary: #1a1a1a;
             --text-secondary: #666666;
-            --gradient-opacity: 0.08;
-            --cursor-display: block;
+            --card-bg: rgba(249, 249, 251, 0.8);
             --card-border: rgba(0, 0, 0, 0.1);
             --chat-bg: rgba(255, 255, 255, 0.98);
+            --scrim: rgba(255, 255, 255, 0.85);
+            --nav-bg: rgba(255, 255, 255, 0.8);
         }
 
         * {
@@ -48,192 +52,489 @@
         }
 
         html {
-            scroll-snap-type: y proximity;
-            overflow-y: scroll;
-            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
+
+        section[id] { scroll-margin-top: 72px; }
 
         body {
-            width: 100%;
-            min-height: 100vh;
-            overflow-x: hidden;
             background: var(--bg-primary);
-            cursor: none;
+            color: var(--text-primary);
+            font-family: 'DM Sans', system-ui, sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ---------- Hero with the globe ---------- */
+        .hero {
             position: relative;
-            transition: background-color 0.3s ease;
+            height: 100vh;
+            min-height: 560px;
+            overflow: hidden;
         }
 
-        /* Flowing gradient background */
-        .bg-gradient {
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(139, 69, 197, var(--gradient-opacity)) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(52, 152, 219, var(--gradient-opacity)) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(231, 76, 60, calc(var(--gradient-opacity) * 0.8)) 0%, transparent 50%),
-                radial-gradient(circle at 60% 60%, rgba(241, 196, 15, calc(var(--gradient-opacity) * 0.67)) 0%, transparent 50%);
-            animation: flow 20s ease-in-out infinite;
-            z-index: 0;
-            transition: opacity 0.3s ease;
+        #globe-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
         }
 
-        @keyframes flow {
-            0%, 100% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            33% {
-                transform: translate(10%, 10%) rotate(120deg);
-            }
-            66% {
-                transform: translate(-5%, 5%) rotate(240deg);
-            }
+        #globe-canvas:active {
+            cursor: grabbing;
         }
 
-        /* Custom cursor */
-        .cursor {
-            width: 40px;
-            height: 40px;
-            border: 2px solid;
-            border-radius: 50%;
-            position: fixed;
+        .hero-copy {
+            position: absolute;
+            left: 50%;
+            top: 13%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 2;
             pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.15s ease-out;
-            transform: translate(-50%, -50%);
-            animation: cursorColor 8s ease-in-out infinite;
+            padding: 26px 20px 30px;
+            width: min(100%, 1100px);
+            background: radial-gradient(ellipse 48% 60% at center, var(--scrim) 0%, var(--scrim) 45%, transparent 100%);
+            text-shadow: 0 0 18px var(--scrim), 0 0 4px var(--scrim);
         }
 
-        @keyframes cursorColor {
-            0%, 100% { border-color: rgba(139, 69, 197, 0.6); }
-            25% { border-color: rgba(52, 152, 219, 0.6); }
-            50% { border-color: rgba(231, 76, 60, 0.6); }
-            75% { border-color: rgba(241, 196, 15, 0.6); }
+        .hero-kicker {
+            font-size: 0.72rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #f1c40f;
+            margin-bottom: 14px;
         }
 
-        .cursor-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            position: fixed;
+        .hero-title {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 300;
+            font-size: clamp(2.3rem, 6vw, 4.2rem);
+            letter-spacing: 1px;
+            line-height: 1.08;
+        }
+
+        .hero-sub {
+            margin: 18px auto 0;
+            max-width: 620px;
+            line-height: 1.6;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            color: var(--text-primary);
+            opacity: 0.85;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-cities {
+            position: absolute;
+            bottom: 96px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-size: 0.78rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
             pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            transition: transform 0.05s ease-out;
-            animation: dotColor 8s ease-in-out infinite;
         }
 
-        @keyframes dotColor {
-            0%, 100% { background: #8b45c5; box-shadow: 0 0 15px #8b45c5; }
-            25% { background: #3498db; box-shadow: 0 0 15px #3498db; }
-            50% { background: #e74c3c; box-shadow: 0 0 15px #e74c3c; }
-            75% { background: #f1c40f; box-shadow: 0 0 15px #f1c40f; }
+
+        .hero-cities button {
+            pointer-events: auto;
+            background: none;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font: inherit;
+            font-size: 0.78rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.25s ease, border-color 0.25s ease;
         }
 
-        /* Canvas for particles */
-        #canvas {
+        .hero-cities button:hover { color: var(--text-primary); }
+
+        .hero-cities button.active {
+            color: var(--text-primary);
+            border-color: var(--card-border);
+        }
+
+        .hero-cities button:nth-child(1)::before { content: '·'; margin-right: 6px; color: var(--text-secondary); }
+        .hero-cities button:nth-child(2)::before { content: '·'; margin-right: 6px; color: #8b45c5; }
+        .hero-cities button:nth-child(3)::before { content: '·'; margin-right: 6px; color: #3498db; }
+        .hero-cities button:nth-child(4)::before { content: '·'; margin-right: 6px; color: #e74c3c; }
+        .hero-cities button:nth-child(5)::before { content: '·'; margin-right: 6px; color: #f1c40f; }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 34px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            width: 18px;
+            height: 18px;
+            border-right: 1.5px solid var(--text-secondary);
+            border-bottom: 1.5px solid var(--text-secondary);
+            opacity: 0.6;
+            transform-origin: center;
+            animation: heroScroll 2s ease-in-out infinite;
+        }
+
+        @keyframes heroScroll {
+            0%, 100% { transform: translateX(-50%) rotate(45deg) translate(0, 0); }
+            50% { transform: translateX(-50%) rotate(45deg) translate(4px, 4px); }
+        }
+
+        /* ---------- Top navigation ---------- */
+        .top-nav {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        /* Wordmark */
-        .wordmark {
-            position: fixed;
-            top: 38px;
-            left: 30px;
+            right: 0;
             z-index: 10001;
-            font-family: 'Crimson Pro', serif;
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            padding: 14px 28px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             color: var(--text-primary);
-            opacity: 0.85;
-            pointer-events: none;
-            user-select: none;
+            text-decoration: none;
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+            margin-right: auto;
+            white-space: nowrap;
         }
 
-        .wordmark .wordmark-dot {
-            animation: labelColor 8s ease-in-out infinite;
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #f1c40f;
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
         }
 
-        /* Central link — the orb motif from the lab cards at hero scale, so
-           the one destination reads as a target rather than a stray dot. */
-        .center-link {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 96px;
-            height: 96px;
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            letter-spacing: 0.4px;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover { color: var(--text-primary); }
+
+        .nav-cta {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            padding: 8px 16px;
+            transition: border-color 0.2s ease;
+        }
+
+        .nav-cta:hover { border-color: #8b45c5; }
+
+        #theme-toggle {
+            width: 38px;
+            height: 38px;
+            flex: none;
+            border-radius: 50%;
+            background: rgba(241, 196, 15, 0.15);
+            border: 1.5px solid rgba(241, 196, 15, 0.35);
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-decoration: none;
+            font-size: 1.05rem;
+            transition: transform 0.3s ease;
+        }
+
+        #theme-toggle:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .theme-icon {
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ---------- Sections ---------- */
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 90px 24px 30px;
+        }
+
+        .section-kicker {
+            font-size: 0.75rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #f1c40f;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 300;
+            font-size: clamp(1.9rem, 4vw, 2.8rem);
+            margin-bottom: 12px;
+        }
+
+        .section-sub {
+            color: var(--text-secondary);
+            max-width: 640px;
+            line-height: 1.7;
+            margin-bottom: 44px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .grid-3 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+        /* ---------- Services ---------- */
+        .service {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 30px 28px;
+            border-top: 3px solid var(--acc-solid);
+        }
+
+        .service:nth-child(1) { --acc-solid: #8b45c5; }
+        .service:nth-child(2) { --acc-solid: #3498db; }
+        .service:nth-child(3) { --acc-solid: #e74c3c; }
+
+        .service-verb {
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--acc-solid);
+            margin-bottom: 10px;
+        }
+
+        .service h3 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 400;
+            font-size: 1.55rem;
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+
+        .service p {
+            color: var(--text-secondary);
+            font-size: 0.93rem;
+            line-height: 1.65;
+            margin-bottom: 18px;
+        }
+
+        .service ul {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+            font-size: 0.88rem;
+        }
+
+        .service li {
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .service li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6em;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background-color: rgba(139, 69, 197, 0.12);
-            border: 1px solid rgba(139, 69, 197, 0.45);
-            box-shadow: 0 0 40px rgba(139, 69, 197, 0.25);
-            z-index: 100;
-            cursor: none;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: labelColor 8s ease-in-out infinite,
-                       centerTile 8s ease-in-out infinite;
+            background: var(--acc-solid);
         }
 
-        /* The tile tint rides the same 8s colour cycle as everything else */
-        @keyframes centerTile {
-            0%, 100% {
-                background-color: rgba(139, 69, 197, 0.12);
-                border-color: rgba(139, 69, 197, 0.45);
-                box-shadow: 0 0 40px rgba(139, 69, 197, 0.25);
-            }
-            25% {
-                background-color: rgba(52, 152, 219, 0.12);
-                border-color: rgba(52, 152, 219, 0.45);
-                box-shadow: 0 0 40px rgba(52, 152, 219, 0.25);
-            }
-            50% {
-                background-color: rgba(231, 76, 60, 0.12);
-                border-color: rgba(231, 76, 60, 0.45);
-                box-shadow: 0 0 40px rgba(231, 76, 60, 0.25);
-            }
-            75% {
-                background-color: rgba(241, 196, 15, 0.12);
-                border-color: rgba(241, 196, 15, 0.45);
-                box-shadow: 0 0 40px rgba(241, 196, 15, 0.25);
-            }
+        .stack {
+            margin-top: 34px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
         }
 
-        /* Orbiting-dot icon motif, matching the lab and product cards */
-        .center-link .orb-ring {
+        .stack-label {
+            font-size: 0.72rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-right: 6px;
+        }
+
+        .chip {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.76rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            padding: 5px 12px;
+        }
+
+        /* ---------- Proof band ---------- */
+        .proof {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 70px auto 0;
+            padding: 36px 24px;
+            border-top: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .proof-num {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 300;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            line-height: 1;
+        }
+
+        .proof-label {
+            margin-top: 10px;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        /* ---------- Approach ---------- */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            counter-reset: step;
+        }
+
+        .step {
+            border-left: 1px solid var(--card-border);
+            padding: 4px 0 4px 20px;
+        }
+
+        .step-num {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.78rem;
+            color: #f1c40f;
+            margin-bottom: 10px;
+        }
+
+        .step h3 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 400;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .t-card {
+            position: relative;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 26px 24px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .t-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(var(--acc), 0.55);
+            box-shadow: 0 16px 50px rgba(var(--acc), 0.18);
+        }
+
+        .t-card:nth-child(4n+1) { --acc: 139, 69, 197; --acc-solid: #8b45c5; }
+        .t-card:nth-child(4n+2) { --acc: 52, 152, 219; --acc-solid: #3498db; }
+        .t-card:nth-child(4n+3) { --acc: 231, 76, 60; --acc-solid: #e74c3c; }
+        .t-card:nth-child(4n+4) { --acc: 241, 196, 15; --acc-solid: #f1c40f; }
+
+        .t-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: rgba(var(--acc), 0.1);
+            border: 1px solid rgba(var(--acc), 0.3);
+            color: var(--acc-solid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+            transition: transform 0.35s ease;
+        }
+
+        .t-card:hover .t-icon {
+            transform: scale(1.08) rotate(5deg);
+        }
+
+        .orb-ring {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 52px;
-            height: 52px;
-            margin: -26px 0 0 -26px;
+            width: 26px;
+            height: 26px;
+            margin: -13px 0 0 -13px;
             border: 1.5px solid currentColor;
             border-radius: 50%;
             opacity: 0.75;
             animation: orbSpin 10s linear infinite;
         }
 
-        .center-link .orb-ring::before {
+        .orb-ring::before {
             content: '';
             position: absolute;
-            top: -4px;
+            top: -3px;
             left: 50%;
-            margin-left: -3.5px;
-            width: 7px;
-            height: 7px;
+            margin-left: -2.5px;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
             background: currentColor;
+        }
+
+        .orb-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 12px currentColor;
         }
 
         @keyframes orbSpin {
@@ -241,1055 +542,892 @@
             to { transform: rotate(360deg); }
         }
 
-        .center-link:hover,
-        .center-link:focus {
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-
-        @keyframes labelColor {
-            0%, 100% { color: #8b45c5; }
-            25% { color: #3498db; }
-            50% { color: #e74c3c; }
-            75% { color: #f1c40f; }
-        }
-
-        .center-label {
-            position: absolute;
-            bottom: -44px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: 0.9rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            opacity: 0.55;
-            transition: opacity 0.3s ease;
-            white-space: nowrap;
-            pointer-events: none;
-            animation: labelColor 8s ease-in-out infinite;
-        }
-
-        [data-theme="light"] .center-label {
-            font-weight: 500;
-        }
-
-        .center-link:hover .center-label,
-        .center-link:focus .center-label {
-            opacity: 1;
-        }
-
-        .center-link:focus {
-            outline: none;
-        }
-
-        .email-circle:focus {
-            outline: none;
-            transform: scale(1.3);
-            border-color: #8b45c5;
-            box-shadow: 0 0 30px rgba(139, 69, 197, 0.4);
-        }
-
-        .email-circle:focus::before {
-            transform: scale(1.5);
-            background: #8b45c5;
-            box-shadow: 0 0 30px rgba(139, 69, 197, 0.8);
-        }
-
-        /* Touch device support */
-        body.touch-device {
-            cursor: auto;
-        }
-
-        body.touch-device .cursor,
-        body.touch-device .cursor-dot {
-            display: none;
-        }
-
-        body.touch-device .center-link,
-        body.touch-device .email-circle {
-            cursor: pointer;
-        }
-
-        /* No hover on touch: the label is always fully visible */
-        body.touch-device .center-label {
-            opacity: 1;
-        }
-
-        /* Orbiting rings */
-        .ring {
-            position: absolute;
-            border: 1px solid rgba(139, 69, 197, 0.3);
-            border-radius: 50%;
-            animation: rotate linear infinite, ringColor 8s ease-in-out infinite;
-        }
-
-        @keyframes ringColor {
-            0%, 100% { border-color: rgba(139, 69, 197, 0.3); }
-            25% { border-color: rgba(52, 152, 219, 0.3); }
-            50% { border-color: rgba(231, 76, 60, 0.3); }
-            75% { border-color: rgba(241, 196, 15, 0.3); }
-        }
-
-        .ring:nth-child(1) {
-            width: 300px;
-            height: 300px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-duration: 30s, 8s;
-        }
-
-        .ring:nth-child(2) {
-            width: 450px;
-            height: 450px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-duration: 45s, 8s;
-            animation-direction: reverse, normal;
-            animation-delay: 0s, 2s;
-        }
-
-        .ring:nth-child(3) {
-            width: 600px;
-            height: 600px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-duration: 60s, 8s;
-            animation-delay: 0s, 4s;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-            to {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
-        }
-
-        /* Central pulsing dot */
-        .center-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: currentColor;
-            box-shadow: 0 0 18px currentColor;
-            animation: pulseCenter 3s ease-in-out infinite;
-        }
-
-        .center-link:hover .center-dot,
-        .center-link:focus .center-dot {
-            animation: pulseHover 1.6s ease-in-out infinite;
-        }
-
-        @keyframes centerDotColor {
-            0%, 100% { 
-                background: #8b45c5;
-                box-shadow: 0 0 30px rgba(139, 69, 197, 0.8);
-            }
-            25% { 
-                background: #3498db;
-                box-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
-            }
-            50% { 
-                background: #e74c3c;
-                box-shadow: 0 0 30px rgba(231, 76, 60, 0.8);
-            }
-            75% { 
-                background: #f1c40f;
-                box-shadow: 0 0 30px rgba(241, 196, 15, 0.8);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(2); opacity: 0.5; }
-        }
-
-        @keyframes pulseCenter {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.65; }
-        }
-
-        @keyframes pulseHover {
-            0%, 100% { transform: scale(1.15); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.7; }
-        }
-
-        /* Email contact circles */
-        .email-contact {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 100;
-        }
-
-        .email-circle {
-            position: relative;
-            width: 30px;
-            height: 30px;
-            border: 2px solid;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: emailCircleColor 8s ease-in-out infinite;
-            cursor: none;
-        }
-
-        @keyframes emailCircleColor {
-            0%, 100% { border-color: rgba(139, 69, 197, 0.4); }
-            25% { border-color: rgba(52, 152, 219, 0.4); }
-            50% { border-color: rgba(231, 76, 60, 0.4); }
-            75% { border-color: rgba(241, 196, 15, 0.4); }
-        }
-
-        .email-circle::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            animation: emailDotColor 8s ease-in-out infinite;
-        }
-
-        @keyframes emailDotColor {
-            0%, 100% { 
-                background: #8b45c5; 
-                box-shadow: 0 0 15px rgba(139, 69, 197, 0.6);
-            }
-            25% { 
-                background: #3498db; 
-                box-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
-            }
-            50% { 
-                background: #e74c3c; 
-                box-shadow: 0 0 15px rgba(231, 76, 60, 0.6);
-            }
-            75% { 
-                background: #f1c40f; 
-                box-shadow: 0 0 15px rgba(241, 196, 15, 0.6);
-            }
-        }
-
-        .email-circle:hover {
-            transform: scale(1.3);
-            animation: emailCircleColorHover 2s ease-in-out infinite;
-        }
-
-        @keyframes emailCircleColorHover {
-            0%, 100% { 
-                border-color: #8b45c5;
-                box-shadow: 0 0 30px rgba(139, 69, 197, 0.4);
-            }
-            50% { 
-                border-color: #3498db;
-                box-shadow: 0 0 30px rgba(52, 152, 219, 0.4);
-            }
-        }
-
-        .email-circle:hover::before {
-            transform: scale(1.5);
-            animation: emailDotColorHover 2s ease-in-out infinite;
-        }
-
-        @keyframes emailDotColorHover {
-            0%, 100% { 
-                background: #8b45c5;
-                box-shadow: 0 0 30px rgba(139, 69, 197, 0.8);
-            }
-            50% { 
-                background: #e74c3c;
-                box-shadow: 0 0 30px rgba(231, 76, 60, 0.8);
-            }
-        }
-
-        /* Email label that shows on click */
-        .email-label {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: 0.9rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            white-space: nowrap;
-            pointer-events: none;
-            animation: labelColor 8s ease-in-out infinite;
-        }
-
-        .email-label.visible {
-            opacity: 1;
-        }
-
-        /* Hero section */
-        .hero {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            z-index: 2;
-            scroll-snap-align: start;
-        }
-
-        .hero .ring {
-            position: absolute;
-        }
-
-        .hero .email-contact {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        /* Scroll indicator */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            opacity: 0.6;
-            transition: opacity 0.5s ease;
-            animation: scrollFade 3s ease-in-out infinite;
-        }
-
-        .scroll-indicator:hover {
-            opacity: 1;
-        }
-
-        .scroll-indicator span {
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: 0.7rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            animation: labelColor 8s ease-in-out infinite;
-        }
-
-        .scroll-arrow {
-            width: 20px;
-            height: 20px;
-            border-right: 1.5px solid;
-            border-bottom: 1.5px solid;
-            transform: rotate(45deg);
-            animation: scrollBounce 2s ease-in-out infinite, labelColor 8s ease-in-out infinite;
-        }
-
-        @keyframes scrollBounce {
-            0%, 100% { transform: rotate(45deg) translateY(0); }
-            50% { transform: rotate(45deg) translateY(6px); }
-        }
-
-        @keyframes scrollFade {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.8; }
-        }
-
-        /* Philosophy sections */
-        .philosophy {
-            position: relative;
-            z-index: 10;
-        }
-
-        .philosophy-section {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 24px;
-            position: relative;
-            scroll-snap-align: start;
-        }
-
-        .philosophy-content {
-            max-width: 600px;
-            text-align: center;
-            opacity: 0;
-            transform: translateY(60px);
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .philosophy-content.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .philosophy-numeral {
+        .t-title {
             font-family: 'Crimson Pro', serif;
-            font-size: 0.85rem;
-            font-weight: 300;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            animation: labelColor 8s ease-in-out infinite;
-        }
-
-        .philosophy-title {
-            font-family: 'Crimson Pro', serif;
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            font-weight: 300;
-            color: var(--text-primary);
-            margin-bottom: 40px;
-            line-height: 1.2;
-            letter-spacing: 1px;
-        }
-
-        .philosophy-text {
-            font-family: 'DM Sans', system-ui, sans-serif;
-            font-size: clamp(0.95rem, 2vw, 1.1rem);
             font-weight: 400;
+            font-size: 1.45rem;
+            margin-bottom: 10px;
+            line-height: 1.25;
+        }
+
+        .t-desc {
             color: var(--text-secondary);
-            line-height: 1.9;
-            margin-bottom: 24px;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            margin-bottom: 16px;
+            flex: 1;
         }
 
-        .philosophy-text:last-child {
-            margin-bottom: 0;
+        .t-link {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.74rem;
+            color: var(--acc-solid);
+            opacity: 0.9;
+            overflow-wrap: anywhere;
         }
 
-        .philosophy-quote {
+        .t-tag {
+            position: absolute;
+            top: 22px;
+            right: 22px;
+            font-size: 0.66rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            padding: 4px 10px;
+        }
+
+        /* ---------- Contact band ---------- */
+        .contact-band {
+            max-width: 760px;
+            margin: 40px auto 0;
+            padding: 80px 24px 90px;
+            text-align: center;
+        }
+
+        .contact-band h2 {
             font-family: 'Crimson Pro', serif;
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
             font-weight: 300;
-            font-style: italic;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            margin-bottom: 14px;
+        }
+
+        .contact-band p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .contact-email {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 26px;
+        }
+
+        .contact-email a {
+            font-family: 'Crimson Pro', serif;
+            font-size: clamp(1.5rem, 4vw, 2rem);
             color: var(--text-primary);
-            margin-top: 32px;
-            opacity: 0.8;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(139, 69, 197, 0.6);
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            padding: 6px 14px;
+            color: var(--text-secondary);
+            font: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .copy-btn:hover { color: var(--text-primary); border-color: #8b45c5; }
+
+        .contact-btn {
+            display: inline-block;
+            padding: 14px 30px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #8b45c5, #3498db);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 34px rgba(139, 69, 197, 0.4);
+        }
+
+        .contact-lab {
+            margin-top: 34px;
+            font-size: 0.88rem;
+        }
+
+        .contact-lab a { color: var(--text-primary); }
+
+
+        /* ---------- Hero calls to action ---------- */
+        .hero-actions {
+            margin-top: 26px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            pointer-events: auto;
+            text-shadow: none;
+        }
+
+        .btn-primary,
+        .btn-ghost {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b45c5, #3498db);
+            color: #fff;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 69, 197, 0.4);
+        }
+
+        .btn-ghost {
+            color: var(--text-primary);
+            border: 1px solid var(--card-border);
+            background: var(--scrim);
+        }
+
+        .btn-ghost:hover { border-color: #8b45c5; }
+
+        /* ---------- Survey platform ---------- */
+        .survey-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .survey-types .chip {
+            font-family: 'DM Sans', system-ui, sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            padding: 7px 14px;
+        }
+
+        .flow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px 22px;
+        }
+
+        .flow-step:nth-child(1) { --acc-solid: #8b45c5; }
+        .flow-step:nth-child(2) { --acc-solid: #3498db; }
+        .flow-step:nth-child(3) { --acc-solid: #e74c3c; }
+        .flow-step:nth-child(4) { --acc-solid: #f1c40f; }
+
+        .flow-step .step-num { color: var(--acc-solid); }
+
+        .flow-step h3 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 400;
+            font-size: 1.35rem;
+            margin-bottom: 8px;
+        }
+
+        .flow-step p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
             line-height: 1.6;
         }
 
-        /* Philosophy dot divider */
-        .philosophy-dot {
-            width: 4px;
-            height: 4px;
+        /* ---------- Case studies ---------- */
+        .case {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 28px 26px;
+            display: flex;
+            flex-direction: column;
+            border-left: 3px solid var(--acc-solid);
+        }
+
+        .case:nth-child(4n+1) { --acc-solid: #8b45c5; }
+        .case:nth-child(4n+2) { --acc-solid: #3498db; }
+        .case:nth-child(4n+3) { --acc-solid: #e74c3c; }
+        .case:nth-child(4n+4) { --acc-solid: #f1c40f; }
+
+        .case-meta {
+            font-size: 0.7rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--acc-solid);
+            margin-bottom: 10px;
+        }
+
+        .case h3 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 400;
+            font-size: 1.5rem;
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+
+        .case p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            line-height: 1.65;
+            margin-bottom: 16px;
+        }
+
+        .case-label {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .case ul {
+            list-style: none;
+            display: grid;
+            gap: 6px;
+            font-size: 0.88rem;
+        }
+
+        .case li {
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .case li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6em;
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
-            margin: 0 auto;
-            animation: centerDotColor 8s ease-in-out infinite;
-            opacity: 0;
-            transition: opacity 1s ease 0.4s;
+            background: var(--acc-solid);
         }
 
-        .philosophy-dot.visible {
-            opacity: 0.6;
+        .grid-2 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+        .note {
+            margin-top: 22px;
+            color: var(--text-secondary);
+            font-size: 0.82rem;
         }
 
-        /* Section-specific accent lines */
-        .philosophy-accent {
-            width: 40px;
-            height: 1px;
-            margin: 0 auto 40px;
-            opacity: 0.4;
-            animation: labelColor 8s ease-in-out infinite;
-            background: currentColor;
+        /* ---------- About ---------- */
+        .about {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 48px;
+            align-items: start;
         }
 
-        /* Final celebration section */
-        .philosophy-section.celebration .philosophy-content {
+        .about-text p {
+            color: var(--text-secondary);
+            line-height: 1.75;
+            margin-bottom: 16px;
+        }
+
+        .about-text p strong { color: var(--text-primary); font-weight: 500; }
+
+        .reasons {
+            display: grid;
+            gap: 18px;
+        }
+
+        .reason {
+            border-left: 1px solid var(--card-border);
+            padding: 2px 0 2px 20px;
+        }
+
+        .reason h3 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 400;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+
+        .reason p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* ---------- Enquiry form ---------- */
+        .enquiry {
+            text-align: left;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 0 auto 30px;
             max-width: 640px;
         }
 
-        .philosophy-final-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin: 48px auto 0;
-            animation: centerDotColor 8s ease-in-out infinite, pulse 3s ease-in-out infinite;
+        .enquiry .full { grid-column: 1 / -1; }
+
+        .enquiry label {
+            display: block;
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
         }
 
-        @media (max-width: 768px) {
-            .philosophy-section {
-                height: 100vh;
-                padding: 60px 20px;
-            }
-
-            .philosophy-content {
-                max-width: 100%;
-            }
-
-            .scroll-indicator {
-                bottom: 80px;
-            }
-
-            .hero .email-contact {
-                bottom: 20px;
-            }
+        .enquiry input,
+        .enquiry select,
+        .enquiry textarea {
+            width: 100%;
+            font: inherit;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 11px 13px;
         }
 
-        /* Reduced motion support */
+        .enquiry select option { color: #1a1a1a; }
+
+        .enquiry textarea { min-height: 120px; resize: vertical; }
+
+        .enquiry input:focus,
+        .enquiry select:focus,
+        .enquiry textarea:focus {
+            outline: none;
+            border-color: #8b45c5;
+            box-shadow: 0 0 0 3px rgba(139, 69, 197, 0.2);
+        }
+
+        .enquiry button.contact-btn {
+            border: none;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .enquiry-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .enquiry-hint {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        .contact-or {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .foot-links a {
+            color: var(--text-secondary);
+            margin: 0 6px;
+        }
+
+        .foot-links a:hover { color: var(--text-primary); }
+
+        /* Bright yellow is unreadable on white: use a deeper gold in light mode */
+        [data-theme="light"] .hero-kicker,
+        [data-theme="light"] .section-kicker,
+        [data-theme="light"] .step-num { color: #b7950b; }
+        [data-theme="light"] .case:nth-child(4n+4),
+        [data-theme="light"] .flow-step:nth-child(4) { --acc-solid: #b7950b; }
+
+        /* ---------- Footer (legal notice) ---------- */
+        .tmd-foot {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 22px 24px calc(22px + env(safe-area-inset-bottom, 0px));
+            border-top: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            text-align: center;
+            font-size: 0.76rem;
+            line-height: 1.5;
+        }
+
+        .tmd-foot b { color: var(--text-primary); font-weight: 500; }
+
         @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
+            *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
         }
 
-        /* Responsive */
+        @media (max-width: 1100px) {
+            .grid, .flow { grid-template-columns: repeat(2, 1fr); }
+            .steps { grid-template-columns: repeat(2, 1fr); row-gap: 32px; }
+        }
+
+        @media (max-width: 860px) {
+            .grid-3, .grid-2, .about { grid-template-columns: 1fr; }
+            .about { gap: 32px; }
+            .nav-link { display: none; }
+        }
+
         @media (max-width: 768px) {
-            .wordmark {
-                top: 42px;
-                left: 20px;
-                font-size: 1.15rem;
-            }
-
-            .center-link {
-                width: 82px;
-                height: 82px;
-            }
-
-            .center-link .orb-ring {
-                width: 44px;
-                height: 44px;
-                margin: -22px 0 0 -22px;
-            }
-
-            .center-label {
-                bottom: -36px;
-                font-size: 0.8rem;
-            }
-
-            .email-contact {
-                bottom: 20px;
-            }
-
-            .email-label {
-                bottom: 40px;
-                font-size: 0.8rem;
-            }
+            .section { padding: 64px 20px 20px; }
+            .hero-cities { bottom: 84px; gap: 6px; padding: 0 16px; width: 100%; }
+            .hero-copy { top: 11%; }
+            .top-nav { padding: 12px 16px; gap: 12px; }
+            .proof { grid-template-columns: 1fr; gap: 28px; margin-top: 50px; }
         }
 
-        /* Theme Toggle Styles */
-        #theme-toggle {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            z-index: 10001;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(139, 69, 197, 0.2);
-            border: 2px solid rgba(139, 69, 197, 0.4);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+        @media (max-width: 600px) {
+            .grid, .steps, .flow, .enquiry { grid-template-columns: 1fr; }
+            .hero-actions { margin-top: 18px; }
+            .hero-cities button { padding: 6px 8px; letter-spacing: 1.5px; }
+            .brand { font-size: 1.1rem; }
+            .nav-cta { padding: 7px 12px; }
         }
-
-        #theme-toggle:hover {
-            transform: scale(1.1) rotate(10deg);
-            background: rgba(139, 69, 197, 0.3);
-            border-color: rgba(139, 69, 197, 0.6);
-            box-shadow: 0 4px 20px rgba(139, 69, 197, 0.3);
-        }
-
-        #theme-toggle:active {
-            transform: scale(0.95);
-        }
-
-        .theme-icon {
-            user-select: none;
-            pointer-events: none;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        }
-
-        [data-theme="light"] #theme-toggle {
-            background: rgba(52, 152, 219, 0.15);
-            border-color: rgba(52, 152, 219, 0.3);
-        }
-
-        [data-theme="light"] #theme-toggle:hover {
-            background: rgba(52, 152, 219, 0.25);
-            border-color: rgba(52, 152, 219, 0.5);
-            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.2);
-        }
-
     </style>
 </head>
 <body>
-    <!-- Theme Toggle Button -->
-    <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-        <span class="theme-icon">☀️</span>
-    </button>
+    <!-- Top navigation -->
+    <nav class="top-nav" aria-label="Main">
+        <a class="brand" href="#top"><span class="brand-dot" aria-hidden="true"></span>the moving dot</a>
+        <a class="nav-link" href="#services">What we do</a>
+        <a class="nav-link" href="#surveys">Surveys</a>
+        <a class="nav-link" href="#cases">Projects</a>
+        <a class="nav-link" href="#work">Tools</a>
+        <a class="nav-link" href="#about">About</a>
+        <a class="nav-cta" href="#contact">Contact</a>
+        <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+            <span class="theme-icon">☀️</span>
+        </button>
+    </nav>
 
-    <!-- Wordmark -->
-    <div class="wordmark"><span class="wordmark-dot">·</span> the moving dot</div>
+    <!-- Hero -->
+    <section class="hero" id="top">
+        <canvas id="globe-canvas" aria-hidden="true"></canvas>
 
-    <!-- Flowing gradient background -->
-    <div class="bg-gradient"></div>
-
-    <!-- Custom cursor -->
-    <div class="cursor"></div>
-    <div class="cursor-dot"></div>
-
-    <!-- Canvas for particle effects -->
-    <canvas id="canvas"></canvas>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <!-- Orbiting rings -->
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
-
-        <!-- Central link. Clicking anywhere else on the page goes here too;
-             see the page-wide click handler at the bottom of this file. -->
-        <a href="https://transport.themovingdot.com/" class="center-link" aria-label="Go to transport.themovingdot.com">
-            <span class="orb-ring"></span>
-            <span class="center-dot"></span>
-            <span class="center-label">TRANSPORT</span>
-        </a>
-
-        <!-- Email contact -->
-        <div class="email-contact">
-            <a href="mailto:info@themovingdot.com" class="email-circle" aria-label="Contact us by email">
-                <span class="email-label">info@themovingdot.com</span>
-            </a>
+        <div class="hero-copy">
+            <div class="hero-kicker">Transport software &amp; consultancy</div>
+            <h1 class="hero-title">Software for how cities move</h1>
+            <p class="hero-sub">Transport surveys, modelling and the software behind them, delivered by one team from the planning question to the live platform. Working with clients worldwide.</p>
+            <div class="hero-actions">
+                <a class="btn-primary" href="#contact">Discuss a project</a>
+                <a class="btn-ghost" href="#cases">See our projects</a>
+            </div>
         </div>
 
-        <!-- Scroll indicator -->
-        <div class="scroll-indicator">
-            <span>scroll</span>
-            <div class="scroll-arrow"></div>
+        <div class="hero-cities" aria-label="Zoom the globe">
+            <button type="button" data-city="World" class="active">World</button>
+            <button type="button" data-city="Birmingham">Birmingham</button>
+            <button type="button" data-city="Riyadh">Riyadh</button>
+            <button type="button" data-city="Abu Dhabi">Abu Dhabi</button>
+            <button type="button" data-city="Dubai">Dubai</button>
+        </div>
+
+        <div class="hero-scroll" aria-hidden="true"></div>
+    </section>
+
+    <!-- What we do -->
+    <section class="section" id="services">
+        <div class="section-kicker">What we do</div>
+        <h2 class="section-title">From the question to the platform</h2>
+        <p class="section-sub">Most transport projects hand over a report. We hand over the report and the working software behind it: the tools that collect the data, model the network and show the result, built by people who understand the planning question.</p>
+        <div class="grid grid-3">
+            <article class="service">
+                <div class="service-verb">Advise</div>
+                <h3>Transport planning &amp; modelling</h3>
+                <p>Evidence for decisions on roads, public transport and new development, framed around the question the client actually has to answer.</p>
+                <ul>
+                    <li>Survey design and data collection strategy</li>
+                    <li>Traffic, demand and trip-generation analysis</li>
+                    <li>Network modelling and scenario testing</li>
+                    <li>Accessibility and public transport studies</li>
+                </ul>
+            </article>
+            <article class="service">
+                <div class="service-verb">Build</div>
+                <h3>Transport software, end to end</h3>
+                <p>Front end, back end and data, built for the job instead of forcing the job into a generic tool.</p>
+                <ul>
+                    <li>Field survey apps that work on a phone</li>
+                    <li>Web platforms, APIs and databases</li>
+                    <li>Dashboards and interactive maps</li>
+                    <li>3D network visualisation and video-based counting</li>
+                </ul>
+            </article>
+            <article class="service">
+                <div class="service-verb">Run</div>
+                <h3>Platforms &amp; data operations</h3>
+                <p>Software that keeps working after launch, with the data checked and delivered clean for as long as the project runs.</p>
+                <ul>
+                    <li>Hosting, monitoring and updates</li>
+                    <li>Data pipelines and quality control</li>
+                    <li>Live dashboards for clients and stakeholders</li>
+                    <li>Reusable platforms that carry into the next project</li>
+                </ul>
+            </article>
+        </div>
+        <div class="stack" aria-label="Tools we work with">
+            <span class="stack-label">Works with</span>
+            <span class="chip">PTV Visum</span>
+            <span class="chip">SUMO</span>
+            <span class="chip">ActivitySim</span>
+            <span class="chip">Python</span>
+            <span class="chip">PostgreSQL / Supabase</span>
+            <span class="chip">three.js</span>
+            <span class="chip">Cloudflare &amp; Netlify</span>
         </div>
     </section>
 
-    <!-- Philosophy -->
-    <div class="philosophy">
 
-        <!-- I. The Dot -->
-        <section class="philosophy-section">
-            <div class="philosophy-content">
-                <div class="philosophy-accent"></div>
-                <div class="philosophy-numeral">I</div>
-                <h2 class="philosophy-title">The Dot</h2>
-                <p class="philosophy-text">At the center of everything, there is a point. No size. No location. No before or after.</p>
-                <p class="philosophy-text">Just — presence.</p>
-                <p class="philosophy-quote">Imagine a single drop of ink, suspended, before it touches water.</p>
+    <!-- Survey platform -->
+    <section class="section" id="surveys">
+        <div class="section-kicker">Survey platform</div>
+        <h2 class="section-title">Field surveys, from questionnaire to clean dataset</h2>
+        <p class="section-sub">Our own survey platform, set up for each project instead of rebuilt from scratch. Interviewers collect on a phone, you watch progress as it happens, and the data arrives checked, cleaned and ready to model with.</p>
+        <div class="survey-types" aria-label="Survey types">
+            <span class="chip">Roadside interview</span>
+            <span class="chip">Household travel diary</span>
+            <span class="chip">Public transport interview</span>
+            <span class="chip">Hotel &amp; visitor travel diary</span>
+            <span class="chip">Park-and-ride</span>
+            <span class="chip">Parking interview</span>
+            <span class="chip">Special generator / trip generation</span>
+            <span class="chip">Traffic counts: automatic, turning &amp; video</span>
+        </div>
+        <div class="flow">
+            <div class="flow-step">
+                <div class="step-num">01</div>
+                <h3>Design</h3>
+                <p>Questionnaire, sample plan and zoning agreed against what the model or study actually needs.</p>
             </div>
-        </section>
-
-        <!-- II. The Layers -->
-        <section class="philosophy-section">
-            <div class="philosophy-content">
-                <div class="philosophy-accent"></div>
-                <div class="philosophy-numeral">II</div>
-                <h2 class="philosophy-title">The Layers</h2>
-                <p class="philosophy-text">Around the dot, things accumulate. Roles. Memories. Fears. Names. Each one a ring, like sediment around a pearl.</p>
-                <p class="philosophy-text">The rings are real. But they are not the pearl. They can be added. They can be removed. The pearl remains.</p>
-                <p class="philosophy-quote">"That is not me."</p>
+            <div class="flow-step">
+                <div class="step-num">02</div>
+                <h3>Collect</h3>
+                <p>Phone-based forms for interviewers in the field, in the languages the survey needs.</p>
             </div>
-        </section>
-
-        <!-- III. Space and Time -->
-        <section class="philosophy-section">
-            <div class="philosophy-content">
-                <div class="philosophy-accent"></div>
-                <div class="philosophy-numeral">III</div>
-                <h2 class="philosophy-title">Space and Time</h2>
-                <p class="philosophy-text">Place two dots in space — and suddenly there is bigger, smaller, higher, lower. Place one dot on a timeline — and suddenly there is better, worse, before, after.</p>
-                <p class="philosophy-text">Remove space: the dot is incomparable to others. Remove time: the dot is incomparable to itself.</p>
-                <p class="philosophy-quote">Different, yet equal. Like stars — each one burning alone, none more star than another.</p>
+            <div class="flow-step">
+                <div class="step-num">03</div>
+                <h3>Monitor</h3>
+                <p>A live dashboard of responses, coverage and quality flags, so problems are fixed during fieldwork, not after it.</p>
             </div>
-        </section>
-
-        <!-- IV. The Sensor -->
-        <section class="philosophy-section">
-            <div class="philosophy-content">
-                <div class="philosophy-accent"></div>
-                <div class="philosophy-numeral">IV</div>
-                <h2 class="philosophy-title">The Sensor</h2>
-                <p class="philosophy-text">But the dot senses. And sensing is the beginning of everything — self, world, distance, relationship, longing, loss.</p>
-                <p class="philosophy-quote">The dot is not the waves. The dot is the water that feels them.</p>
+            <div class="flow-step">
+                <div class="step-num">04</div>
+                <h3>Deliver</h3>
+                <p>A validated dataset with zoning, maps and the quality-control evidence behind every cleaning decision.</p>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- V. The Choice -->
-        <section class="philosophy-section">
-            <div class="philosophy-content">
-                <div class="philosophy-accent"></div>
-                <div class="philosophy-numeral">V</div>
-                <h2 class="philosophy-title">The Choice</h2>
-                <p class="philosophy-text">Things come. Things go. Layers arrive. Layers dissolve.</p>
-                <p class="philosophy-text">Of all the things beyond the dot's control, one thing remains entirely its own:</p>
-                <p class="philosophy-quote">How to receive this journey.</p>
-            </div>
-        </section>
+    <!-- Case studies -->
+    <section class="section" id="cases">
+        <div class="section-kicker">Projects</div>
+        <h2 class="section-title">Recent client work</h2>
+        <p class="section-sub">A selection of projects delivered for public-sector and consultancy clients. Client names are kept confidential.</p>
+        <div class="grid grid-2">
+            <article class="case">
+                <div class="case-meta">Saudi Arabia · Surveys &amp; dashboards</div>
+                <h3>City-wide travel survey programme</h3>
+                <p>A major city needed one consistent picture of how residents, visitors and public transport users travel, collected across several survey types at once.</p>
+                <div class="case-label">What we delivered</div>
+                <ul>
+                    <li>Household, hotel-visitor, public transport, park-and-ride and special-generator surveys on one platform</li>
+                    <li>Automatic and turning-count dashboards for the traffic survey</li>
+                    <li>Review dashboards so the client could check the data as it came in</li>
+                </ul>
+            </article>
+            <article class="case">
+                <div class="case-meta">Saudi Arabia · Public transport</div>
+                <h3>Metro passenger surveys</h3>
+                <p>Understanding how passengers reach a new metro system: access mode, park-and-ride use and the shape of their journeys.</p>
+                <div class="case-label">What we delivered</div>
+                <ul>
+                    <li>Passenger interviews at more than 10 metro stations</li>
+                    <li>Survey forms, fieldwork monitoring and data cleaning</li>
+                    <li>A review platform for the cleaned results</li>
+                </ul>
+            </article>
+            <article class="case">
+                <div class="case-meta">UAE · Trip generation</div>
+                <h3>Trip generation manual, made digital</h3>
+                <p>Turning a trip generation manual into tools that planners and developers can use directly, instead of reading tables from a document.</p>
+                <div class="case-label">What we delivered</div>
+                <ul>
+                    <li>A trip-estimation calculator by land-use class</li>
+                    <li>A survey data explorer behind the manual's rates</li>
+                </ul>
+            </article>
+            <article class="case">
+                <div class="case-meta">Saudi Arabia · Road network</div>
+                <h3>Junction and corridor prioritisation</h3>
+                <p>Helping a regional road authority decide which junctions and corridors to improve first, on evidence rather than opinion.</p>
+                <div class="case-label">What we delivered</div>
+                <ul>
+                    <li>Junction count analysis and performance review</li>
+                    <li>An interactive corridor prioritisation tool</li>
+                </ul>
+            </article>
+        </div>
+    </section>
 
-        <!-- VI. Celebration -->
-        <section class="philosophy-section celebration">
-            <div class="philosophy-content">
-                <div class="philosophy-accent"></div>
-                <div class="philosophy-numeral">VI</div>
-                <h2 class="philosophy-title">Celebration</h2>
-                <p class="philosophy-text">Awareness is not a destination. It is the dot, fully here, fully now — watching the waves, holding nothing, missing nothing.</p>
-                <p class="philosophy-text">And finding, in that watching, that to exist, to sense, to move —</p>
-                <p class="philosophy-quote">is already enough to celebrate.</p>
-                <div class="philosophy-final-dot"></div>
-            </div>
-        </section>
-
+    <!-- Proof -->
+    <div class="proof" aria-label="Track record">
+        <div>
+            <div class="proof-num">3</div>
+            <div class="proof-label">countries of project work<br>UK · Saudi Arabia · UAE</div>
+        </div>
+        <div>
+            <div class="proof-num">30+</div>
+            <div class="proof-label">web applications running<br>in production</div>
+        </div>
+        <div>
+            <div class="proof-num">670+</div>
+            <div class="proof-label">bus and metro routes<br>rendered in 3D</div>
+        </div>
     </div>
 
-    <script>
-        // Detect touch device
-        function isTouchDevice() {
-            return (('ontouchstart' in window) ||
-                (navigator.maxTouchPoints > 0) ||
-                (navigator.msMaxTouchPoints > 0));
-        }
+    <!-- Work -->
+    <section class="section" id="work">
+        <div class="section-kicker">Tools</div>
+        <h2 class="section-title">Built and running</h2>
+        <p class="section-sub">Platforms, analysis tools and visualisations we have built. Each one is live and public; click through and try it.</p>
+        <div class="grid">
+            <a class="t-card" href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter">
+                <span class="t-tag">Product</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Vehicle Counter</h3>
+                <p class="t-desc">Counts and classifies traffic from camera footage, so a count survey no longer needs a team standing on the kerb.</p>
+                <span class="t-link">vehcount.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://one2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="one2many">
+                <span class="t-tag">Platform</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">One2Many</h3>
+                <p class="t-desc">Route from one origin to many destinations and compare them side by side, for logistics, site selection and commuter catchments.</p>
+                <span class="t-link">one2many.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://many2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="many2many">
+                <span class="t-tag">Platform</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Many2Many</h3>
+                <p class="t-desc">Every origin–destination pair of a study on one map, so journey patterns read at a glance instead of from a spreadsheet.</p>
+                <span class="t-link">many2many.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://mismatch.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="mismatch">
+                <span class="t-tag">Analysis</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Mismatch</h3>
+                <p class="t-desc">Pinpoints where car-free households in the West Midlands cannot reach essential services by public transport: evidence for where investment matters most.</p>
+                <span class="t-link">mismatch.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://wmbusflow.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="bus-flow-analyzer">
+                <span class="t-tag">Analysis</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Bus Flow Analyzer</h3>
+                <p class="t-desc">Shows where West Midlands buses actually run, how often, and which corridors carry the network.</p>
+                <span class="t-link">wmbusflow.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://uaetransit.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="uae-transit-animation">
+                <span class="t-tag">3D visualisation</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">UAE Transit Animation</h3>
+                <p class="t-desc">Ride 670+ bus and metro routes through real UAE streets in 3D. A network explained in a minute rather than a report.</p>
+                <span class="t-link">uaetransit.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://riyadh-transit-animation.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="riyadh-transit-animation">
+                <span class="t-tag">Visualisation</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Riyadh Transit Animation</h3>
+                <p class="t-desc">Riyadh's metro network animated line by line: a clear way to show stakeholders what a new system changes.</p>
+                <span class="t-link">riyadh-transit-animation.themovingdot.com →</span>
+            </a>
+            <a class="t-card" href="https://whereistherainbowbus.netlify.app/" target="_blank" rel="noopener" data-agent-id="rainbow-bus-tracker">
+                <span class="t-tag">Live data</span>
+                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
+                <h3 class="t-title">Rainbow Bus Tracker</h3>
+                <p class="t-desc">Birmingham's rainbow bus on a public map in real time, from a live vehicle feed to a page anyone can open.</p>
+                <span class="t-link">whereistherainbowbus.netlify.app →</span>
+            </a>
+        </div>
+    </section>
 
-        if (isTouchDevice()) {
-            document.body.classList.add('touch-device');
-        }
+    <!-- How we work -->
+    <section class="section" id="approach">
+        <div class="section-kicker">How we work</div>
+        <h2 class="section-title">One team, planning to production</h2>
+        <p class="section-sub">No hand-off between the consultant who understands the problem and the developer who builds the tool. It is the same team, so nothing is lost in translation.</p>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">01</div>
+                <h3>Frame</h3>
+                <p>Agree the decision the work has to support, and what evidence would settle it.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">02</div>
+                <h3>Collect</h3>
+                <p>Design the surveys and counts, and build the apps that gather clean data in the field.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">03</div>
+                <h3>Model &amp; build</h3>
+                <p>Analyse and model the network, and turn the result into a platform people can use.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">04</div>
+                <h3>Run</h3>
+                <p>Host it, keep the data flowing, and reuse what works on the next project.</p>
+            </div>
+        </div>
+    </section>
 
-        // Canvas setup
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
 
-        // Particle system
-        const colors = [
-            { r: 139, g: 69, b: 197 },   // Purple
-            { r: 52, g: 152, b: 219 },   // Blue
-            { r: 231, g: 76, b: 60 },    // Red
-            { r: 241, g: 196, b: 15 }    // Yellow
-        ];
-        
-        let colorIndex = 0;
-        let colorTransition = 0;
-        // Particles are softened on light backgrounds where full-strength
-        // trails read as smudges instead of a star field
-        let themeSoften = 1;
-        
-        function getCurrentColor() {
-            const nextIndex = (colorIndex + 1) % colors.length;
-            const current = colors[colorIndex];
-            const next = colors[nextIndex];
-            
-            const r = current.r + (next.r - current.r) * colorTransition;
-            const g = current.g + (next.g - current.g) * colorTransition;
-            const b = current.b + (next.b - current.b) * colorTransition;
-            
-            return { r, g, b };
-        }
+    <!-- About -->
+    <section class="section" id="about">
+        <div class="section-kicker">About</div>
+        <h2 class="section-title">Planners who build software</h2>
+        <div class="about">
+            <div class="about-text">
+                <p><strong>The Moving Dot Ltd</strong> is a transport software and consultancy company. We started from a simple frustration: transport studies end in a report, while the data, the model and the tools behind them are left behind.</p>
+                <p>So we do both. The same team that frames the planning question designs the surveys, models the network and builds the software that keeps the answer usable after the project closes.</p>
+                <p>We have delivered work in the UK, Saudi Arabia and the UAE, and work with clients worldwide.</p>
+            </div>
+            <div class="reasons">
+                <div class="reason">
+                    <h3>No hand-off</h3>
+                    <p>The person who understands the planning question is the person building the tool.</p>
+                </div>
+                <div class="reason">
+                    <h3>Software that stays</h3>
+                    <p>You keep working dashboards and platforms, not just a PDF.</p>
+                </div>
+                <div class="reason">
+                    <h3>Data you can defend</h3>
+                    <p>Every cleaning and validation step is recorded, so the numbers stand up to review.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        class Particle {
-            constructor() {
-                this.reset();
-                this.y = Math.random() * canvas.height;
-                this.history = [];
-            }
+    <!-- Contact -->
+    <section class="contact-band" id="contact">
+        <h2>Tell us about your project</h2>
+        <p>A survey to run, a network to model, or a platform to build. Tell us what you need to decide and we will reply with how we would get you there.</p>
+        <form class="enquiry" id="enquiry" novalidate>
+            <div>
+                <label for="enq-name">Your name</label>
+                <input id="enq-name" name="name" type="text" autocomplete="name">
+            </div>
+            <div>
+                <label for="enq-org">Organisation</label>
+                <input id="enq-org" name="organisation" type="text" autocomplete="organization">
+            </div>
+            <div>
+                <label for="enq-type">What do you need?</label>
+                <select id="enq-type" name="type">
+                    <option>Transport surveys</option>
+                    <option>Traffic counts</option>
+                    <option>Modelling &amp; analysis</option>
+                    <option>Software, dashboard or platform</option>
+                    <option>Something else</option>
+                </select>
+            </div>
+            <div>
+                <label for="enq-where">Project location</label>
+                <input id="enq-where" name="location" type="text" placeholder="City, country">
+            </div>
+            <div class="full">
+                <label for="enq-when">Timing</label>
+                <select id="enq-when" name="timing">
+                    <option>As soon as possible</option>
+                    <option>Within 3 months</option>
+                    <option>Later this year</option>
+                    <option>Just exploring</option>
+                </select>
+            </div>
+            <div class="full">
+                <label for="enq-msg">The question you need to answer</label>
+                <textarea id="enq-msg" name="message" placeholder="A few lines are enough."></textarea>
+            </div>
+            <div class="full enquiry-actions">
+                <button type="submit" class="contact-btn">Send enquiry</button>
+                <span class="enquiry-hint">Opens your email app with the details filled in, addressed to info@themovingdot.com.</span>
+            </div>
+        </form>
+        <p class="contact-or">Prefer to write directly?</p>
+        <div class="contact-email">
+            <a href="mailto:info@themovingdot.com">info@themovingdot.com</a>
+            <button type="button" class="copy-btn" id="copy-email" data-email="info@themovingdot.com">Copy</button>
+        </div>
+    </section>
 
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = 0;
-                this.speed = 0.2 + Math.random() * 0.5;
-                this.size = 1 + Math.random() * 2;
-                this.opacity = Math.random() * 0.5 + 0.3;
-            }
+    <footer class="tmd-foot">
+        <span class="foot-links"><a href="/lab">Lab</a>·<a href="/flow">Flow</a>·<a href="/philosophy">Philosophy</a></span>
+        <span><b>The Moving Dot Ltd</b> · transport software &amp; consultancy. Globe geography: Natural Earth (public domain).</span>
+        <span>Platform software &copy; 2022&ndash;<span id="tmd-year">2026</span> The Moving Dot Ltd. All rights reserved.</span>
+    </footer>
 
-            update() {
-                this.history.push({ x: this.x, y: this.y });
-                if (this.history.length > 10) {
-                    this.history.shift();
-                }
-
-                this.y += this.speed;
-                this.x += Math.sin(this.y * 0.01) * 0.5;
-
-                if (this.y > canvas.height) {
-                    this.reset();
-                }
-            }
-
-            draw() {
-                const color = getCurrentColor();
-                
-                // Draw trail
-                for (let i = 0; i < this.history.length; i++) {
-                    const point = this.history[i];
-                    const trailOpacity = (i / this.history.length) * this.opacity * 0.3 * themeSoften;
-                    ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${trailOpacity})`;
-                    ctx.beginPath();
-                    ctx.arc(point.x, point.y, this.size * 0.5, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-
-                // Draw particle
-                ctx.fillStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * themeSoften})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Draw glow
-                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 4);
-                gradient.addColorStop(0, `rgba(${color.r}, ${color.g}, ${color.b}, ${this.opacity * 0.2 * themeSoften})`);
-                gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        // Create particles — density scales with viewport area so phones
-        // get a calm field instead of a dense web (and save battery)
-        const particles = [];
-        const particleCount = Math.round(Math.min(80, Math.max(24, (window.innerWidth * window.innerHeight) / 18000)));
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
-
-        // Connection lines
-        function drawConnections() {
-            const color = getCurrentColor();
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < 150) {
-                        const opacity = (1 - distance / 150) * 0.15 * themeSoften;
-                        ctx.strokeStyle = `rgba(${color.r}, ${color.g}, ${color.b}, ${opacity})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        // Animation loop
-        function animate() {
-            // Update color transition
-            colorTransition += 0.002;
-            if (colorTransition >= 1) {
-                colorTransition = 0;
-                colorIndex = (colorIndex + 1) % colors.length;
-            }
-
-            // Use theme-appropriate canvas background
-            const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-            themeSoften = theme === 'dark' ? 1 : 0.5;
-            ctx.fillStyle = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.16)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            drawConnections();
-
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        // Handle resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        // Custom cursor (only on non-touch devices)
-        const cursor = document.querySelector('.cursor');
-        const cursorDot = document.querySelector('.cursor-dot');
-
-        if (!isTouchDevice()) {
-            let mouseX = 0;
-            let mouseY = 0;
-            let cursorX = 0;
-            let cursorY = 0;
-            let dotX = 0;
-            let dotY = 0;
-
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-
-            function updateCursor() {
-                cursorX += (mouseX - cursorX) * 0.15;
-                cursorY += (mouseY - cursorY) * 0.15;
-                dotX += (mouseX - dotX) * 0.25;
-                dotY += (mouseY - dotY) * 0.25;
-
-                cursor.style.left = cursorX + 'px';
-                cursor.style.top = cursorY + 'px';
-                cursorDot.style.left = dotX + 'px';
-                cursorDot.style.top = dotY + 'px';
-
-                requestAnimationFrame(updateCursor);
-            }
-
-            updateCursor();
-
-            // Hide default cursor
-            document.addEventListener('mouseleave', () => {
-                cursor.style.opacity = '0';
-                cursorDot.style.opacity = '0';
-            });
-
-            document.addEventListener('mouseenter', () => {
-                cursor.style.opacity = '1';
-                cursorDot.style.opacity = '1';
-            });
-        }
-
-        // Cursor hover effect over the central link
-        const centerLink = document.querySelector('.center-link');
-        if (centerLink) {
-            centerLink.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            });
-            centerLink.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-        }
-
-        // Cursor hover effects for email circle
-        const emailCircle = document.querySelector('.email-circle');
-        const emailLabel = document.querySelector('.email-label');
-
-        if (emailCircle && !isTouchDevice()) {
-            emailCircle.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.3)';
-            });
-            emailCircle.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-        }
-
-        // Show email and copy to clipboard on click
-        if (emailCircle && emailLabel) {
-            emailCircle.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                // Toggle email visibility
-                const isVisible = emailLabel.classList.contains('visible');
-                emailLabel.classList.toggle('visible');
-
-                // Copy to clipboard with user feedback
-                if (!isVisible) {
-                    navigator.clipboard.writeText('info@themovingdot.com')
-                        .then(() => {
-                            const originalText = emailLabel.textContent;
-                            emailLabel.textContent = 'Email copied!';
-
-                            // Reset after 2 seconds
-                            setTimeout(() => {
-                                emailLabel.textContent = originalText;
-                            }, 2000);
-                        })
-                        .catch(() => {
-                            // Fallback: open mailto link
-                            window.location.href = 'mailto:info@themovingdot.com';
-                        });
-                }
-            });
-        }
-    </script>
-
-    <!-- Scroll reveal for philosophy sections -->
-    <script>
-        // Intersection Observer for scroll-triggered reveals
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.15,
-            rootMargin: '0px 0px -60px 0px'
-        });
-
-        document.querySelectorAll('.philosophy-content').forEach(el => {
-            revealObserver.observe(el);
-        });
-
-        /* ------------------------------------------------------------------
-           The whole page is a doorway. Any click that is not on something
-           that owns its own click — a link, a button, the scroll cue, the
-           theme toggle, the chat widget — follows the central link.
-           Scrolling is untouched: only clicks navigate.
-           ------------------------------------------------------------------ */
-        const DESTINATION = 'https://transport.themovingdot.com/';
-        const KEEPS_ITS_CLICK = [
-            'a', 'button', 'input', 'textarea', 'select', 'label',
-            '.scroll-indicator', '#theme-toggle',
-            '#chat-widget-container', '#chat-window'
-        ].join(', ');
-
-        document.addEventListener('click', (e) => {
-            if (e.defaultPrevented || e.button !== 0) return;
-            // Let modified clicks (new tab, download, …) behave normally.
-            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
-            const target = e.target;
-            if (!target || typeof target.closest !== 'function') return;
-            if (target.closest(KEEPS_ITS_CLICK)) return;
-
-            // A click that finished a text selection is not a click-through.
-            const selection = window.getSelection && window.getSelection().toString();
-            if (selection) return;
-
-            window.location.href = DESTINATION;
-        });
-
-        // The one way down: the scroll cue scrolls instead of navigating.
-        const scrollCue = document.querySelector('.scroll-indicator');
-        if (scrollCue) {
-            scrollCue.style.cursor = 'pointer';
-            scrollCue.addEventListener('click', () => {
-                const firstSection = document.querySelector('.philosophy-section');
-                if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth' });
-            });
-        }
-
-        // Fade out scroll indicator when user scrolls
-        const scrollIndicator = document.querySelector('.scroll-indicator');
-        if (scrollIndicator) {
-            window.addEventListener('scroll', () => {
-                const scrollY = window.scrollY;
-                if (scrollY > 100) {
-                    scrollIndicator.style.opacity = '0';
-                    scrollIndicator.style.pointerEvents = 'none';
-                } else {
-                    scrollIndicator.style.opacity = '';
-                    scrollIndicator.style.pointerEvents = '';
-                }
-            }, { passive: true });
-        }
-    </script>
-
-    <!-- Agent chat widget (shared) -->
-    <script src="chat.js" defer></script>
+    <!-- Globe -->
+    <script type="module" src="assets/globe.js"></script>
 
     <!-- Theme Toggle Script -->
-    <script src="theme.js"></script>
+    <script src="/theme.js"></script>
+
+    <script>
+        document.getElementById('tmd-year').textContent = new Date().getFullYear();
+
+        // Enquiry form: no server involved. It composes an email in the
+        // visitor's own mail app, addressed to us, with the answers filled in.
+        (function () {
+            const form = document.getElementById('enquiry');
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const v = function (id) { return document.getElementById(id).value.trim(); };
+                const type = v('enq-type');
+                const lines = [
+                    'Name: ' + v('enq-name'),
+                    'Organisation: ' + v('enq-org'),
+                    'Need: ' + type,
+                    'Location: ' + v('enq-where'),
+                    'Timing: ' + v('enq-when'),
+                    '',
+                    v('enq-msg')
+                ];
+                const subject = 'Project enquiry: ' + type + (v('enq-where') ? ' (' + v('enq-where') + ')' : '');
+                window.location.href = 'mailto:info@themovingdot.com?subject=' +
+                    encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
+            });
+        })();
+
+        // Copy the email for people whose computer has no mail app set up.
+        (function () {
+            const btn = document.getElementById('copy-email');
+            btn.addEventListener('click', function () {
+                const email = btn.dataset.email;
+                const done = function (ok) {
+                    btn.textContent = ok ? 'Copied' : email;
+                    setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+                };
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(email).then(function () { done(true); }, function () { done(false); });
+                } else {
+                    done(false);
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
