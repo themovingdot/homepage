@@ -17,7 +17,16 @@
 - 主动提示时间：模板是空闲 3 分钟；首页访问时间短，改成空闲 40 秒，每个浏览会话只弹一次，打开过就不再弹。
 - 模型（llama-4-scout）对语言规则不敏感：必须在提示词前面单列 LANGUAGE 规则并给一个西班牙语示例，才会用访客的语言回答。
 
+- 2026-10-16（第三轮）：询盘改成「一个邮箱框 + 可选一句需求 + Send」，直接存进数据库，不再打开访客的邮件程序（只在保存失败时兜底）。聊天里：要报价/联系时弹出同样的小表单；访客直接在聊天里打出邮箱，自动记成一条询盘。
+- 存储位置：Supabase 项目 project_database（ref tbfmcxsbiybtyytbgyic，eu-west-1）。表 website_chat_log（每轮问答一行）、website_enquiries（询盘，status 默认 new）。权限：网页公钥只能新增，不能读、改、删（已用 anon 角色实测）。看数据：Supabase 后台 → Table Editor。
+- 网页要填 Supabase 的 publishable key 才会真正保存：assets/chatbot.js 顶部 CONFIG.supabaseKey（目前为空，聊天照常工作但不保存，页面表单退回邮件程序）。这次会话里读取 key 的操作被权限拦下，需用户自己粘贴。
+- 用户以为有一个 Supabase 反馈库：两个项目（GCC_HHS_v0、project_database）里都没有 feedback 表或数据，只有调查表。之前唯一的「问题记录」是 ADTGM 聊天机器人写进 Google 表格「ATTGM Chatbot Test Questions」（Apps Script）。
+- ADTGM demo（Netlify 站 abudhabi-tgm-demo，adtgmdemo.themovingdot.com）：用户要求下线。Netlify 连接器不能删站，加访问密码返回 422（可能是套餐不支持），需用户在 Netlify 后台删除，并在 Google Cloud 作废那个 Gemini 密钥。
+- 风险：两个 Supabase 项目的 riyadh_metro_survey 表都对所有人开放了读、写、改、删（public 策略），任何人都能清空调查数据。未改动，待用户决定。
+
 ## 待用户提供
+- Supabase publishable key（粘贴到 assets/chatbot.js 的 CONFIG.supabaseKey）。
+- 新询盘的提醒方式（邮件？每日汇总？），现在只存在表里。
 - 创始人介绍（姓名、照片、一句话背景、资历）——About 区目前只写公司层面。
 - 是否加 WhatsApp 联系方式（号码）。
 - 调查平台要不要起正式产品名。
@@ -32,4 +41,4 @@
 ## 外部资源位置
 - 客户项目站点都在 Netlify（zhwlxl 团队），源码不在本仓库。
 - 聊天助手后端：workers/cloudflare-llm-worker（地址写在 chat.js 和 assets/chatbot.js 的 apiUrl）。
-- 风险（不在本仓库）：adtgmdemo.themovingdot.com 的 gemini_config.js 把 Gemini API 密钥明文放在网页里，任何人都能拿去用。需要用户在 Google Cloud 限制或换掉，最好改走 Worker。
+- 风险（不在本仓库）：adtgmdemo.themovingdot.com 的 gemini_config.js 把 Gemini API 密钥明文放在网页里。已要求下线，见上。

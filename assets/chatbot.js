@@ -21,12 +21,17 @@
         subtitle: 'AI assistant',
         welcome: "Hi, I'm the dot. Ask me about AI traffic counting, transport modelling, our tools, or starting a project.",
         proactive: 'Need a hand? I can point you to the right service, open one of our live tools, or draft an enquiry for you.',
-        tryExample: 'Try: "Can you count traffic from our cameras?"',
+        tryExample: 'Try: "Can you count traffic from our cameras?" · Chats are saved to improve our service.',
         minimisedText: 'Minimised. Click ⤢ to expand.',
         suggestions: ['What do you do?', 'Show me your tools', 'Start a project'],
         proactiveAfterMs: 40000,   // template: 3 min idle on a survey form; a homepage visit is shorter
         timeoutMs: 15000,
-        contact: 'info@themovingdot.com'
+        contact: 'info@themovingdot.com',
+        // Chats and enquiries are saved here (Supabase project "project_database").
+        // Paste the project's PUBLISHABLE key below (Supabase dashboard → Project Settings → API Keys).
+        // It is safe in a web page: the tables only accept new rows; nobody can read them with it.
+        supabaseUrl: 'https://tbfmcxsbiybtyytbgyic.supabase.co',
+        supabaseKey: ''
     };
     try { CONFIG.apiUrl = localStorage.getItem('tmd-chat-api') || CONFIG.apiUrl; } catch (e) { /* storage blocked */ }
 
@@ -88,6 +93,11 @@
         '.tmdc-form input:focus{outline:none;border-color:#8b45c5;}',
         '.tmdc-form button{border:none;border-radius:8px;width:42px;color:#fff;background:var(--g);cursor:pointer;display:grid;place-items:center;}',
         '.tmdc-form button:disabled{opacity:.5;cursor:default;}',
+        '.tmdc-enq{display:grid;gap:6px;}',
+        '.tmdc-enq input,.tmdc-enq textarea{width:100%;border:1px solid var(--line,rgba(0,0,0,.12));background:var(--surface,#fff);color:var(--text,#141418);border-radius:8px;padding:8px 10px;font:inherit;font-size:.84rem;resize:vertical;}',
+        '.tmdc-enq input:focus,.tmdc-enq textarea:focus{outline:none;border-color:#8b45c5;}',
+        '.tmdc-enq button{justify-self:start;border:none;border-radius:8px;padding:7px 14px;color:#fff;background:var(--g);font-weight:600;cursor:pointer;}',
+        '.tmdc-enq button:disabled{opacity:.6;cursor:default;}',
         '.tmdc-hint{font-size:.72rem;color:var(--text-2,#6b6b78);margin-top:8px;}',
         '.tmdc-mini{padding:12px;text-align:center;font-size:.85rem;color:var(--text-2,#6b6b78);cursor:pointer;}',
         '.tmdc-toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9100;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;}',
@@ -297,6 +307,87 @@
         'rainbow-bus-tracker': 'https://whereistherainbowbus.netlify.app/'
     };
 
+    /* ------------------------------------------------------------------ *
+     * Storage: chat log and enquiries (Supabase, insert-only)            *
+     * ------------------------------------------------------------------ */
+
+    var EMAIL_RE = /[^\s@<>()"',;]+@[^\s@<>()"',;]+\.[a-z]{2,}/i;
+
+    var sessionId = session('tmdc-sid');
+    if (!sessionId) { sessionId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); session('tmdc-sid', sessionId); }
+
+    function clip(v, n) { return v == null ? null : String(v).slice(0, n); }
+
+    function store(table, row) {
+        if (!CONFIG.supabaseUrl || !CONFIG.supabaseKey) return Promise.reject(new Error('storage not configured'));
+        var headers = { 'Content-Type': 'application/json', apikey: CONFIG.supabaseKey, Prefer: 'return=minimal' };
+        if (!/^sb_/.test(CONFIG.supabaseKey)) headers.Authorization = 'Bearer ' + CONFIG.supabaseKey;   // legacy anon key
+        return fetch(CONFIG.supabaseUrl + '/rest/v1/' + table, { method: 'POST', headers: headers, body: JSON.stringify(row), keepalive: true })
+            .then(function (r) { if (!r.ok) throw new Error('save failed: ' + r.status); return true; });
+    }
+
+    function logExchange(question, reply, source) {
+        store('website_chat_log', {
+            session_id: sessionId,
+            page: clip(location.pathname, 300),
+            question: clip(question, 2000),
+            reply: clip(reply.say, 4000),
+            actions: reply.actions && reply.actions.length ? reply.actions : null,
+            source: source,
+            language: clip(navigator.language, 20),
+            user_agent: clip(navigator.userAgent, 400)
+        }).catch(function () { /* logging must never break the chat */ });
+    }
+
+    function saveEnquiry(email, message, source) {
+        return store('website_enquiries', {
+            email: clip(email.trim(), 254),
+            message: clip(message || '', 4000),
+            source: source,
+            session_id: sessionId,
+            page: clip(location.pathname, 300)
+        });
+    }
+
+    // What the visitor has said so far, as context for an enquiry from the chat.
+    function conversationSoFar() {
+        return history.filter(function (m) { return m.role === 'user' && CONFIG.suggestions.indexOf(m.content) === -1; })
+            .map(function (m) { return '- ' + m.content; }).slice(-6).join('\n');
+    }
+
+    function enquiryCard(message) {
+        var row = document.createElement('div');
+        row.className = 'tmdc-row bot';
+        var msg = document.createElement('div');
+        msg.className = 'tmdc-msg';
+        var f = document.createElement('form');
+        f.className = 'tmdc-enq';
+        f.innerHTML = '<input type="email" required placeholder="Your email" aria-label="Your email" autocomplete="email">' +
+            '<textarea rows="3" aria-label="Your message" placeholder="What do you need?"></textarea>' +
+            '<button type="submit">Send</button>';
+        f.querySelector('textarea').value = message || '';
+        f.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var email = f.querySelector('input').value;
+            var text = f.querySelector('textarea').value;
+            if (!EMAIL_RE.test(email)) { f.querySelector('input').focus(); return; }
+            f.querySelector('button').disabled = true;
+            saveEnquiry(email, text, 'chat').then(function () {
+                row.remove();
+                addMessage('assistant', 'Thanks! We have your message and will reply to ' + email.trim() + '.');
+                toast('Enquiry sent');
+            }, function () {
+                row.remove();
+                addMessage('assistant', 'Sorry, that did not go through.', { link: { href: mailto('Project enquiry', text), text: 'Send it by email instead' } });
+            });
+        });
+        msg.appendChild(f);
+        row.appendChild(msg);
+        log.appendChild(row);
+        log.scrollTop = log.scrollHeight;
+        setTimeout(function () { f.querySelector('input').focus({ preventScroll: true }); }, 50);
+    }
+
     function mailto(subject, bodyText) {
         return 'mailto:' + CONFIG.contact + '?subject=' + encodeURIComponent(subject || 'Project enquiry') + '&body=' + encodeURIComponent(bodyText || '');
     }
@@ -323,8 +414,8 @@
                     return 'Opened ' + u.hostname;
                 } catch (e) { return null; }
             case 'draft_email':
-                addMessage('assistant', 'Your enquiry is ready:', { link: { href: mailto(a.subject, a.body), text: 'open it in your email app' } });
-                return 'Enquiry drafted';
+                enquiryCard(a.body || conversationSoFar());
+                return null;
             case 'set_theme':
                 if ((a.theme === 'light' || a.theme === 'dark') && a.theme !== document.documentElement.getAttribute('data-theme') && window.toggleTheme) window.toggleTheme();
                 return 'Switched to ' + a.theme + ' mode';
@@ -358,8 +449,8 @@
 
     var LOCAL = [
         [/start|quote|price|cost|hire|contact|email|enquir|talk|meeting/i, function () {
-            return { say: "Tell us what you need to decide and where. We'll reply with how we'd approach it.",
-                actions: [{ tool: 'draft_email', args: { subject: 'Project enquiry', body: 'What we need:\nLocation:\nTiming:\n' } }] };
+            return { say: "Great. Tell us briefly what you need and where, and leave your email. We'll reply with how we'd approach it.",
+                actions: [{ tool: 'draft_email', args: { subject: 'Project enquiry', body: '' } }] };
         }],
         [/\bcount(s|ing|er)?\b|camera|video|cctv|detect|classif/i, function () {
             return { say: 'We count traffic from camera footage with computer vision: every vehicle detected, classified and counted by turning movement.',
@@ -406,7 +497,7 @@
             '- show_card {"card": "module-counting" | "module-modelling" | "module-tools" | "module-services"} opens that section.',
             '- show_card {"card": "<tool id>" | "contact"} highlights it.',
             '- open_project {"url": "<tool url>"} only when the visitor asks to open or try a tool.',
-            '- draft_email {"subject": "...", "body": "..."} prepares an enquiry email from what the visitor said.',
+            '- draft_email {"subject": "...", "body": "..."} shows an enquiry card in the chat, prefilled with a summary of what the visitor needs; they add their email and press Send. Use it whenever the visitor wants a quote, a call, to start a project or to be contacted.',
             '- set_theme {"theme": "light" | "dark"}',
             'Rules: use actions whenever the visitor wants to see, try or start something. Never name clients or projects (confidential). Never invent prices, timelines, staff or statistics; for those, offer draft_email. Output nothing outside the JSON.',
             '',
@@ -415,7 +506,7 @@
             'Visitor: "do you use Visum?" -> {"say":"Yes, PTV Visum alongside SUMO and ActivitySim, with AI agents that check and validate the model.","actions":[{"tool":"show_card","args":{"card":"module-modelling"}}]}',
             'Visitor: "open the UAE transit animation" -> {"say":"Opening it in a new tab.","actions":[{"tool":"open_project","args":{"url":"https://uaetransit.themovingdot.com/"}}]}',
             'Visitor: "¿hacéis encuestas de movilidad?" -> {"say":"Sí. Diseñamos y realizamos encuestas de movilidad completas, con formularios móviles y control de calidad de los datos.","actions":[{"tool":"show_card","args":{"card":"module-services"}}]}',
-            'Visitor: "we need a parking survey in Doha next month" -> {"say":"We can design and run that. I have drafted an enquiry for you.","actions":[{"tool":"draft_email","args":{"subject":"Parking survey in Doha","body":"We need a parking survey in Doha next month. Please get in touch about scope and timing."}}]}'
+            'Visitor: "we need a parking survey in Doha next month" -> {"say":"We can design and run that. Leave your email below and we will get back to you.","actions":[{"tool":"draft_email","args":{"subject":"Parking survey in Doha","body":"We need a parking survey in Doha next month. Please get in touch about scope and timing."}}]}'
         ].join('\n');
     }
 
@@ -436,10 +527,11 @@
         }, function (e) { clearTimeout(timer); throw e; });
     }
 
-    function deliver(reply) {
+    function deliver(reply, question, source) {
         addMessage('assistant', reply.say, { chips: reply.chips });
         history.push({ role: 'assistant', content: JSON.stringify({ say: reply.say, actions: reply.actions || [] }) });
         runActions(reply.actions);
+        if (question) logExchange(question, reply, source);
     }
 
     function setLoading(on) {
@@ -456,16 +548,29 @@
         addMessage('user', text);
         history.push({ role: 'user', content: text });
 
-        if (opts && opts.local) { deliver(localReply(text)); return; }
+        // A visitor who types their email has just made an enquiry: save it, no AI needed.
+        var found = text.match(EMAIL_RE);
+        if (found) {
+            var email = found[0];
+            saveEnquiry(email, conversationSoFar(), 'chat').then(function () {
+                deliver({ say: 'Thanks! We have your details and will reply to ' + email + '.', actions: [] }, text, 'local');
+                toast('Enquiry sent');
+            }, function () {
+                addMessage('assistant', 'Sorry, I could not save that.', { link: { href: mailto('Project enquiry', conversationSoFar()), text: 'Send it by email instead' } });
+            });
+            return;
+        }
+
+        if (opts && opts.local) { deliver(localReply(text), text, 'local'); return; }
 
         setLoading(true);
         var wait = spinner();
         askAI().then(function (reply) {
             errIcon.hidden = true;
-            deliver(reply);
+            deliver(reply, text, 'ai');
         }).catch(function () {
             errIcon.hidden = false;
-            deliver(localReply(text));
+            deliver(localReply(text), text, 'local');
         }).then(function () {
             wait.remove();
             setLoading(false);
@@ -481,5 +586,5 @@
     });
 
     render();
-    window.TMDChat = { open: open, close: close, minimise: minimise, send: send };
+    window.TMDChat = { open: open, close: close, minimise: minimise, send: send, saveEnquiry: saveEnquiry };
 })();

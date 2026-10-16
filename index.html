@@ -202,12 +202,52 @@
             background: rgba(241, 196, 15, 0.12);
         }
 
-        .contact {
-            margin-top: 48px;
-            color: var(--text-2);
+        .contact { margin-top: 56px; }
+
+        .contact h2 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-weight: 400;
+            font-size: 1.55rem;
+            margin-bottom: 14px;
         }
 
-        .contact a { color: var(--text); }
+        .enquiry { display: flex; gap: 8px; }
+
+        .enquiry input {
+            min-width: 0;
+            flex: 1;
+            font: inherit;
+            font-size: 0.95rem;
+            color: var(--text);
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 11px 13px;
+        }
+
+        .enquiry #enq-msg { flex: 1.6; }
+
+        .enquiry input:focus { outline: none; border-color: var(--accent); }
+
+        .enquiry input.invalid { border-color: #d03b3b; }
+
+        .enquiry button {
+            border: none;
+            border-radius: 8px;
+            padding: 0 20px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            cursor: pointer;
+        }
+
+        .enquiry button:disabled { opacity: 0.6; cursor: default; }
+
+        .enq-note { margin-top: 10px; font-size: 0.85rem; color: var(--text-2); }
+
+        .enq-note a { color: var(--text); }
+
+        .enq-done { color: var(--text); font-size: 1rem; }
 
         footer {
             padding: 24px 104px 32px 28px;   /* keep clear of the chat button */
@@ -235,6 +275,8 @@
             .area-head { flex-wrap: wrap; gap: 4px 14px; }
             .area-tag { order: 3; width: 100%; padding-left: 36px; }
             .area-body { padding-left: 36px; }
+            .enquiry { flex-direction: column; }
+            .enquiry button { padding: 12px; }
             footer { padding: 20px 18px 96px; }
         }
     </style>
@@ -295,7 +337,15 @@
             </li>
         </ul>
 
-        <p class="contact" id="contact" data-agent-id="contact">Start a project: <a href="mailto:info@themovingdot.com">info@themovingdot.com</a></p>
+        <section class="contact" id="contact" data-agent-id="contact" aria-labelledby="contact-title">
+            <h2 id="contact-title">Start a project</h2>
+            <form class="enquiry" id="enquiry" novalidate>
+                <input type="email" id="enq-email" required placeholder="Your email" aria-label="Your email" autocomplete="email">
+                <input type="text" id="enq-msg" placeholder="What do you need? (optional)" aria-label="What do you need">
+                <button type="submit">Send</button>
+            </form>
+            <p class="enq-note" id="enq-note" aria-live="polite">We reply by email. Or write to <a href="mailto:info@themovingdot.com">info@themovingdot.com</a></p>
+        </section>
     </main>
 
     <footer>
@@ -337,6 +387,32 @@
             }
 
             document.getElementById('tmd-year').textContent = new Date().getFullYear();
+
+            // Enquiry: one email box. Saved straight to our inbox table; email app only as a fallback.
+            var form = document.getElementById('enquiry');
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var emailEl = document.getElementById('enq-email');
+                var email = emailEl.value.trim();
+                var msg = document.getElementById('enq-msg').value.trim();
+                var ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+                emailEl.classList.toggle('invalid', !ok);
+                if (!ok) { emailEl.focus(); return; }
+                var btn = form.querySelector('button');
+                btn.disabled = true;
+                var save = window.TMDChat && window.TMDChat.saveEnquiry
+                    ? window.TMDChat.saveEnquiry(email, msg, 'form')
+                    : Promise.reject(new Error('not ready'));
+                save.then(function () {
+                    form.hidden = true;
+                    var note = document.getElementById('enq-note');
+                    note.className = 'enq-done';
+                    note.textContent = "Thanks! We'll reply to " + email + '.';
+                }, function () {
+                    btn.disabled = false;
+                    window.location.href = 'mailto:info@themovingdot.com?subject=' + encodeURIComponent('Project enquiry') + '&body=' + encodeURIComponent(msg + '\n\nReply to: ' + email);
+                });
+            });
 
             window.TMD = {
                 areas: AREAS.slice(),
