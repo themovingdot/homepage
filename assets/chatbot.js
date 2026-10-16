@@ -21,16 +21,17 @@
         subtitle: 'AI assistant',
         welcome: "Hi, I'm the dot. Ask me about AI traffic counting, transport modelling, our tools, or starting a project.",
         proactive: 'Need a hand? I can point you to the right service, open one of our live tools, or draft an enquiry for you.',
-        tryExample: 'Try: "Can you count traffic from our cameras?" · Chats are saved to improve our service.',
+        tryExample: 'Try: "Can you count traffic from our cameras?"',
         minimisedText: 'Minimised. Click ⤢ to expand.',
         suggestions: ['What do you do?', 'Show me your tools', 'Start a project'],
         proactiveAfterMs: 40000,   // template: 3 min idle on a survey form; a homepage visit is shorter
         timeoutMs: 15000,
         contact: 'info@themovingdot.com',
-        // Chats and enquiries are saved here (Supabase project "project_database").
+        // Chats and enquiries go to the central feedback table (Supabase project "project_database", table public.feedback).
         // Paste the project's PUBLISHABLE key below (Supabase dashboard → Project Settings → API Keys).
         // It is safe in a web page: the tables only accept new rows; nobody can read them with it.
         supabaseUrl: 'https://tbfmcxsbiybtyytbgyic.supabase.co',
+        site: 'themovingdot.com',
         supabaseKey: ''
     };
     try { CONFIG.apiUrl = localStorage.getItem('tmd-chat-api') || CONFIG.apiUrl; } catch (e) { /* storage blocked */ }
@@ -308,7 +309,7 @@
     };
 
     /* ------------------------------------------------------------------ *
-     * Storage: chat log and enquiries (Supabase, insert-only)            *
+     * Storage: central feedback table (Supabase, insert-only)            *
      * ------------------------------------------------------------------ */
 
     var EMAIL_RE = /[^\s@<>()"',;]+@[^\s@<>()"',;]+\.[a-z]{2,}/i;
@@ -326,27 +327,33 @@
             .then(function (r) { if (!r.ok) throw new Error('save failed: ' + r.status); return true; });
     }
 
-    function logExchange(question, reply, source) {
-        store('website_chat_log', {
+    function feedbackRow(kind, fields) {
+        var row = {
+            site: CONFIG.site,
+            kind: kind,
             session_id: sessionId,
             page: clip(location.pathname, 300),
-            question: clip(question, 2000),
-            reply: clip(reply.say, 4000),
-            actions: reply.actions && reply.actions.length ? reply.actions : null,
-            source: source,
             language: clip(navigator.language, 20),
             user_agent: clip(navigator.userAgent, 400)
-        }).catch(function () { /* logging must never break the chat */ });
+        };
+        for (var k in fields) row[k] = fields[k];
+        return row;
+    }
+
+    function logExchange(question, reply, source) {
+        store('feedback', feedbackRow('chat', {
+            message: clip(question, 4000),
+            reply: clip(reply.say, 4000),
+            meta: { source: source, actions: reply.actions && reply.actions.length ? reply.actions : undefined }
+        })).catch(function () { /* logging must never break the chat */ });
     }
 
     function saveEnquiry(email, message, source) {
-        return store('website_enquiries', {
+        return store('feedback', feedbackRow('enquiry', {
             email: clip(email.trim(), 254),
             message: clip(message || '', 4000),
-            source: source,
-            session_id: sessionId,
-            page: clip(location.pathname, 300)
-        });
+            meta: { source: source }
+        }));
     }
 
     // What the visitor has said so far, as context for an enquiry from the chat.

@@ -18,15 +18,16 @@
 - 模型（llama-4-scout）对语言规则不敏感：必须在提示词前面单列 LANGUAGE 规则并给一个西班牙语示例，才会用访客的语言回答。
 
 - 2026-10-16（第三轮）：询盘改成「一个邮箱框 + 可选一句需求 + Send」，直接存进数据库，不再打开访客的邮件程序（只在保存失败时兜底）。聊天里：要报价/联系时弹出同样的小表单；访客直接在聊天里打出邮箱，自动记成一条询盘。
-- 存储位置：Supabase 项目 project_database（ref tbfmcxsbiybtyytbgyic，eu-west-1）。表 website_chat_log（每轮问答一行）、website_enquiries（询盘，status 默认 new）。权限：网页公钥只能新增，不能读、改、删（已用 anon 角色实测）。看数据：Supabase 后台 → Table Editor。
-- 网页要填 Supabase 的 publishable key 才会真正保存：assets/chatbot.js 顶部 CONFIG.supabaseKey（目前为空，聊天照常工作但不保存，页面表单退回邮件程序）。这次会话里读取 key 的操作被权限拦下，需用户自己粘贴。
+- 存储位置（10-16 改为中央表）：Supabase 项目 project_database（ref tbfmcxsbiybtyytbgyic，eu-west-1）的 public.feedback，所有网站共用：site（哪个网站）、kind（enquiry / chat / feedback / bug）、email、message、reply、meta、status（new/replied/closed）、notified_at（已发提醒邮件的时间）。网页公钥只能新增，不能读改删（已用 anon 角色实测 8 项）。选 Supabase 而不是 Google 表格：免费、已可用、各网站同样一行代码就能写入；Google 表格要手动部署 Apps Script 才能接收网页写入。
+- 当天先建的 website_chat_log / website_enquiries 两张表已被 feedback 取代，都是空表；删除操作通过连接器一直超时（删表可能需要确认），留着无害，可在后台手动删。
+- 网页要填 Supabase 的 publishable key 才会真正保存：assets/chatbot.js 顶部 CONFIG.supabaseKey（目前为空，聊天照常工作但不保存，页面表单退回邮件程序）。会话里读取 key 被权限拦下，需用户自己粘贴。
 - 用户以为有一个 Supabase 反馈库：两个项目（GCC_HHS_v0、project_database）里都没有 feedback 表或数据，只有调查表。之前唯一的「问题记录」是 ADTGM 聊天机器人写进 Google 表格「ATTGM Chatbot Test Questions」（Apps Script）。
-- ADTGM demo（Netlify 站 abudhabi-tgm-demo，adtgmdemo.themovingdot.com）：用户要求下线。Netlify 连接器不能删站，加访问密码返回 422（可能是套餐不支持），需用户在 Netlify 后台删除，并在 Google Cloud 作废那个 Gemini 密钥。
-- 风险：两个 Supabase 项目的 riyadh_metro_survey 表都对所有人开放了读、写、改、删（public 策略），任何人都能清空调查数据。未改动，待用户决定。
+- ADTGM demo：用户最终只要求「从本网站去掉链接」，站点本身保留。查过仓库、main 分支和线上各页面，已经没有任何 ADTGM 链接（PR #33 已删）。
+- 风险：两个 Supabase 项目的 riyadh_metro_survey 表都对所有人开放了读、写、改、删（public 策略）。用户 10-16 决定不改。
 
 ## 待用户提供
 - Supabase publishable key（粘贴到 assets/chatbot.js 的 CONFIG.supabaseKey）。
-- 新询盘的提醒方式（邮件？每日汇总？），现在只存在表里。
+- 新询盘邮件提醒：用户要邮件。会话里建的定时任务带不上 Supabase/Gmail 连接器（本组织不支持在这里传连接器），已删除；需用户在 claude.ai → Routines 里用同一段提示词建（带 Supabase + Gmail），或改用 Google Apps Script。测试提醒邮件已手动发过一封（feedback 第 6 行）。
 - 创始人介绍（姓名、照片、一句话背景、资历）——About 区目前只写公司层面。
 - 是否加 WhatsApp 联系方式（号码）。
 - 调查平台要不要起正式产品名。
@@ -37,6 +38,8 @@
 - Cloudflare Pages 会把仓库根目录原样公开，AGENTS.md / MEMORY.md 用 `_redirects` 挡住。
 - 本地截图时 Google Fonts 会因代理证书报错，是环境问题。
 - 本地用 Playwright 测助手时，浏览器连不上外网：用 page.route 把 /chat 请求转给 curl 发出去。
+
+- 用户提到「交通计数 explorer 的反馈存在 Supabase」：Vehicle Counter 仓库（themovingdot/vehicle-detection）里没有反馈功能，两个 Supabase 项目里也没有反馈数据，没找到。
 
 ## 外部资源位置
 - 客户项目站点都在 Netlify（zhwlxl 团队），源码不在本仓库。
