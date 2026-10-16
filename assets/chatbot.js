@@ -293,13 +293,9 @@
     var AREA_NAMES = { counting: 'Traffic counting', modelling: 'Transport modelling', tools: 'Tools', services: 'Services' };
     var TOOLS = {
         'vehicle-counter': 'https://vehcount.themovingdot.com',
-        'one2many': 'https://one2many.themovingdot.com/',
-        'many2many': 'https://many2many.themovingdot.com/',
-        'mismatch': 'https://mismatch.themovingdot.com/',
-        'bus-flow-analyzer': 'https://wmbusflow.themovingdot.com/',
-        'uae-transit-animation': 'https://uaetransit.themovingdot.com/',
-        'riyadh-transit-animation': 'https://riyadh-transit-animation.themovingdot.com/',
-        'rainbow-bus-tracker': 'https://whereistherainbowbus.netlify.app/'
+        'uk-traffic-explorer': 'https://uktrafficexplorer.themovingdot.com/',
+        'trip-rate-explorer': 'https://triprateexplorer.themovingdot.com/',
+        'gtfs-explorer': 'https://gtfsexplorer.themovingdot.com/'
     };
 
     /* ------------------------------------------------------------------ *
@@ -387,7 +383,7 @@
             case 'open_project':
                 try {
                     var u = new URL(a.url);
-                    if (u.protocol !== 'https:' || !(/(^|\.)themovingdot\.com$/.test(u.hostname) || u.hostname === 'whereistherainbowbus.netlify.app')) return null;
+                    if (u.protocol !== 'https:' || !(/(^|\.)themovingdot\.com$/.test(u.hostname))) return null;
                     window.open(u.href, '_blank', 'noopener');
                     return 'Opened ' + u.hostname;
                 } catch (e) { return null; }
@@ -466,7 +462,7 @@
         return [
             'You are "the dot", the assistant on themovingdot.com, the homepage of The Moving Dot Ltd: transport consultancy and software, powered by AI, working with clients worldwide. You guide visitors and can act on the page.',
             'The business: (1) Traffic counting: computer vision counts vehicles from camera footage by class and turning movement (product: Vehicle Counter). (2) Transport modelling: network and demand models in PTV Visum, SUMO and ActivitySim, with AI agents that check network coding, run assignments and validate against counts. (3) Tools: live platforms we built. (4) Services: Advise (surveys, analysis, modelling), Build (software, dashboards, AI counting), Run (hosting, data pipelines, quality control). Projects in the UK, Saudi Arabia and the UAE. Survey types: roadside, household travel diary, public transport, hotel/visitor, park-and-ride, parking, special generator, traffic counts.',
-            'Tools (id -> url): ' + Object.keys(TOOLS).map(function (k) { return k + ' -> ' + TOOLS[k]; }).join('; ') + '.',
+            'Tools (id -> url; Vehicle Counter = AI vehicle counting from video; UK Traffic Explorer = Great Britain traffic count data; Trip Rate Explorer = trip generation rates; GTFS Explorer = scheduled public transport service on a map): ' + Object.keys(TOOLS).map(function (k) { return k + ' -> ' + TOOLS[k]; }).join('; ') + '.',
             'Page state: ' + (T.state ? T.state() : '') ,
             '',
             'LANGUAGE: write "say" in the same language as the visitor\'s latest message (Spanish question -> Spanish answer, Arabic -> Arabic, Chinese -> Chinese).',
@@ -482,7 +478,7 @@
             'Examples:',
             'Visitor: "can you count from our cameras?" -> {"say":"Yes. Our Vehicle Counter detects, classifies and counts vehicles from camera footage, by turning movement.","actions":[{"tool":"show_card","args":{"card":"module-counting"}}]}',
             'Visitor: "do you use Visum?" -> {"say":"Yes, PTV Visum alongside SUMO and ActivitySim, with AI agents that check and validate the model.","actions":[{"tool":"show_card","args":{"card":"module-modelling"}}]}',
-            'Visitor: "open the UAE transit animation" -> {"say":"Opening it in a new tab.","actions":[{"tool":"open_project","args":{"url":"https://uaetransit.themovingdot.com/"}}]}',
+            'Visitor: "open the GTFS explorer" -> {"say":"Opening it in a new tab.","actions":[{"tool":"open_project","args":{"url":"https://gtfsexplorer.themovingdot.com/"}}]}',
             'Visitor: "¿hacéis encuestas de movilidad?" -> {"say":"Sí. Diseñamos y realizamos encuestas de movilidad completas, con formularios móviles y control de calidad de los datos.","actions":[{"tool":"show_card","args":{"card":"module-services"}}]}',
             'Visitor: "we need a parking survey in Doha next month" -> {"say":"We can design and run that. Leave your email below and we will get back to you.","actions":[{"tool":"draft_email","args":{"subject":"Parking survey in Doha","body":"We need a parking survey in Doha next month. Please get in touch about scope and timing."}}]}'
         ].join('\n');

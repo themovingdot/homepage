@@ -25,6 +25,8 @@
 - ADTGM demo：用户最终只要求「从本网站去掉链接」，站点本身保留。查过仓库、main 分支和线上各页面，已经没有任何 ADTGM 链接（PR #33 已删）。
 - 风险：两个 Supabase 项目的 riyadh_metro_survey 表都对所有人开放了读、写、改、删（public 策略）。用户 10-16 决定不改。
 
+- 2026-10-16：PR #34 已合并上线。之后首页「工具」只列 4 个（用户指定，暂定）：Vehicle Counter、UK Traffic Explorer、Trip Rate Explorer、GTFS Explorer；聊天机器人的工具清单同步，open_project 只允许 themovingdot.com 子域名。其他页面（lab 等）的旧工具卡片不动。
+
 ## 待用户提供
 - Supabase publishable key（粘贴到 assets/chatbot.js 的 CONFIG.supabaseKey）。
 - 新询盘邮件提醒：用户选 Google Apps Script（10-16）。代码 workers/enquiry-alert/Code.gs（部署步骤见同目录 README）。表格「Website enquiries — The Moving Dot」已建在用户 Drive（文件 ID 1tR02DEG2mDT9rnH14Qn1Qv9JnoAoH4dvt1oS20MiRog）。已部署（10-16），/exec 网址已填进 assets/feedback.js 的 ALERT_URL；实测：健康检查正常、测试询盘进了表格、坏邮箱被拒。表格时区显示为美国太平洋时间，需用户在表格「文件 → 设置 → 时区」改成伦敦（连接器无法修改表格设置）。
