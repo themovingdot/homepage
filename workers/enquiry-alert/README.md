@@ -13,7 +13,7 @@ Every enquiry is also stored in Supabase (`project_database`, `public.feedback`)
 3. Choose `testAlert` in the function list, press **Run**, allow the permissions.
    A test row appears in the sheet and a test email arrives.
 4. **Deploy → New deployment → Web app**: Execute as **Me**, Who has access **Anyone**. Deploy.
-5. Copy the URL ending in `/exec` and paste it into `alertUrl` at the top of `assets/chatbot.js`.
+5. Copy the URL ending in `/exec` and paste it into `ALERT_URL` at the top of `assets/feedback.js`.
 
 Opening the `/exec` URL in a browser should say "The Moving Dot enquiry alerts are running."
 

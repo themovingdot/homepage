@@ -26,16 +26,7 @@
         suggestions: ['What do you do?', 'Show me your tools', 'Start a project'],
         proactiveAfterMs: 40000,   // template: 3 min idle on a survey form; a homepage visit is shorter
         timeoutMs: 15000,
-        contact: 'info@themovingdot.com',
-        // Chats and enquiries go to the central feedback table (Supabase project "project_database", table public.feedback).
-        // Paste the project's PUBLISHABLE key below (Supabase dashboard → Project Settings → API Keys).
-        // It is safe in a web page: the tables only accept new rows; nobody can read them with it.
-        supabaseUrl: 'https://tbfmcxsbiybtyytbgyic.supabase.co',
-        site: 'themovingdot.com',
-        supabaseKey: '',
-        // Google Apps Script web app (workers/enquiry-alert/Code.gs): adds each enquiry to the
-        // "Website enquiries" Google Sheet and emails the owner at once. Paste its /exec URL here.
-        alertUrl: ''
+        contact: 'info@themovingdot.com'
     };
     try { CONFIG.apiUrl = localStorage.getItem('tmd-chat-api') || CONFIG.apiUrl; } catch (e) { /* storage blocked */ }
 
@@ -312,65 +303,28 @@
     };
 
     /* ------------------------------------------------------------------ *
-     * Storage: central feedback table (Supabase, insert-only)            *
+     * Storage: via the shared feedback template                          *
      * ------------------------------------------------------------------ */
 
     var EMAIL_RE = /[^\s@<>()"',;]+@[^\s@<>()"',;]+\.[a-z]{2,}/i;
 
-    var sessionId = session('tmdc-sid');
-    if (!sessionId) { sessionId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); session('tmdc-sid', sessionId); }
-
-    function clip(v, n) { return v == null ? null : String(v).slice(0, n); }
-
-    function store(table, row) {
-        if (!CONFIG.supabaseUrl || !CONFIG.supabaseKey) return Promise.reject(new Error('storage not configured'));
-        var headers = { 'Content-Type': 'application/json', apikey: CONFIG.supabaseKey, Prefer: 'return=minimal' };
-        if (!/^sb_/.test(CONFIG.supabaseKey)) headers.Authorization = 'Bearer ' + CONFIG.supabaseKey;   // legacy anon key
-        return fetch(CONFIG.supabaseUrl + '/rest/v1/' + table, { method: 'POST', headers: headers, body: JSON.stringify(row), keepalive: true })
-            .then(function (r) { if (!r.ok) throw new Error('save failed: ' + r.status); return true; });
-    }
-
-    function feedbackRow(kind, fields) {
-        var row = {
-            site: CONFIG.site,
-            kind: kind,
-            session_id: sessionId,
-            page: clip(location.pathname, 300),
-            language: clip(navigator.language, 20),
-            user_agent: clip(navigator.userAgent, 400)
-        };
-        for (var k in fields) row[k] = fields[k];
-        return row;
+    // Saving goes through the shared feedback template (assets/feedback.js → central Supabase table,
+    // plus instant email + Google Sheet for enquiries).
+    function feedback(item) {
+        return window.TMDFeedback ? window.TMDFeedback.send(item) : Promise.reject(new Error('feedback.js not loaded'));
     }
 
     function logExchange(question, reply, source) {
-        store('feedback', feedbackRow('chat', {
-            message: clip(question, 4000),
-            reply: clip(reply.say, 4000),
+        feedback({
+            kind: 'chat',
+            message: question,
+            reply: reply.say,
             meta: { source: source, actions: reply.actions && reply.actions.length ? reply.actions : undefined }
-        })).catch(function () { /* logging must never break the chat */ });
-    }
-
-    // Instant email + Google Sheet row. Apps Script can't answer cross-site requests,
-    // so this is fire-and-forget; the Supabase save decides success.
-    function alertOwner(email, message, source) {
-        if (!CONFIG.alertUrl) return;
-        try {
-            fetch(CONFIG.alertUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ site: CONFIG.site, kind: 'enquiry', email: email, message: message, page: location.pathname, source: source }),
-                keepalive: true
-            }).catch(function () { /* the Supabase copy still has it */ });
-        } catch (e) { /* ignore */ }
+        }).catch(function () { /* logging must never break the chat */ });
     }
 
     function saveEnquiry(email, message, source) {
-        email = clip(email.trim(), 254);
-        message = clip(message || '', 4000);
-        alertOwner(email, message, source);
-        return store('feedback', feedbackRow('enquiry', { email: email, message: message, meta: { source: source } }));
+        return feedback({ kind: 'enquiry', email: email, message: message, meta: { source: source } });
     }
 
     // What the visitor has said so far, as context for an enquiry from the chat.
