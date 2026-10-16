@@ -7,14 +7,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <link rel="canonical" href="https://themovingdot.com/">
-    <meta name="description" content="The Moving Dot counts traffic with AI, models transport networks and builds the software clients use every day. Explore live demos or ask our assistant. Working with clients worldwide.">
+    <meta name="description" content="The Moving Dot: AI traffic counting, transport modelling and the software behind them. Working with clients worldwide.">
     <meta name="author" content="The Moving Dot Ltd">
     <meta name="copyright" content="Platform software © 2022-2026 The Moving Dot Ltd. All rights reserved.">
     <meta property="og:title" content="The Moving Dot · Transport, data and AI">
-    <meta property="og:description" content="AI traffic counting, transport modelling and the software behind them. Explore the live demos or ask our assistant.">
+    <meta property="og:description" content="AI traffic counting, transport modelling and the software behind them.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://themovingdot.com/">
     <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
@@ -23,71 +23,36 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
     <style>
-        :root {
-            --purple: #8b45c5;
-            --blue: #3498db;
-            --red: #e74c3c;
-            --yellow: #f1c40f;
-            --radius: 16px;
-            /* status colours for road loading: fixed, always paired with a label */
-            --ok: #0ca30c;
-            --warn: #fab219;
-            --crit: #d03b3b;
-        }
+        :root { --accent: #8b45c5; --accent-2: #3498db; }
 
         :root[data-theme="dark"] {
             color-scheme: dark;
-            --bg: #0b0b10;
-            --surface: #13131b;
-            --surface-2: #1a1a24;
-            --text: #ecebf2;
-            --text-2: #a7a6b4;
-            --muted: #8a8998;
-            --border: rgba(255, 255, 255, 0.10);
-            --grid: #2a2a35;
-            --nav-bg: rgba(11, 11, 16, 0.78);
-            --accent-text: #f1c40f;
-            /* vehicle classes: validated as a set on this surface (dataviz validator, dark) */
-            --c-car: #3498db;
-            --c-lgv: #b08a0a;
-            --c-bus: #9b59d0;
-            --c-hgv: #e74c3c;
-            --road: #22222c;
-            --road-mark: #44445a;
+            --bg: #0b0b0e;
+            --surface: #15151a;
+            --text: #ececf1;
+            --text-2: #9b9aa8;
+            --line: rgba(255, 255, 255, 0.10);
         }
 
         :root[data-theme="light"] {
             color-scheme: light;
-            --bg: #f7f7fa;
+            --bg: #fbfbfc;
             --surface: #ffffff;
-            --surface-2: #f0f0f5;
-            --text: #16161d;
-            --text-2: #55546a;
-            --muted: #6f6e84;
-            --border: rgba(0, 0, 0, 0.10);
-            --grid: #e3e2ea;
-            --nav-bg: rgba(247, 247, 250, 0.85);
-            --accent-text: #8a6d00;
-            /* vehicle classes: validated as a set on this surface (dataviz validator, light) */
-            --c-car: #2f86c4;
-            --c-lgv: #b7950b;
-            --c-bus: #8b45c5;
-            --c-hgv: #d43f2f;
-            --road: #dcdce5;
-            --road-mark: #ffffff;
+            --text: #141418;
+            --text-2: #5d5c6b;
+            --line: rgba(0, 0, 0, 0.10);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; }
-
-        section[id] { scroll-margin-top: 76px; }
 
         body {
             background: var(--bg);
             color: var(--text);
             font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -95,21 +60,13 @@
 
         button { font: inherit; color: inherit; }
 
-        :focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+        :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 4px; }
 
-        /* ---------- Navigation ---------- */
-        .top-nav {
-            position: fixed;
-            inset: 0 0 auto 0;
-            z-index: 50;
+        .top {
             display: flex;
             align-items: center;
-            gap: 26px;
-            padding: 14px 28px;
-            background: var(--nav-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border);
+            justify-content: space-between;
+            padding: 22px 28px;
         }
 
         .brand {
@@ -118,1173 +75,280 @@
             gap: 10px;
             text-decoration: none;
             font-family: 'Crimson Pro', Georgia, serif;
-            font-size: 1.25rem;
-            margin-right: auto;
-            white-space: nowrap;
+            font-size: 1.2rem;
         }
 
-        .brand-dot {
-            width: 10px;
-            height: 10px;
+        .dot {
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
-            background: var(--yellow);
-            box-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
-            animation: brandPulse 3s ease-in-out infinite;
+            background: #f1c40f;
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.6);
         }
-
-        @keyframes brandPulse { 50% { transform: scale(1.35); } }
-
-        .nav-link {
-            color: var(--text-2);
-            text-decoration: none;
-            font-size: 0.88rem;
-            transition: color 0.2s;
-        }
-
-        .nav-link:hover { color: var(--text); }
-
-        .nav-cta {
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 8px 16px;
-        }
-
-        .nav-cta:hover { border-color: var(--purple); }
 
         #theme-toggle {
-            width: 38px;
-            height: 38px;
-            flex: none;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            background: rgba(241, 196, 15, 0.14);
-            border: 1.5px solid rgba(241, 196, 15, 0.35);
+            border: 1px solid var(--line);
+            background: none;
             cursor: pointer;
+            font-size: 0.95rem;
             display: grid;
             place-items: center;
-            font-size: 1.05rem;
         }
 
         .theme-icon { pointer-events: none; }
 
-        /* ---------- Hero ---------- */
-        .hero {
-            position: relative;
-            min-height: 88vh;
-            display: grid;
-            place-items: center;
-            padding: 120px 24px 70px;
-            overflow: hidden;
-        }
-
-        #hero-net {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.6;
-        }
-
-        .hero-inner {
-            position: relative;
-            z-index: 1;
-            max-width: 860px;
-            text-align: center;
-        }
-
-        .kicker {
-            font-size: 0.74rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--accent-text);
-            margin-bottom: 14px;
-        }
-
-        .hero h1 {
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-weight: 300;
-            font-size: clamp(2.5rem, 7vw, 4.6rem);
-            line-height: 1.05;
-            letter-spacing: 0.5px;
-        }
-
-        .hero-sub {
-            margin: 20px auto 0;
-            max-width: 660px;
-            color: var(--text-2);
-            line-height: 1.65;
-            font-size: clamp(1rem, 2vw, 1.12rem);
-        }
-
-        .ask {
-            margin: 34px auto 0;
-            max-width: 640px;
-            display: flex;
-            gap: 8px;
-            padding: 8px;
-            border-radius: 999px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 40px rgba(139, 69, 197, 0.18);
-        }
-
-        .ask:focus-within { border-color: var(--purple); }
-
-        .ask-dot {
-            flex: none;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            background: rgba(139, 69, 197, 0.14);
-        }
-
-        .ask-dot span {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--purple);
-            box-shadow: 0 0 12px var(--purple);
-            animation: brandPulse 2.4s ease-in-out infinite;
-        }
-
-        .ask input {
+        main {
             flex: 1;
-            min-width: 0;
-            border: none;
-            background: none;
-            color: var(--text);
-            font: inherit;
-            font-size: 1rem;
-            padding: 0 6px;
-        }
-
-        .ask input:focus { outline: none; }
-
-        .ask button {
-            flex: none;
-            border: none;
-            border-radius: 999px;
-            padding: 0 22px;
-            font-weight: 600;
-            color: #fff;
-            background: linear-gradient(135deg, var(--purple), var(--blue));
-            cursor: pointer;
-        }
-
-        .chips {
-            margin-top: 16px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .chip-btn {
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-2);
-            border-radius: 999px;
-            padding: 7px 14px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: color 0.2s, border-color 0.2s;
-        }
-
-        .chip-btn:hover { color: var(--text); border-color: var(--purple); }
-
-        /* ---------- Sections ---------- */
-        .section {
-            max-width: 1220px;
+            width: 100%;
+            max-width: 720px;
             margin: 0 auto;
-            padding: 70px 24px 20px;
+            padding: 9vh 24px 60px;
         }
 
-        .section-title {
+        h1 {
             font-family: 'Crimson Pro', Georgia, serif;
             font-weight: 300;
-            font-size: clamp(1.9rem, 4vw, 2.8rem);
-            margin-bottom: 10px;
+            font-size: clamp(2.4rem, 7vw, 3.8rem);
+            line-height: 1.08;
         }
 
-        .section-sub {
+        .lede {
+            margin-top: 16px;
             color: var(--text-2);
-            max-width: 680px;
-            line-height: 1.7;
-            margin-bottom: 34px;
+            font-size: 1.05rem;
         }
 
-        /* ---------- AI strip ---------- */
-        .ai-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        /* the four lines of business */
+        .areas {
+            list-style: none;
+            margin-top: 56px;
+            border-top: 1px solid var(--line);
+        }
+
+        .area { border-bottom: 1px solid var(--line); }
+
+        .area-head {
+            width: 100%;
+            display: flex;
+            align-items: baseline;
             gap: 18px;
-        }
-
-        .ai-card {
-            text-align: left;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-top: 3px solid var(--acc);
-            border-radius: var(--radius);
-            padding: 24px 22px;
-            cursor: pointer;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .ai-card:nth-child(1) { --acc: var(--blue); }
-        .ai-card:nth-child(2) { --acc: var(--purple); }
-        .ai-card:nth-child(3) { --acc: var(--red); }
-        .ai-card:nth-child(4) { --acc: var(--yellow); }
-
-        .ai-card:hover { transform: translateY(-4px); border-color: var(--acc); }
-
-        .ai-card h3 {
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-weight: 400;
-            font-size: 1.4rem;
-            margin-bottom: 8px;
-        }
-
-        .ai-card p {
-            color: var(--text-2);
-            font-size: 0.92rem;
-            line-height: 1.6;
-        }
-
-        .ai-card .go {
-            display: inline-block;
-            margin-top: 14px;
-            font-size: 0.82rem;
-        }
-
-        /* ---------- Dashboard ---------- */
-        .dash {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 4px;
-            padding: 8px;
-            border-bottom: 1px solid var(--border);
-            background: var(--surface-2);
-            overflow-x: auto;
-        }
-
-        .tab {
-            flex: 1;
-            min-width: 150px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid transparent;
+            padding: 20px 0;
             background: none;
-            border-radius: 12px;
-            padding: 12px 16px;
+            border: none;
             cursor: pointer;
-            color: var(--text-2);
             text-align: left;
-            font-size: 0.95rem;
         }
 
-        .tab .tab-dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--acc);
+        .area-num {
+            font-size: 0.78rem;
+            color: var(--text-2);
+            font-variant-numeric: tabular-nums;
+            width: 22px;
             flex: none;
         }
 
-        .tab[data-module="counting"] { --acc: var(--blue); }
-        .tab[data-module="modelling"] { --acc: var(--purple); }
-        .tab[data-module="tools"] { --acc: var(--red); }
-        .tab[data-module="services"] { --acc: var(--yellow); }
-
-        .tab small { display: block; font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-
-        .tab[aria-selected="true"] {
-            background: var(--surface);
-            border-color: var(--border);
-            color: var(--text);
-        }
-
-        .panel { padding: 28px; }
-
-        .panel[hidden] { display: none; }
-
-        .panel-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .panel-head h3 {
+        .area-name {
             font-family: 'Crimson Pro', Georgia, serif;
+            font-size: 1.55rem;
             font-weight: 400;
-            font-size: 1.8rem;
+            flex: 1;
         }
 
-        .panel-head p { color: var(--text-2); max-width: 640px; line-height: 1.6; margin-top: 6px; }
+        .area-tag { font-size: 0.85rem; color: var(--text-2); }
 
-        .demo-tag {
-            font-size: 0.7rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--muted);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 4px 10px;
-            white-space: nowrap;
-        }
-
-        .split {
-            display: grid;
-            grid-template-columns: 1.45fr 1fr;
-            gap: 22px;
-        }
-
-        .stage {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            overflow: hidden;
-            position: relative;
-            align-self: start;
-        }
-
-        .stage canvas, .stage svg { display: block; width: 100%; }
-
-        .stage-bar {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-            padding: 10px 12px;
-            border-top: 1px solid var(--border);
-            font-size: 0.82rem;
-            color: var(--text-2);
-        }
-
-        .ctl {
-            border: 1px solid var(--border);
-            background: var(--surface);
-            border-radius: 999px;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-
-        .ctl[aria-pressed="true"] { border-color: var(--purple); background: rgba(139, 69, 197, 0.16); }
-
-        .clock { margin-left: auto; font-variant-numeric: tabular-nums; }
-
-        .tiles {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .tile {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 14px;
-        }
-
-        .tile-label {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 0.78rem;
-            color: var(--text-2);
-        }
-
-        .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex: none; }
-
-        .tile-value { font-size: 1.55rem; font-weight: 500; margin-top: 4px; }
-
-        .tile-note { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-
-        .chart-box {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 14px;
-            position: relative;
-        }
-
-        .chart-title { font-size: 0.82rem; color: var(--text-2); margin-bottom: 8px; }
-
-        .chart-box svg { display: block; width: 100%; height: auto; overflow: visible; }
-
-        .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.76rem; color: var(--text-2); margin-top: 8px; }
-
-        .legend span { display: inline-flex; align-items: center; gap: 6px; }
-
-        .tooltip {
-            position: absolute;
-            pointer-events: none;
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 10px;
-            font-size: 0.78rem;
-            line-height: 1.5;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            z-index: 5;
-            white-space: nowrap;
-        }
-
-        .tooltip[hidden] { display: none; }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.82rem;
-            font-variant-numeric: tabular-nums;
-            margin-top: 10px;
-        }
-
-        .data-table th, .data-table td {
+        .area-sign {
+            width: 18px;
+            flex: none;
             text-align: right;
-            padding: 5px 8px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .data-table th:first-child, .data-table td:first-child { text-align: left; }
-
-        .data-table th { color: var(--text-2); font-weight: 500; }
-
-        .link-btn {
-            background: none;
-            border: none;
             color: var(--text-2);
-            text-decoration: underline;
-            cursor: pointer;
-            font-size: 0.82rem;
-            padding: 0;
+            transition: transform 0.25s ease;
         }
 
-        .points {
-            list-style: none;
-            display: grid;
-            gap: 8px;
-            margin-top: 16px;
-            font-size: 0.9rem;
+        .area-head[aria-expanded="true"] .area-sign { transform: rotate(45deg); }
+
+        .area-head:hover .area-name { color: var(--accent); }
+
+        .area-body {
+            padding: 0 0 22px 40px;
             color: var(--text-2);
         }
 
-        .points li { padding-left: 16px; position: relative; line-height: 1.5; }
+        .area-body[hidden] { display: none; }
 
-        .points li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0.6em;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--purple);
-        }
+        .area-body p { max-width: 560px; }
 
-        .cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
-
-        .btn {
-            display: inline-block;
-            text-decoration: none;
-            border-radius: 999px;
-            padding: 10px 18px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: var(--surface);
-        }
-
-        .btn-primary {
-            border-color: transparent;
-            color: #fff;
-            background: linear-gradient(135deg, var(--purple), var(--blue));
-        }
-
-        /* modelling */
-        .scenarios { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-
-        .slider-row {
+        .links {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.85rem;
-            color: var(--text-2);
-            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            margin-top: 12px;
+            font-size: 0.92rem;
         }
 
-        .slider-row input { flex: 1; accent-color: var(--purple); }
-
-        .slider-row output { min-width: 48px; text-align: right; color: var(--text); font-variant-numeric: tabular-nums; }
-
-        .insight {
-            background: rgba(139, 69, 197, 0.10);
-            border: 1px solid rgba(139, 69, 197, 0.35);
-            border-radius: 12px;
-            padding: 12px 14px;
-            font-size: 0.88rem;
-            line-height: 1.55;
-        }
-
-        #net .link { stroke-linecap: round; transition: stroke-width 0.4s ease, stroke 0.4s ease; pointer-events: none; }
-
-        #net .link-hit { stroke: transparent; stroke-width: 24; cursor: pointer; }
-
-        #net .node-label { font-size: 13px; fill: var(--text-2); }
-
-        #net .flag { font-size: 13px; font-weight: 700; fill: var(--text); }
-
-        /* tools + services */
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-
-        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-
-        .card {
-            display: flex;
-            flex-direction: column;
+        .links a {
+            color: var(--text);
             text-decoration: none;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px;
-            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            border-bottom: 1px solid var(--line);
+            transition: border-color 0.2s;
         }
 
-        a.card:hover { transform: translateY(-4px); border-color: var(--purple); }
-
-        .card-tag {
-            font-size: 0.68rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 10px;
-        }
-
-        .card h4 {
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-weight: 400;
-            font-size: 1.3rem;
-            margin-bottom: 8px;
-        }
-
-        .card p { color: var(--text-2); font-size: 0.88rem; line-height: 1.6; flex: 1; }
-
-        .card .url { margin-top: 12px; font-size: 0.75rem; color: var(--muted); overflow-wrap: anywhere; }
-
-        .card ul { list-style: none; margin-top: 10px; display: grid; gap: 5px; font-size: 0.84rem; }
-
-        .card li::before { content: '· '; color: var(--purple); font-weight: 700; }
-
-        .subhead {
-            font-size: 0.74rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent-text);
-            margin: 30px 0 12px;
-        }
-
-        .pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
-
-        .pill {
-            font-size: 0.82rem;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 6px 12px;
-        }
+        .links a:hover { border-color: var(--accent); }
 
         .spotlight {
-            border-color: var(--yellow) !important;
-            box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.35), 0 12px 40px rgba(241, 196, 15, 0.18) !important;
+            border-bottom-color: #f1c40f !important;
+            background: rgba(241, 196, 15, 0.12);
         }
 
-        /* ---------- Contact ---------- */
-        .contact { max-width: 720px; margin: 0 auto; padding: 80px 24px 90px; text-align: center; }
-
-        .contact h2 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 300; font-size: clamp(1.9rem, 4vw, 2.6rem); margin-bottom: 12px; }
-
-        .contact > p { color: var(--text-2); line-height: 1.7; margin-bottom: 28px; }
-
-        .enquiry {
-            text-align: left;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
+        .contact {
+            margin-top: 48px;
+            color: var(--text-2);
         }
 
-        .enquiry .full { grid-column: 1 / -1; }
+        .contact a { color: var(--text); }
 
-        .enquiry label {
-            display: block;
+        footer {
+            padding: 24px 104px 32px 28px;   /* keep clear of the chat button */
+            color: var(--text-2);
             font-size: 0.76rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--text-2);
-            margin-bottom: 6px;
-        }
-
-        .enquiry input, .enquiry select, .enquiry textarea {
-            width: 100%;
-            font: inherit;
-            font-size: 0.95rem;
-            color: var(--text);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 11px 13px;
-        }
-
-        .enquiry textarea { min-height: 120px; resize: vertical; }
-
-        .enquiry input:focus, .enquiry select:focus, .enquiry textarea:focus {
-            outline: none;
-            border-color: var(--purple);
-            box-shadow: 0 0 0 3px rgba(139, 69, 197, 0.2);
-        }
-
-        .enquiry-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-
-        .hint { color: var(--text-2); font-size: 0.8rem; line-height: 1.5; }
-
-        .direct { margin-top: 26px; color: var(--text-2); font-size: 0.92rem; }
-
-        .copy-btn {
-            margin-left: 8px;
-            background: none;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 4px 12px;
-            color: var(--text-2);
-            font-size: 0.78rem;
-            cursor: pointer;
-        }
-
-        /* ---------- Footer ---------- */
-        .tmd-foot {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 22px 24px calc(84px + env(safe-area-inset-bottom, 0px));
-            border-top: 1px solid var(--border);
-            color: var(--text-2);
-            text-align: center;
-            font-size: 0.76rem;
-            line-height: 1.5;
+            flex-wrap: wrap;
+            gap: 6px 18px;
+            justify-content: space-between;
         }
 
-        .tmd-foot b { color: var(--text); font-weight: 500; }
+        footer nav { display: flex; gap: 16px; }
 
-        .foot-links a { color: var(--text-2); margin: 0 6px; }
+        footer a { text-decoration: none; }
 
-        /* ---------- Assistant ---------- */
-        #assistant-launch {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 60;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: none;
-            border-radius: 999px;
-            padding: 12px 18px 12px 14px;
-            color: #fff;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--purple), var(--blue));
-            box-shadow: 0 8px 30px rgba(139, 69, 197, 0.45);
-            cursor: pointer;
-        }
+        footer a:hover { color: var(--text); }
 
-        #assistant-launch .ld {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #fff;
-            animation: brandPulse 2.4s ease-in-out infinite;
-        }
-
-        #assistant-launch[hidden] { display: none; }
-
-        #assistant {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 60;
-            width: 390px;
-            height: min(580px, calc(100vh - 110px));
-            display: flex;
-            flex-direction: column;
-            background: var(--surface);
-            border: 1px solid rgba(139, 69, 197, 0.4);
-            border-radius: 18px;
-            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.4);
-            overflow: hidden;
-        }
-
-        #assistant[hidden] { display: none; }
-
-        .as-head {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 16px;
-            background: linear-gradient(135deg, rgba(139, 69, 197, 0.18), rgba(52, 152, 219, 0.18));
-            border-bottom: 1px solid var(--border);
-        }
-
-        .as-head .ask-dot { width: 32px; height: 32px; }
-
-        .as-title { font-weight: 600; font-size: 0.95rem; }
-
-        .as-status { font-size: 0.74rem; color: var(--text-2); }
-
-        .as-close {
-            margin-left: auto;
-            background: none;
-            border: none;
-            font-size: 1.4rem;
-            line-height: 1;
-            cursor: pointer;
-            color: var(--text-2);
-            width: 32px;
-            height: 32px;
-        }
-
-        #as-log {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .msg {
-            max-width: 86%;
-            padding: 10px 13px;
-            border-radius: 14px;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            overflow-wrap: anywhere;
-        }
-
-        .msg.bot { align-self: flex-start; background: var(--surface-2); border-bottom-left-radius: 4px; }
-
-        .msg.user { align-self: flex-end; color: #fff; background: linear-gradient(135deg, var(--purple), var(--blue)); border-bottom-right-radius: 4px; }
-
-        .msg.act {
-            align-self: flex-start;
-            border: 1px dashed var(--border);
-            color: var(--text-2);
-            font-size: 0.78rem;
-            padding: 5px 10px;
-        }
-
-        .msg.typing span {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            margin: 0 2px;
-            border-radius: 50%;
-            background: var(--text-2);
-            animation: typing 1.2s infinite;
-        }
-
-        .msg.typing span:nth-child(2) { animation-delay: 0.15s; }
-        .msg.typing span:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes typing { 50% { opacity: 0.25; transform: translateY(-3px); } }
-
-        .as-chips { display: flex; gap: 6px; padding: 0 12px 10px; flex-wrap: wrap; }
-
-        .as-chips .chip-btn { font-size: 0.76rem; padding: 5px 10px; }
-
-        .as-form {
-            display: flex;
-            gap: 8px;
-            padding: 12px;
-            border-top: 1px solid var(--border);
-        }
-
-        .as-form input {
-            flex: 1;
-            min-width: 0;
-            border: 1px solid var(--border);
-            background: var(--bg);
-            color: var(--text);
-            border-radius: 999px;
-            padding: 10px 14px;
-            font: inherit;
-            font-size: 0.9rem;
-        }
-
-        .as-form input:focus { outline: none; border-color: var(--purple); }
-
-        .as-form button {
-            border: none;
-            border-radius: 999px;
-            padding: 0 16px;
-            color: #fff;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--purple), var(--blue));
-            cursor: pointer;
-        }
-
-        /* ---------- Responsive ---------- */
         @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            html { scroll-behavior: auto; }
-        }
-
-        @media (max-width: 1100px) {
-            .ai-grid, .grid-4 { grid-template-columns: repeat(2, 1fr); }
-            .split { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 860px) {
-            .nav-link { display: none; }
-            .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
 
         @media (max-width: 600px) {
-            .top-nav { padding: 12px 16px; gap: 12px; }
-            .brand { font-size: 1.1rem; }
-            .section { padding: 56px 16px 16px; }
-            .hero { padding: 100px 16px 56px; min-height: auto; }
-            .ask { border-radius: 18px; flex-wrap: wrap; }
-            .ask input { flex-basis: calc(100% - 60px); padding: 8px 4px; }
-            .ask button { width: 100%; padding: 11px; }
-            .ai-grid, .grid-4, .enquiry { grid-template-columns: 1fr; }
-            .panel { padding: 18px 14px; }
-            .tabs { display: grid; grid-template-columns: 1fr 1fr; }
-            #net .node-label { font-size: 18px; }
-            #net .flag { font-size: 18px; }
-            .tab { min-width: 0; padding: 10px 12px; font-size: 0.9rem; }
-            .tab small { display: none; }
-            #assistant { right: 0; bottom: 0; width: 100%; height: min(78vh, 600px); border-radius: 18px 18px 0 0; }
-            #assistant-launch { right: 14px; bottom: 14px; }
+            .top { padding: 18px 18px; }
+            main { padding: 6vh 18px 40px; }
+            .area-head { flex-wrap: wrap; gap: 4px 14px; }
+            .area-tag { order: 3; width: 100%; padding-left: 36px; }
+            .area-body { padding-left: 36px; }
+            footer { padding: 20px 18px 96px; }
         }
     </style>
 </head>
 <body>
-    <nav class="top-nav" aria-label="Main">
-        <a class="brand" href="#top"><span class="brand-dot" aria-hidden="true"></span>the moving dot</a>
-        <a class="nav-link" href="#dashboard" data-open="counting">Traffic counting</a>
-        <a class="nav-link" href="#dashboard" data-open="modelling">Modelling</a>
-        <a class="nav-link" href="#dashboard" data-open="tools">Tools</a>
-        <a class="nav-link" href="#dashboard" data-open="services">Services</a>
-        <a class="nav-cta" href="#contact">Contact</a>
+    <header class="top">
+        <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>the moving dot</a>
         <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="theme-icon">☀️</span></button>
-    </nav>
-
-    <!-- Hero: the assistant is the front door -->
-    <header class="hero" id="top">
-        <canvas id="hero-net" aria-hidden="true"></canvas>
-        <div class="hero-inner">
-            <div class="kicker">Transport · Data · AI</div>
-            <h1>Count it. Model it. Run it.</h1>
-            <p class="hero-sub">We count traffic from video with AI, model how networks respond to change, and build the software clients use every day. One team, from the kerb to the model, working with clients worldwide.</p>
-            <form class="ask" id="hero-ask">
-                <span class="ask-dot" aria-hidden="true"><span></span></span>
-                <input id="hero-input" type="text" autocomplete="off" aria-label="Ask our assistant" placeholder="Ask anything, e.g. what happens if the bridge closes?">
-                <button type="submit">Ask</button>
-            </form>
-            <div class="chips">
-                <button type="button" class="chip-btn" data-prompt="Show me AI traffic counting">Show me AI traffic counting</button>
-                <button type="button" class="chip-btn" data-prompt="What happens if the central bridge closes?">What if the bridge closes?</button>
-                <button type="button" class="chip-btn" data-prompt="What services do you offer?">What do you offer?</button>
-                <button type="button" class="chip-btn" data-prompt="I want to start a project">Start a project</button>
-            </div>
-        </div>
     </header>
 
-    <!-- Where AI does the work -->
-    <section class="section" id="ai">
-        <div class="kicker">Innovation</div>
-        <h2 class="section-title">Where AI does the work</h2>
-        <p class="section-sub">We put AI where it saves real effort on transport projects: fewer people at the roadside, faster model checks, cleaner data and quicker answers.</p>
-        <div class="ai-grid">
-            <button type="button" class="ai-card" data-open="counting">
-                <h3>Counting from video</h3>
-                <p>Computer vision detects, classifies and counts vehicles from camera footage, so a count survey no longer needs a team standing at the roadside.</p>
-                <span class="go">See the demo →</span>
-            </button>
-            <button type="button" class="ai-card" data-open="modelling">
-                <h3>AI-assisted modelling</h3>
-                <p>AI agents connected to industry modelling software run network checks, assignments and validation, so modellers spend their time on judgement.</p>
-                <span class="go">Try a scenario →</span>
-            </button>
-            <button type="button" class="ai-card" data-open="services" data-spot="service-surveys">
-                <h3>Survey data quality</h3>
-                <p>Automated checks flag problems while fieldwork is still running, and every cleaning step is recorded so the final dataset stands up to review.</p>
-                <span class="go">How surveys work →</span>
-            </button>
-            <button type="button" class="ai-card" data-assistant>
-                <h3>An assistant that guides you</h3>
-                <p>Ask in plain words. It opens the right demo, runs scenarios, explains the results and drafts your enquiry.</p>
-                <span class="go">Open the assistant →</span>
-            </button>
-        </div>
-    </section>
+    <main>
+        <h1>Count it. Model it. Run it.</h1>
+        <p class="lede">Transport consultancy and software, powered by AI. Working worldwide.</p>
 
-    <!-- Interactive dashboard -->
-    <section class="section" id="dashboard">
-        <div class="kicker">Explore</div>
-        <h2 class="section-title">What we do, live</h2>
-        <p class="section-sub">The four parts of the business in one dashboard. Click around, or ask the assistant to drive.</p>
-
-        <div class="dash">
-            <div class="tabs" role="tablist" aria-label="Business areas">
-                <button class="tab" role="tab" id="tab-counting" data-module="counting" aria-controls="counting" aria-selected="true"><span class="tab-dot"></span><span>Traffic counting<small>AI video counts</small></span></button>
-                <button class="tab" role="tab" id="tab-modelling" data-module="modelling" aria-controls="modelling" aria-selected="false" tabindex="-1"><span class="tab-dot"></span><span>Transport modelling<small>Test a change</small></span></button>
-                <button class="tab" role="tab" id="tab-tools" data-module="tools" aria-controls="tools" aria-selected="false" tabindex="-1"><span class="tab-dot"></span><span>Tools<small>Live platforms</small></span></button>
-                <button class="tab" role="tab" id="tab-services" data-module="services" aria-controls="services" aria-selected="false" tabindex="-1"><span class="tab-dot"></span><span>Services<small>How we work with you</small></span></button>
-            </div>
-
-            <!-- Traffic counting -->
-            <section class="panel" id="counting" role="tabpanel" aria-labelledby="tab-counting">
-                <div class="panel-head">
-                    <div>
-                        <h3>Traffic counting with computer vision</h3>
-                        <p>Each vehicle is detected, classified and counted as it crosses the stop line, turn by turn. Our Vehicle Counter does this with real camera footage.</p>
-                    </div>
-                    <span class="demo-tag">Simulated demo · accelerated time</span>
+        <ul class="areas">
+            <li class="area" id="counting">
+                <button class="area-head" aria-expanded="false" aria-controls="counting-body">
+                    <span class="area-num">01</span><span class="area-name">Traffic counting</span><span class="area-tag">AI video counts</span><span class="area-sign" aria-hidden="true">+</span>
+                </button>
+                <div class="area-body" id="counting-body" hidden>
+                    <p>Computer vision detects, classifies and counts vehicles from camera footage, by class and turning movement. No team at the roadside.</p>
+                    <div class="links"><a href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter">Vehicle Counter ↗</a></div>
                 </div>
-                <div class="split">
-                    <div class="stage">
-                        <canvas id="count-canvas" aria-label="Animated junction with vehicles being detected and counted"></canvas>
-                        <div class="stage-bar">
-                            <button type="button" class="ctl" id="ctl-detect" aria-pressed="true">AI detections</button>
-                            <button type="button" class="ctl" id="ctl-fast" aria-pressed="false">Fast forward</button>
-                            <button type="button" class="ctl" id="ctl-reset">Reset</button>
-                            <span class="clock" id="count-clock">07:00</span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="tiles" id="count-tiles"></div>
-                        <div class="chart-box">
-                            <div class="chart-title">Vehicles per 15 minutes, by class</div>
-                            <svg id="count-chart" viewBox="0 0 360 160" role="img" aria-label="Stacked bars of vehicles per 15 minutes by class"></svg>
-                            <div class="legend" id="count-legend"></div>
-                            <div class="tooltip" id="count-tip" hidden></div>
-                        </div>
-                        <div style="margin-top:10px">
-                            <button type="button" class="link-btn" id="ctl-table" aria-expanded="false">Show turning counts as a table</button>
-                            <div id="count-table-wrap" hidden></div>
-                        </div>
-                        <div class="cta-row">
-                            <a class="btn btn-primary" href="https://vehcount.themovingdot.com" target="_blank" rel="noopener">Open Vehicle Counter ↗</a>
-                            <a class="btn" href="#contact" data-enquire="Traffic counts">Plan a count</a>
-                        </div>
+            </li>
+            <li class="area" id="modelling">
+                <button class="area-head" aria-expanded="false" aria-controls="modelling-body">
+                    <span class="area-num">02</span><span class="area-name">Transport modelling</span><span class="area-tag">Test a change first</span><span class="area-sign" aria-hidden="true">+</span>
+                </button>
+                <div class="area-body" id="modelling-body" hidden>
+                    <p>Network and demand models in PTV Visum, SUMO and ActivitySim, with AI agents that check the network and validate against counts.</p>
+                </div>
+            </li>
+            <li class="area" id="tools">
+                <button class="area-head" aria-expanded="false" aria-controls="tools-body">
+                    <span class="area-num">03</span><span class="area-name">Tools</span><span class="area-tag">Live platforms</span><span class="area-sign" aria-hidden="true">+</span>
+                </button>
+                <div class="area-body" id="tools-body" hidden>
+                    <p>Built by us and running now.</p>
+                    <div class="links">
+                        <a href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter">Vehicle Counter ↗</a>
+                        <a href="https://one2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="one2many">One2Many ↗</a>
+                        <a href="https://many2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="many2many">Many2Many ↗</a>
+                        <a href="https://mismatch.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="mismatch">Mismatch ↗</a>
+                        <a href="https://wmbusflow.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="bus-flow-analyzer">Bus Flow Analyzer ↗</a>
+                        <a href="https://uaetransit.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="uae-transit-animation">UAE Transit ↗</a>
+                        <a href="https://riyadh-transit-animation.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="riyadh-transit-animation">Riyadh Transit ↗</a>
+                        <a href="https://whereistherainbowbus.netlify.app/" target="_blank" rel="noopener" data-agent-id="rainbow-bus-tracker">Rainbow Bus Tracker ↗</a>
                     </div>
                 </div>
-            </section>
+            </li>
+            <li class="area" id="services">
+                <button class="area-head" aria-expanded="false" aria-controls="services-body">
+                    <span class="area-num">04</span><span class="area-name">Services</span><span class="area-tag">Advise · Build · Run</span><span class="area-sign" aria-hidden="true">+</span>
+                </button>
+                <div class="area-body" id="services-body" hidden>
+                    <p>Surveys, analysis and modelling; the software and dashboards behind them; and the data operations that keep them running. Projects in the UK, Saudi Arabia and the UAE.</p>
+                </div>
+            </li>
+        </ul>
 
-            <!-- Transport modelling -->
-            <section class="panel" id="modelling" role="tabpanel" aria-labelledby="tab-modelling" hidden>
-                <div class="panel-head">
-                    <div>
-                        <h3>Test a change before you build it</h3>
-                        <p>A small city network, solved live. Traffic takes its fastest route, roads slow down as they fill, and the network settles into balance. Change the demand, pick a scenario, or click any road to close it.</p>
-                    </div>
-                    <span class="demo-tag">Simplified demo model</span>
-                </div>
-                <div class="split">
-                    <div class="stage">
-                        <svg id="net" viewBox="0 0 640 380" role="img" aria-label="Road network coloured by how full each road is"></svg>
-                        <div class="tooltip" id="net-tip" hidden></div>
-                        <div class="stage-bar">
-                            <span class="legend" style="margin:0">
-                                <span><span class="sw" style="background:var(--ok)"></span>Flowing (under 85% full)</span>
-                                <span><span class="sw" style="background:var(--warn)"></span>Busy (85–100%)</span>
-                                <span><span class="sw" style="background:var(--crit)"></span>! Over capacity</span>
-                                <span>Line width = traffic</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="scenarios" id="scenarios">
-                            <button type="button" class="ctl" data-scenario="base">Today</button>
-                            <button type="button" class="ctl" data-scenario="peak">Event peak +30%</button>
-                            <button type="button" class="ctl" data-scenario="closure">Bridge closed</button>
-                            <button type="button" class="ctl" data-scenario="growth">2035 growth + new link</button>
-                        </div>
-                        <div class="slider-row">
-                            <label for="demand">Demand</label>
-                            <input type="range" id="demand" min="60" max="160" step="5" value="100">
-                            <output id="demand-out" for="demand">100%</output>
-                        </div>
-                        <div class="tiles" id="net-tiles"></div>
-                        <div class="insight" id="net-insight" aria-live="polite"></div>
-                        <ul class="points">
-                            <li>Strategic and local models in PTV Visum, SUMO and ActivitySim</li>
-                            <li>AI agents that check network coding, run assignments and validate against counts</li>
-                            <li>Results delivered as interactive maps, not just tables</li>
-                        </ul>
-                        <div class="cta-row">
-                            <a class="btn btn-primary" href="#contact" data-enquire="Modelling & analysis">Discuss a model</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <p class="contact" id="contact" data-agent-id="contact">Start a project: <a href="mailto:info@themovingdot.com">info@themovingdot.com</a></p>
+    </main>
 
-            <!-- Tools -->
-            <section class="panel" id="tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
-                <div class="panel-head">
-                    <div>
-                        <h3>Platforms we built, running now</h3>
-                        <p>Each one is live and public. Open it and try it.</p>
-                    </div>
-                </div>
-                <div class="grid-4">
-                    <a class="card" href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter"><span class="card-tag">Product · AI</span><h4>Vehicle Counter</h4><p>Counts and classifies traffic from camera footage.</p><span class="url">vehcount.themovingdot.com ↗</span></a>
-                    <a class="card" href="https://one2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="one2many"><span class="card-tag">Platform</span><h4>One2Many</h4><p>Route from one origin to many destinations and compare them side by side.</p><span class="url">one2many.themovingdot.com ↗</span></a>
-                    <a class="card" href="https://many2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="many2many"><span class="card-tag">Platform</span><h4>Many2Many</h4><p>Every origin–destination pair of a study on one map.</p><span class="url">many2many.themovingdot.com ↗</span></a>
-                    <a class="card" href="https://mismatch.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="mismatch"><span class="card-tag">Analysis</span><h4>Mismatch</h4><p>Where car-free households cannot reach essential services by public transport.</p><span class="url">mismatch.themovingdot.com ↗</span></a>
-                    <a class="card" href="https://wmbusflow.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="bus-flow-analyzer"><span class="card-tag">Analysis</span><h4>Bus Flow Analyzer</h4><p>Where buses actually run, how often, and which corridors carry the network.</p><span class="url">wmbusflow.themovingdot.com ↗</span></a>
-                    <a class="card" href="https://uaetransit.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="uae-transit-animation"><span class="card-tag">3D visualisation</span><h4>UAE Transit Animation</h4><p>Ride 670+ bus and metro routes through real streets in 3D.</p><span class="url">uaetransit.themovingdot.com ↗</span></a>
-                    <a class="card" href="https://riyadh-transit-animation.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="riyadh-transit-animation"><span class="card-tag">Visualisation</span><h4>Riyadh Transit Animation</h4><p>A metro network animated line by line, to show what a new system changes.</p><span class="url">riyadh-transit-animation.themovingdot.com ↗</span></a>
-                    <a class="card" href="https://whereistherainbowbus.netlify.app/" target="_blank" rel="noopener" data-agent-id="rainbow-bus-tracker"><span class="card-tag">Live data</span><h4>Rainbow Bus Tracker</h4><p>One bus on a public map in real time, from a live vehicle feed.</p><span class="url">whereistherainbowbus.netlify.app ↗</span></a>
-                </div>
-            </section>
-
-            <!-- Services -->
-            <section class="panel" id="services" role="tabpanel" aria-labelledby="tab-services" hidden>
-                <div class="panel-head">
-                    <div>
-                        <h3>From the question to the platform</h3>
-                        <p>Most transport projects end with a report. Ours end with the report and the working software behind it, built by the people who understand the planning question.</p>
-                    </div>
-                </div>
-                <div class="grid-3">
-                    <div class="card" data-agent-id="service-advise"><span class="card-tag">Advise</span><h4>Planning &amp; modelling</h4><p>Evidence for decisions on roads, public transport and new development.</p><ul><li>Survey design and data strategy</li><li>Traffic, demand and trip-generation analysis</li><li>Network modelling and scenario testing</li></ul></div>
-                    <div class="card" data-agent-id="service-build"><span class="card-tag">Build</span><h4>Transport software</h4><p>Front end, back end and data, built for the job.</p><ul><li>Field survey apps that work on a phone</li><li>Dashboards and interactive maps</li><li>AI video counting and 3D visualisation</li></ul></div>
-                    <div class="card" data-agent-id="service-run"><span class="card-tag">Run</span><h4>Platforms &amp; data operations</h4><p>Software that keeps working after launch.</p><ul><li>Hosting, monitoring and updates</li><li>Data pipelines and quality control</li><li>Live dashboards for stakeholders</li></ul></div>
-                </div>
-
-                <div class="subhead" data-agent-id="service-surveys">Survey platform</div>
-                <p class="hint" style="font-size:0.9rem;margin-bottom:12px">Phone-based forms for interviewers, a live dashboard during fieldwork, and a validated dataset at the end.</p>
-                <div class="pill-row">
-                    <span class="pill">Roadside interview</span>
-                    <span class="pill">Household travel diary</span>
-                    <span class="pill">Public transport interview</span>
-                    <span class="pill">Hotel &amp; visitor travel diary</span>
-                    <span class="pill">Park-and-ride</span>
-                    <span class="pill">Parking interview</span>
-                    <span class="pill">Special generator / trip generation</span>
-                    <span class="pill">Traffic counts: automatic, turning, video</span>
-                </div>
-
-                <div class="subhead" data-agent-id="projects">Recent client work · client names kept confidential</div>
-                <div class="grid-2">
-                    <div class="card"><span class="card-tag">Saudi Arabia · Surveys &amp; dashboards</span><h4>City-wide travel survey programme</h4><p>Household, hotel-visitor, public transport, park-and-ride and special-generator surveys on one platform, with traffic count and data review dashboards.</p></div>
-                    <div class="card"><span class="card-tag">Saudi Arabia · Public transport</span><h4>Metro passenger surveys</h4><p>Passenger interviews at more than 10 metro stations on access mode, park-and-ride use and journeys, with fieldwork monitoring and data cleaning.</p></div>
-                    <div class="card"><span class="card-tag">UAE · Trip generation</span><h4>Trip generation manual, made digital</h4><p>A trip-estimation calculator by land-use class and a survey data explorer behind the manual's rates.</p></div>
-                    <div class="card"><span class="card-tag">Saudi Arabia · Road network</span><h4>Junction and corridor prioritisation</h4><p>Junction count analysis and an interactive tool for deciding which corridors to improve first.</p></div>
-                </div>
-
-                <div class="subhead">Works with</div>
-                <div class="pill-row">
-                    <span class="pill">PTV Visum</span><span class="pill">SUMO</span><span class="pill">ActivitySim</span><span class="pill">Python</span><span class="pill">PostgreSQL / Supabase</span><span class="pill">three.js</span><span class="pill">Cloudflare &amp; Netlify</span>
-                </div>
-            </section>
-        </div>
-    </section>
-
-    <!-- Contact -->
-    <section class="contact" id="contact" data-agent-id="contact">
-        <h2>Tell us about your project</h2>
-        <p>A count to run, a network to model, or a platform to build. Tell us what you need to decide and we will reply with how we would get you there.</p>
-        <form class="enquiry" id="enquiry" novalidate>
-            <div>
-                <label for="enq-name">Your name</label>
-                <input id="enq-name" type="text" autocomplete="name">
-            </div>
-            <div>
-                <label for="enq-org">Organisation</label>
-                <input id="enq-org" type="text" autocomplete="organization">
-            </div>
-            <div>
-                <label for="enq-type">What do you need?</label>
-                <select id="enq-type">
-                    <option>Traffic counts</option>
-                    <option>Transport surveys</option>
-                    <option>Modelling &amp; analysis</option>
-                    <option>Software, dashboard or platform</option>
-                    <option>Something else</option>
-                </select>
-            </div>
-            <div>
-                <label for="enq-where">Project location</label>
-                <input id="enq-where" type="text" placeholder="City, country">
-            </div>
-            <div class="full">
-                <label for="enq-msg">The question you need to answer</label>
-                <textarea id="enq-msg" placeholder="A few lines are enough."></textarea>
-            </div>
-            <div class="full enquiry-actions">
-                <button type="submit" class="btn btn-primary">Send enquiry</button>
-                <span class="hint">Opens your email app with the details filled in, addressed to info@themovingdot.com.</span>
-            </div>
-        </form>
-        <p class="direct">Or write directly: <a href="mailto:info@themovingdot.com">info@themovingdot.com</a><button type="button" class="copy-btn" id="copy-email">Copy</button></p>
-    </section>
-
-    <footer class="tmd-foot">
-        <span class="foot-links"><a href="/lab">Lab</a>·<a href="/flow">Flow</a>·<a href="/philosophy">Philosophy</a></span>
-        <span><b>The Moving Dot Ltd</b> · transport software &amp; consultancy. The demos on this page are simulated for illustration.</span>
+    <footer>
         <span>Platform software &copy; 2022&ndash;<span id="tmd-year">2026</span> The Moving Dot Ltd. All rights reserved.</span>
+        <nav aria-label="More"><a href="/lab">Lab</a><a href="/flow">Flow</a><a href="/philosophy">Philosophy</a></nav>
     </footer>
 
-    <!-- Assistant -->
-    <button type="button" id="assistant-launch" aria-controls="assistant" aria-expanded="false"><span class="ld" aria-hidden="true"></span>Ask the dot</button>
-    <aside id="assistant" aria-label="AI assistant" hidden>
-        <div class="as-head">
-            <span class="ask-dot" aria-hidden="true"><span></span></span>
-            <div>
-                <div class="as-title">the dot · AI assistant</div>
-                <div class="as-status" id="as-status">Opens demos, runs scenarios, drafts your enquiry</div>
-            </div>
-            <button type="button" class="as-close" id="as-close" aria-label="Close assistant">×</button>
-        </div>
-        <div id="as-log" aria-live="polite"></div>
-        <div class="as-chips">
-            <button type="button" class="chip-btn" data-prompt="Give me a quick tour">Quick tour</button>
-            <button type="button" class="chip-btn" data-prompt="Show me AI traffic counting">AI counting</button>
-            <button type="button" class="chip-btn" data-prompt="What happens if the central bridge closes?">Close the bridge</button>
-            <button type="button" class="chip-btn" data-prompt="I want to start a project">Start a project</button>
-        </div>
-        <form class="as-form" id="as-form">
-            <input id="as-input" type="text" autocomplete="off" placeholder="Ask anything…" aria-label="Message the assistant">
-            <button type="submit">Send</button>
-        </form>
-    </aside>
-
     <script src="/theme.js"></script>
-    <script src="/assets/dashboard.js"></script>
-    <script src="/assets/assistant.js"></script>
+    <script>
+        // The four areas: one open at a time. window.TMD is what the chatbot drives.
+        (function () {
+            var AREAS = ['counting', 'modelling', 'tools', 'services'];
+
+            function openArea(id, scroll) {
+                if (AREAS.indexOf(id) === -1) return false;
+                AREAS.forEach(function (a) {
+                    var head = document.querySelector('#' + a + ' .area-head');
+                    var on = a === id && head.getAttribute('aria-expanded') !== 'true' || (a === id && scroll);
+                    head.setAttribute('aria-expanded', String(on));
+                    document.getElementById(a + '-body').hidden = !on;
+                });
+                if (scroll) document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return true;
+            }
+
+            AREAS.forEach(function (a) {
+                document.querySelector('#' + a + ' .area-head').addEventListener('click', function () { openArea(a, false); });
+            });
+
+            function spotlight(id) {
+                var el = document.querySelector('[data-agent-id="' + id + '"]');
+                if (!el) return false;
+                var area = el.closest('.area');
+                if (area) openArea(area.id, true);
+                el.classList.add('spotlight');
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(function () { el.classList.remove('spotlight'); }, 2600);
+                return true;
+            }
+
+            document.getElementById('tmd-year').textContent = new Date().getFullYear();
+
+            window.TMD = {
+                areas: AREAS.slice(),
+                openArea: function (id) { return openArea(id, true); },
+                spotlight: spotlight,
+                state: function () {
+                    var open = AREAS.filter(function (a) { return !document.getElementById(a + '-body').hidden; });
+                    return open.length ? 'Open section: ' + open[0] + '.' : 'No section open.';
+                }
+            };
+        })();
+    </script>
+    <script src="/assets/chatbot.js"></script>
 </body>
 </html>
