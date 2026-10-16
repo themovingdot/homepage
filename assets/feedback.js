@@ -27,7 +27,7 @@
     // ---- central settings: change here, every tool follows ----------------
     var SUPABASE_URL = 'https://tbfmcxsbiybtyytbgyic.supabase.co';
     var SUPABASE_KEY = 'sb_publishable_dGytCWeXoKbdvJC2X2fzew_wir2ndP2';
-    var ALERT_URL = '';   // Apps Script /exec URL (workers/enquiry-alert); empty = no instant email yet
+    var ALERT_URL = 'https://script.google.com/macros/s/AKfycbyQO2-wu7IJeN8y2YD_WAh8AGJH9oIFQiDo4lTq_Oya56MsVtfvxVtyPkciSa0IKPCTLQ/exec';   // Apps Script (workers/enquiry-alert): Sheet row + instant email
     var CONTACT = 'info@themovingdot.com';
     // ---------------------------------------------------------------------------
 

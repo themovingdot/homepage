@@ -27,7 +27,7 @@
 
 ## 待用户提供
 - Supabase publishable key（粘贴到 assets/chatbot.js 的 CONFIG.supabaseKey）。
-- 新询盘邮件提醒：用户选 Google Apps Script（10-16）。代码 workers/enquiry-alert/Code.gs（部署步骤见同目录 README）。表格「Website enquiries — The Moving Dot」已建在用户 Drive（文件 ID 1tR02DEG2mDT9rnH14Qn1Qv9JnoAoH4dvt1oS20MiRog）。待用户：在表格里粘贴脚本、部署成 Web app、把 /exec 网址发来，填进 assets/feedback.js 顶部的 ALERT_URL。
+- 新询盘邮件提醒：用户选 Google Apps Script（10-16）。代码 workers/enquiry-alert/Code.gs（部署步骤见同目录 README）。表格「Website enquiries — The Moving Dot」已建在用户 Drive（文件 ID 1tR02DEG2mDT9rnH14Qn1Qv9JnoAoH4dvt1oS20MiRog）。已部署（10-16），/exec 网址已填进 assets/feedback.js 的 ALERT_URL；实测：健康检查正常、测试询盘进了表格、坏邮箱被拒。表格时区显示为美国太平洋时间，需用户在表格「文件 → 设置 → 时区」改成伦敦（连接器无法修改表格设置）。
 - Supabase publishable key：用户第一次发的少了最后一个字符被拒；第二次的可用（实测：新增 201，读/删被拒，坏邮箱被拒）。注意：同一个 key 能读写该项目的 riyadh_metro_survey（用户决定不改）。
 - 2026-10-16：反馈做成模板 + skill。模板 = assets/feedback.js，挂在 themovingdot.com/assets/feedback.js，任何网站一行 <script ... data-site="工具名"> 即可：左下角 Feedback 按钮（反馈/问题/询盘），写入中央 feedback 表，询盘/反馈/问题同时发 Apps Script（表格+即时邮件）。中央配置（Supabase 地址、key、ALERT_URL、联系邮箱）只在 feedback.js 顶部。首页聊天机器人也改为通过它保存（data-button="off"）。
 - skill 源文件在 skills/tmd-feedback/（SKILL.md、enquiry-alert.gs、schema.sql）；打包好的 zip 在用户 Drive「tmd-feedback skill.zip」（文件 ID 1a3GQqp4mbI1TPawoeF8S0hmLu1I_Udzn），需用户在 claude.ai 设置里上传成组织 skill。改 workers/enquiry-alert/Code.gs 时要同步 skills/tmd-feedback/enquiry-alert.gs。
