@@ -27,7 +27,8 @@
 
 ## 待用户提供
 - Supabase publishable key（粘贴到 assets/chatbot.js 的 CONFIG.supabaseKey）。
-- 新询盘邮件提醒：用户要邮件。会话里建的定时任务带不上 Supabase/Gmail 连接器（本组织不支持在这里传连接器），已删除；需用户在 claude.ai → Routines 里用同一段提示词建（带 Supabase + Gmail），或改用 Google Apps Script。测试提醒邮件已手动发过一封（feedback 第 6 行）。
+- 新询盘邮件提醒：用户选 Google Apps Script（10-16）。代码 workers/enquiry-alert/Code.gs（部署步骤见同目录 README）。表格「Website enquiries — The Moving Dot」已建在用户 Drive（文件 ID 1tR02DEG2mDT9rnH14Qn1Qv9JnoAoH4dvt1oS20MiRog）。待用户：在表格里粘贴脚本、部署成 Web app、把 /exec 网址发来，填进 assets/chatbot.js 的 CONFIG.alertUrl。
+- 用户 10-16 发来的 publishable key 被 Supabase 拒绝（Invalid API key，两个项目都不认），疑似复制时少了最后一个字符；CONFIG.supabaseKey 仍为空，待用户重发。
 - 创始人介绍（姓名、照片、一句话背景、资历）——About 区目前只写公司层面。
 - 是否加 WhatsApp 联系方式（号码）。
 - 调查平台要不要起正式产品名。

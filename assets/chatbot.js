@@ -32,7 +32,10 @@
         // It is safe in a web page: the tables only accept new rows; nobody can read them with it.
         supabaseUrl: 'https://tbfmcxsbiybtyytbgyic.supabase.co',
         site: 'themovingdot.com',
-        supabaseKey: ''
+        supabaseKey: '',
+        // Google Apps Script web app (workers/enquiry-alert/Code.gs): adds each enquiry to the
+        // "Website enquiries" Google Sheet and emails the owner at once. Paste its /exec URL here.
+        alertUrl: ''
     };
     try { CONFIG.apiUrl = localStorage.getItem('tmd-chat-api') || CONFIG.apiUrl; } catch (e) { /* storage blocked */ }
 
@@ -348,12 +351,26 @@
         })).catch(function () { /* logging must never break the chat */ });
     }
 
+    // Instant email + Google Sheet row. Apps Script can't answer cross-site requests,
+    // so this is fire-and-forget; the Supabase save decides success.
+    function alertOwner(email, message, source) {
+        if (!CONFIG.alertUrl) return;
+        try {
+            fetch(CONFIG.alertUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ site: CONFIG.site, kind: 'enquiry', email: email, message: message, page: location.pathname, source: source }),
+                keepalive: true
+            }).catch(function () { /* the Supabase copy still has it */ });
+        } catch (e) { /* ignore */ }
+    }
+
     function saveEnquiry(email, message, source) {
-        return store('feedback', feedbackRow('enquiry', {
-            email: clip(email.trim(), 254),
-            message: clip(message || '', 4000),
-            meta: { source: source }
-        }));
+        email = clip(email.trim(), 254);
+        message = clip(message || '', 4000);
+        alertOwner(email, message, source);
+        return store('feedback', feedbackRow('enquiry', { email: email, message: message, meta: { source: source } }));
     }
 
     // What the visitor has said so far, as context for an enquiry from the chat.
