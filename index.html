@@ -1,224 +1,124 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Moving Dot · Transport software &amp; consultancy</title>
+    <title>The Moving Dot · Transport, data and AI</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
-    <meta name="description" content="The Moving Dot builds transport software and advises on the questions behind it: transport surveys, planning and modelling, and the software behind them, from field data to live platforms. Working with clients worldwide.">
+    <link rel="canonical" href="https://themovingdot.com/">
+    <meta name="description" content="The Moving Dot counts traffic with AI, models transport networks and builds the software clients use every day. Explore live demos or ask our assistant. Working with clients worldwide.">
     <meta name="author" content="The Moving Dot Ltd">
     <meta name="copyright" content="Platform software © 2022-2026 The Moving Dot Ltd. All rights reserved.">
-    <meta property="og:title" content="The Moving Dot · Transport software &amp; consultancy">
-    <meta property="og:description" content="Transport surveys, modelling and the software behind them, delivered by one team from the planning question to the live platform. Working with clients worldwide.">
+    <meta property="og:title" content="The Moving Dot · Transport, data and AI">
+    <meta property="og:description" content="AI traffic counting, transport modelling and the software behind them. Explore the live demos or ask our assistant.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://themovingdot.com/">
-    <link rel="canonical" href="https://themovingdot.com/">
     <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
     <style>
+        :root {
+            --purple: #8b45c5;
+            --blue: #3498db;
+            --red: #e74c3c;
+            --yellow: #f1c40f;
+            --radius: 16px;
+            /* status colours for road loading: fixed, always paired with a label */
+            --ok: #0ca30c;
+            --warn: #fab219;
+            --crit: #d03b3b;
+        }
+
         :root[data-theme="dark"] {
-            --bg-primary: #000000;
-            --text-primary: #e8e8e8;
-            --text-secondary: #a0a0a8;
-            --card-bg: rgba(19, 19, 26, 0.6);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --chat-bg: rgba(20, 20, 20, 0.98);
-            --scrim: rgba(0, 0, 0, 0.78);
-            --nav-bg: rgba(0, 0, 0, 0.72);
+            color-scheme: dark;
+            --bg: #0b0b10;
+            --surface: #13131b;
+            --surface-2: #1a1a24;
+            --text: #ecebf2;
+            --text-2: #a7a6b4;
+            --muted: #8a8998;
+            --border: rgba(255, 255, 255, 0.10);
+            --grid: #2a2a35;
+            --nav-bg: rgba(11, 11, 16, 0.78);
+            --accent-text: #f1c40f;
+            /* vehicle classes: validated as a set on this surface (dataviz validator, dark) */
+            --c-car: #3498db;
+            --c-lgv: #b08a0a;
+            --c-bus: #9b59d0;
+            --c-hgv: #e74c3c;
+            --road: #22222c;
+            --road-mark: #44445a;
         }
 
         :root[data-theme="light"] {
-            --bg-primary: #ffffff;
-            --text-primary: #1a1a1a;
-            --text-secondary: #666666;
-            --card-bg: rgba(249, 249, 251, 0.8);
-            --card-border: rgba(0, 0, 0, 0.1);
-            --chat-bg: rgba(255, 255, 255, 0.98);
-            --scrim: rgba(255, 255, 255, 0.85);
-            --nav-bg: rgba(255, 255, 255, 0.8);
+            color-scheme: light;
+            --bg: #f7f7fa;
+            --surface: #ffffff;
+            --surface-2: #f0f0f5;
+            --text: #16161d;
+            --text-2: #55546a;
+            --muted: #6f6e84;
+            --border: rgba(0, 0, 0, 0.10);
+            --grid: #e3e2ea;
+            --nav-bg: rgba(247, 247, 250, 0.85);
+            --accent-text: #8a6d00;
+            /* vehicle classes: validated as a set on this surface (dataviz validator, light) */
+            --c-car: #2f86c4;
+            --c-lgv: #b7950b;
+            --c-bus: #8b45c5;
+            --c-hgv: #d43f2f;
+            --road: #dcdce5;
+            --road-mark: #ffffff;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
-        section[id] { scroll-margin-top: 72px; }
+        section[id] { scroll-margin-top: 76px; }
 
         body {
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'DM Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* ---------- Hero with the globe ---------- */
-        .hero {
-            position: relative;
-            height: 100vh;
-            min-height: 560px;
-            overflow: hidden;
-        }
+        a { color: inherit; }
 
-        #globe-canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            cursor: grab;
-        }
+        button { font: inherit; color: inherit; }
 
-        #globe-canvas:active {
-            cursor: grabbing;
-        }
+        :focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 
-        .hero-copy {
-            position: absolute;
-            left: 50%;
-            top: 13%;
-            transform: translateX(-50%);
-            text-align: center;
-            z-index: 2;
-            pointer-events: none;
-            padding: 26px 20px 30px;
-            width: min(100%, 1100px);
-            background: radial-gradient(ellipse 48% 60% at center, var(--scrim) 0%, var(--scrim) 45%, transparent 100%);
-            text-shadow: 0 0 18px var(--scrim), 0 0 4px var(--scrim);
-        }
-
-        .hero-kicker {
-            font-size: 0.72rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #f1c40f;
-            margin-bottom: 14px;
-        }
-
-        .hero-title {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 300;
-            font-size: clamp(2.3rem, 6vw, 4.2rem);
-            letter-spacing: 1px;
-            line-height: 1.08;
-        }
-
-        .hero-sub {
-            margin: 18px auto 0;
-            max-width: 620px;
-            line-height: 1.6;
-            font-size: clamp(0.95rem, 2vw, 1.1rem);
-            color: var(--text-primary);
-            opacity: 0.85;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-
-        .hero-cities {
-            position: absolute;
-            bottom: 96px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-            justify-content: center;
-            font-size: 0.78rem;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            pointer-events: none;
-        }
-
-
-        .hero-cities button {
-            pointer-events: auto;
-            background: none;
-            border: 1px solid transparent;
-            border-radius: 999px;
-            padding: 6px 12px;
-            font: inherit;
-            font-size: 0.78rem;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: color 0.25s ease, border-color 0.25s ease;
-        }
-
-        .hero-cities button:hover { color: var(--text-primary); }
-
-        .hero-cities button.active {
-            color: var(--text-primary);
-            border-color: var(--card-border);
-        }
-
-        .hero-cities button:nth-child(1)::before { content: '·'; margin-right: 6px; color: var(--text-secondary); }
-        .hero-cities button:nth-child(2)::before { content: '·'; margin-right: 6px; color: #8b45c5; }
-        .hero-cities button:nth-child(3)::before { content: '·'; margin-right: 6px; color: #3498db; }
-        .hero-cities button:nth-child(4)::before { content: '·'; margin-right: 6px; color: #e74c3c; }
-        .hero-cities button:nth-child(5)::before { content: '·'; margin-right: 6px; color: #f1c40f; }
-
-        .hero-scroll {
-            position: absolute;
-            bottom: 34px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2;
-            width: 18px;
-            height: 18px;
-            border-right: 1.5px solid var(--text-secondary);
-            border-bottom: 1.5px solid var(--text-secondary);
-            opacity: 0.6;
-            transform-origin: center;
-            animation: heroScroll 2s ease-in-out infinite;
-        }
-
-        @keyframes heroScroll {
-            0%, 100% { transform: translateX(-50%) rotate(45deg) translate(0, 0); }
-            50% { transform: translateX(-50%) rotate(45deg) translate(4px, 4px); }
-        }
-
-        /* ---------- Top navigation ---------- */
+        /* ---------- Navigation ---------- */
         .top-nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10001;
+            inset: 0 0 auto 0;
+            z-index: 50;
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 26px;
             padding: 14px 28px;
             background: var(--nav-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--border);
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: var(--text-primary);
             text-decoration: none;
-            font-family: 'Crimson Pro', serif;
+            font-family: 'Crimson Pro', Georgia, serif;
             font-size: 1.25rem;
-            letter-spacing: 0.5px;
             margin-right: auto;
             white-space: nowrap;
         }
@@ -227,144 +127,468 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: #f1c40f;
+            background: var(--yellow);
             box-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+            animation: brandPulse 3s ease-in-out infinite;
         }
+
+        @keyframes brandPulse { 50% { transform: scale(1.35); } }
 
         .nav-link {
-            color: var(--text-secondary);
+            color: var(--text-2);
             text-decoration: none;
             font-size: 0.88rem;
-            letter-spacing: 0.4px;
-            transition: color 0.2s ease;
+            transition: color 0.2s;
         }
 
-        .nav-link:hover { color: var(--text-primary); }
+        .nav-link:hover { color: var(--text); }
 
         .nav-cta {
-            color: var(--text-primary);
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 500;
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--border);
             border-radius: 999px;
             padding: 8px 16px;
-            transition: border-color 0.2s ease;
         }
 
-        .nav-cta:hover { border-color: #8b45c5; }
+        .nav-cta:hover { border-color: var(--purple); }
 
         #theme-toggle {
             width: 38px;
             height: 38px;
             flex: none;
             border-radius: 50%;
-            background: rgba(241, 196, 15, 0.15);
+            background: rgba(241, 196, 15, 0.14);
             border: 1.5px solid rgba(241, 196, 15, 0.35);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: grid;
+            place-items: center;
             font-size: 1.05rem;
-            transition: transform 0.3s ease;
         }
 
-        #theme-toggle:hover {
-            transform: scale(1.1) rotate(10deg);
+        .theme-icon { pointer-events: none; }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            position: relative;
+            min-height: 88vh;
+            display: grid;
+            place-items: center;
+            padding: 120px 24px 70px;
+            overflow: hidden;
         }
 
-        .theme-icon {
-            user-select: none;
-            pointer-events: none;
+        #hero-net {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.6;
         }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 860px;
+            text-align: center;
+        }
+
+        .kicker {
+            font-size: 0.74rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-text);
+            margin-bottom: 14px;
+        }
+
+        .hero h1 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-weight: 300;
+            font-size: clamp(2.5rem, 7vw, 4.6rem);
+            line-height: 1.05;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-sub {
+            margin: 20px auto 0;
+            max-width: 660px;
+            color: var(--text-2);
+            line-height: 1.65;
+            font-size: clamp(1rem, 2vw, 1.12rem);
+        }
+
+        .ask {
+            margin: 34px auto 0;
+            max-width: 640px;
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 40px rgba(139, 69, 197, 0.18);
+        }
+
+        .ask:focus-within { border-color: var(--purple); }
+
+        .ask-dot {
+            flex: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(139, 69, 197, 0.14);
+        }
+
+        .ask-dot span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--purple);
+            box-shadow: 0 0 12px var(--purple);
+            animation: brandPulse 2.4s ease-in-out infinite;
+        }
+
+        .ask input {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            background: none;
+            color: var(--text);
+            font: inherit;
+            font-size: 1rem;
+            padding: 0 6px;
+        }
+
+        .ask input:focus { outline: none; }
+
+        .ask button {
+            flex: none;
+            border: none;
+            border-radius: 999px;
+            padding: 0 22px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            cursor: pointer;
+        }
+
+        .chips {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .chip-btn {
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-2);
+            border-radius: 999px;
+            padding: 7px 14px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .chip-btn:hover { color: var(--text); border-color: var(--purple); }
 
         /* ---------- Sections ---------- */
         .section {
-            max-width: 1200px;
+            max-width: 1220px;
             margin: 0 auto;
-            padding: 90px 24px 30px;
-        }
-
-        .section-kicker {
-            font-size: 0.75rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #f1c40f;
-            margin-bottom: 10px;
+            padding: 70px 24px 20px;
         }
 
         .section-title {
-            font-family: 'Crimson Pro', serif;
+            font-family: 'Crimson Pro', Georgia, serif;
             font-weight: 300;
             font-size: clamp(1.9rem, 4vw, 2.8rem);
-            margin-bottom: 12px;
-        }
-
-        .section-sub {
-            color: var(--text-secondary);
-            max-width: 640px;
-            line-height: 1.7;
-            margin-bottom: 44px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .grid-3 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
-
-        /* ---------- Services ---------- */
-        .service {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 30px 28px;
-            border-top: 3px solid var(--acc-solid);
-        }
-
-        .service:nth-child(1) { --acc-solid: #8b45c5; }
-        .service:nth-child(2) { --acc-solid: #3498db; }
-        .service:nth-child(3) { --acc-solid: #e74c3c; }
-
-        .service-verb {
-            font-size: 0.72rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--acc-solid);
             margin-bottom: 10px;
         }
 
-        .service h3 {
-            font-family: 'Crimson Pro', serif;
+        .section-sub {
+            color: var(--text-2);
+            max-width: 680px;
+            line-height: 1.7;
+            margin-bottom: 34px;
+        }
+
+        /* ---------- AI strip ---------- */
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .ai-card {
+            text-align: left;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--acc);
+            border-radius: var(--radius);
+            padding: 24px 22px;
+            cursor: pointer;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .ai-card:nth-child(1) { --acc: var(--blue); }
+        .ai-card:nth-child(2) { --acc: var(--purple); }
+        .ai-card:nth-child(3) { --acc: var(--red); }
+        .ai-card:nth-child(4) { --acc: var(--yellow); }
+
+        .ai-card:hover { transform: translateY(-4px); border-color: var(--acc); }
+
+        .ai-card h3 {
+            font-family: 'Crimson Pro', Georgia, serif;
             font-weight: 400;
-            font-size: 1.55rem;
-            line-height: 1.25;
-            margin-bottom: 12px;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
         }
 
-        .service p {
-            color: var(--text-secondary);
-            font-size: 0.93rem;
-            line-height: 1.65;
-            margin-bottom: 18px;
+        .ai-card p {
+            color: var(--text-2);
+            font-size: 0.92rem;
+            line-height: 1.6;
         }
 
-        .service ul {
+        .ai-card .go {
+            display: inline-block;
+            margin-top: 14px;
+            font-size: 0.82rem;
+        }
+
+        /* ---------- Dashboard ---------- */
+        .dash {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-2);
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 150px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid transparent;
+            background: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            color: var(--text-2);
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .tab .tab-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--acc);
+            flex: none;
+        }
+
+        .tab[data-module="counting"] { --acc: var(--blue); }
+        .tab[data-module="modelling"] { --acc: var(--purple); }
+        .tab[data-module="tools"] { --acc: var(--red); }
+        .tab[data-module="services"] { --acc: var(--yellow); }
+
+        .tab small { display: block; font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+        .tab[aria-selected="true"] {
+            background: var(--surface);
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .panel { padding: 28px; }
+
+        .panel[hidden] { display: none; }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .panel-head h3 {
+            font-family: 'Crimson Pro', Georgia, serif;
+            font-weight: 400;
+            font-size: 1.8rem;
+        }
+
+        .panel-head p { color: var(--text-2); max-width: 640px; line-height: 1.6; margin-top: 6px; }
+
+        .demo-tag {
+            font-size: 0.7rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 4px 10px;
+            white-space: nowrap;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1.45fr 1fr;
+            gap: 22px;
+        }
+
+        .stage {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            align-self: start;
+        }
+
+        .stage canvas, .stage svg { display: block; width: 100%; }
+
+        .stage-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 10px 12px;
+            border-top: 1px solid var(--border);
+            font-size: 0.82rem;
+            color: var(--text-2);
+        }
+
+        .ctl {
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .ctl[aria-pressed="true"] { border-color: var(--purple); background: rgba(139, 69, 197, 0.16); }
+
+        .clock { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+        .tiles {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .tile {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .tile-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.78rem;
+            color: var(--text-2);
+        }
+
+        .sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex: none; }
+
+        .tile-value { font-size: 1.55rem; font-weight: 500; margin-top: 4px; }
+
+        .tile-note { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+        .chart-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            position: relative;
+        }
+
+        .chart-title { font-size: 0.82rem; color: var(--text-2); margin-bottom: 8px; }
+
+        .chart-box svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.76rem; color: var(--text-2); margin-top: 8px; }
+
+        .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+        .tooltip {
+            position: absolute;
+            pointer-events: none;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.78rem;
+            line-height: 1.5;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            z-index: 5;
+            white-space: nowrap;
+        }
+
+        .tooltip[hidden] { display: none; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            font-variant-numeric: tabular-nums;
+            margin-top: 10px;
+        }
+
+        .data-table th, .data-table td {
+            text-align: right;
+            padding: 5px 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th:first-child, .data-table td:first-child { text-align: left; }
+
+        .data-table th { color: var(--text-2); font-weight: 500; }
+
+        .link-btn {
+            background: none;
+            border: none;
+            color: var(--text-2);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.82rem;
+            padding: 0;
+        }
+
+        .points {
             list-style: none;
             display: grid;
             gap: 8px;
-            font-size: 0.88rem;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--text-2);
         }
 
-        .service li {
-            padding-left: 18px;
-            position: relative;
-            line-height: 1.5;
-        }
+        .points li { padding-left: 16px; position: relative; line-height: 1.5; }
 
-        .service li::before {
+        .points li::before {
             content: '';
             position: absolute;
             left: 0;
@@ -372,974 +596,642 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--acc-solid);
+            background: var(--purple);
         }
 
-        .stack {
-            margin-top: 34px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
+        .cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
 
-        .stack-label {
-            font-size: 0.72rem;
-            letter-spacing: 2.5px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            margin-right: 6px;
-        }
-
-        .chip {
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.76rem;
-            color: var(--text-secondary);
-            border: 1px solid var(--card-border);
+        .btn {
+            display: inline-block;
+            text-decoration: none;
             border-radius: 999px;
-            padding: 5px 12px;
-        }
-
-        /* ---------- Proof band ---------- */
-        .proof {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            max-width: 1200px;
-            margin: 70px auto 0;
-            padding: 36px 24px;
-            border-top: 1px solid var(--card-border);
-            border-bottom: 1px solid var(--card-border);
-            text-align: center;
-        }
-
-        .proof-num {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 300;
-            font-size: clamp(2.2rem, 5vw, 3.2rem);
-            line-height: 1;
-        }
-
-        .proof-label {
-            margin-top: 10px;
-            color: var(--text-secondary);
+            padding: 10px 18px;
             font-size: 0.88rem;
-            line-height: 1.5;
-        }
-
-        /* ---------- Approach ---------- */
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            counter-reset: step;
-        }
-
-        .step {
-            border-left: 1px solid var(--card-border);
-            padding: 4px 0 4px 20px;
-        }
-
-        .step-num {
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.78rem;
-            color: #f1c40f;
-            margin-bottom: 10px;
-        }
-
-        .step h3 {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 400;
-            font-size: 1.3rem;
-            margin-bottom: 8px;
-        }
-
-        .step p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .t-card {
-            position: relative;
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 26px 24px;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
-        }
-
-        .t-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(var(--acc), 0.55);
-            box-shadow: 0 16px 50px rgba(var(--acc), 0.18);
-        }
-
-        .t-card:nth-child(4n+1) { --acc: 139, 69, 197; --acc-solid: #8b45c5; }
-        .t-card:nth-child(4n+2) { --acc: 52, 152, 219; --acc-solid: #3498db; }
-        .t-card:nth-child(4n+3) { --acc: 231, 76, 60; --acc-solid: #e74c3c; }
-        .t-card:nth-child(4n+4) { --acc: 241, 196, 15; --acc-solid: #f1c40f; }
-
-        .t-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            background: rgba(var(--acc), 0.1);
-            border: 1px solid rgba(var(--acc), 0.3);
-            color: var(--acc-solid);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin-bottom: 20px;
-            transition: transform 0.35s ease;
-        }
-
-        .t-card:hover .t-icon {
-            transform: scale(1.08) rotate(5deg);
-        }
-
-        .orb-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 26px;
-            height: 26px;
-            margin: -13px 0 0 -13px;
-            border: 1.5px solid currentColor;
-            border-radius: 50%;
-            opacity: 0.75;
-            animation: orbSpin 10s linear infinite;
-        }
-
-        .orb-ring::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: 50%;
-            margin-left: -2.5px;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
-        .orb-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-            box-shadow: 0 0 12px currentColor;
-        }
-
-        @keyframes orbSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .t-title {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 400;
-            font-size: 1.45rem;
-            margin-bottom: 10px;
-            line-height: 1.25;
-        }
-
-        .t-desc {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.65;
-            margin-bottom: 16px;
-            flex: 1;
-        }
-
-        .t-link {
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.74rem;
-            color: var(--acc-solid);
-            opacity: 0.9;
-            overflow-wrap: anywhere;
-        }
-
-        .t-tag {
-            position: absolute;
-            top: 22px;
-            right: 22px;
-            font-size: 0.66rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            border: 1px solid var(--card-border);
-            border-radius: 999px;
-            padding: 4px 10px;
-        }
-
-        /* ---------- Contact band ---------- */
-        .contact-band {
-            max-width: 760px;
-            margin: 40px auto 0;
-            padding: 80px 24px 90px;
-            text-align: center;
-        }
-
-        .contact-band h2 {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 300;
-            font-size: clamp(1.8rem, 4vw, 2.6rem);
-            margin-bottom: 14px;
-        }
-
-        .contact-band p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 30px;
-        }
-
-        .contact-email {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 26px;
-        }
-
-        .contact-email a {
-            font-family: 'Crimson Pro', serif;
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            color: var(--text-primary);
-            text-decoration: none;
-            border-bottom: 1px solid rgba(139, 69, 197, 0.6);
-        }
-
-        .copy-btn {
-            background: none;
-            border: 1px solid var(--card-border);
-            border-radius: 999px;
-            padding: 6px 14px;
-            color: var(--text-secondary);
-            font: inherit;
-            font-size: 0.8rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: color 0.2s ease, border-color 0.2s ease;
-        }
-
-        .copy-btn:hover { color: var(--text-primary); border-color: #8b45c5; }
-
-        .contact-btn {
-            display: inline-block;
-            padding: 14px 30px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #8b45c5, #3498db);
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-
-        .contact-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 34px rgba(139, 69, 197, 0.4);
-        }
-
-        .contact-lab {
-            margin-top: 34px;
-            font-size: 0.88rem;
-        }
-
-        .contact-lab a { color: var(--text-primary); }
-
-
-        /* ---------- Hero calls to action ---------- */
-        .hero-actions {
-            margin-top: 26px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            pointer-events: auto;
-            text-shadow: none;
-        }
-
-        .btn-primary,
-        .btn-ghost {
-            display: inline-block;
-            padding: 12px 24px;
-            border-radius: 999px;
-            text-decoration: none;
-            font-size: 0.92rem;
-            font-weight: 600;
-            letter-spacing: 0.4px;
-            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            border: 1px solid var(--border);
+            background: var(--surface);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #8b45c5, #3498db);
+            border-color: transparent;
             color: #fff;
-            border: 1px solid transparent;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(139, 69, 197, 0.4);
-        }
+        /* modelling */
+        .scenarios { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 
-        .btn-ghost {
-            color: var(--text-primary);
-            border: 1px solid var(--card-border);
-            background: var(--scrim);
-        }
-
-        .btn-ghost:hover { border-color: #8b45c5; }
-
-        /* ---------- Survey platform ---------- */
-        .survey-types {
+        .slider-row {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 40px;
-        }
-
-        .survey-types .chip {
-            font-family: 'DM Sans', system-ui, sans-serif;
+            align-items: center;
+            gap: 12px;
             font-size: 0.85rem;
-            color: var(--text-primary);
-            padding: 7px 14px;
+            color: var(--text-2);
+            margin-bottom: 14px;
         }
 
-        .flow {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+        .slider-row input { flex: 1; accent-color: var(--purple); }
+
+        .slider-row output { min-width: 48px; text-align: right; color: var(--text); font-variant-numeric: tabular-nums; }
+
+        .insight {
+            background: rgba(139, 69, 197, 0.10);
+            border: 1px solid rgba(139, 69, 197, 0.35);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            line-height: 1.55;
         }
 
-        .flow-step {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 24px 22px;
-        }
+        #net .link { stroke-linecap: round; transition: stroke-width 0.4s ease, stroke 0.4s ease; pointer-events: none; }
 
-        .flow-step:nth-child(1) { --acc-solid: #8b45c5; }
-        .flow-step:nth-child(2) { --acc-solid: #3498db; }
-        .flow-step:nth-child(3) { --acc-solid: #e74c3c; }
-        .flow-step:nth-child(4) { --acc-solid: #f1c40f; }
+        #net .link-hit { stroke: transparent; stroke-width: 24; cursor: pointer; }
 
-        .flow-step .step-num { color: var(--acc-solid); }
+        #net .node-label { font-size: 13px; fill: var(--text-2); }
 
-        .flow-step h3 {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 400;
-            font-size: 1.35rem;
-            margin-bottom: 8px;
-        }
+        #net .flag { font-size: 13px; font-weight: 700; fill: var(--text); }
 
-        .flow-step p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
+        /* tools + services */
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
-        /* ---------- Case studies ---------- */
-        .case {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 28px 26px;
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+        .card {
             display: flex;
             flex-direction: column;
-            border-left: 3px solid var(--acc-solid);
+            text-decoration: none;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
 
-        .case:nth-child(4n+1) { --acc-solid: #8b45c5; }
-        .case:nth-child(4n+2) { --acc-solid: #3498db; }
-        .case:nth-child(4n+3) { --acc-solid: #e74c3c; }
-        .case:nth-child(4n+4) { --acc-solid: #f1c40f; }
+        a.card:hover { transform: translateY(-4px); border-color: var(--purple); }
 
-        .case-meta {
-            font-size: 0.7rem;
-            letter-spacing: 2.5px;
+        .card-tag {
+            font-size: 0.68rem;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: var(--acc-solid);
+            color: var(--muted);
             margin-bottom: 10px;
         }
 
-        .case h3 {
-            font-family: 'Crimson Pro', serif;
+        .card h4 {
+            font-family: 'Crimson Pro', Georgia, serif;
             font-weight: 400;
-            font-size: 1.5rem;
-            line-height: 1.25;
-            margin-bottom: 12px;
-        }
-
-        .case p {
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.65;
-            margin-bottom: 16px;
-        }
-
-        .case-label {
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--text-secondary);
+            font-size: 1.3rem;
             margin-bottom: 8px;
         }
 
-        .case ul {
-            list-style: none;
-            display: grid;
-            gap: 6px;
-            font-size: 0.88rem;
+        .card p { color: var(--text-2); font-size: 0.88rem; line-height: 1.6; flex: 1; }
+
+        .card .url { margin-top: 12px; font-size: 0.75rem; color: var(--muted); overflow-wrap: anywhere; }
+
+        .card ul { list-style: none; margin-top: 10px; display: grid; gap: 5px; font-size: 0.84rem; }
+
+        .card li::before { content: '· '; color: var(--purple); font-weight: 700; }
+
+        .subhead {
+            font-size: 0.74rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--accent-text);
+            margin: 30px 0 12px;
         }
 
-        .case li {
-            padding-left: 16px;
-            position: relative;
-            line-height: 1.5;
-        }
+        .pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
 
-        .case li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0.6em;
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--acc-solid);
-        }
-
-        .grid-2 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-
-        .note {
-            margin-top: 22px;
-            color: var(--text-secondary);
+        .pill {
             font-size: 0.82rem;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px 12px;
         }
 
-        /* ---------- About ---------- */
-        .about {
-            display: grid;
-            grid-template-columns: 1.1fr 1fr;
-            gap: 48px;
-            align-items: start;
+        .spotlight {
+            border-color: var(--yellow) !important;
+            box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.35), 0 12px 40px rgba(241, 196, 15, 0.18) !important;
         }
 
-        .about-text p {
-            color: var(--text-secondary);
-            line-height: 1.75;
-            margin-bottom: 16px;
-        }
+        /* ---------- Contact ---------- */
+        .contact { max-width: 720px; margin: 0 auto; padding: 80px 24px 90px; text-align: center; }
 
-        .about-text p strong { color: var(--text-primary); font-weight: 500; }
+        .contact h2 { font-family: 'Crimson Pro', Georgia, serif; font-weight: 300; font-size: clamp(1.9rem, 4vw, 2.6rem); margin-bottom: 12px; }
 
-        .reasons {
-            display: grid;
-            gap: 18px;
-        }
+        .contact > p { color: var(--text-2); line-height: 1.7; margin-bottom: 28px; }
 
-        .reason {
-            border-left: 1px solid var(--card-border);
-            padding: 2px 0 2px 20px;
-        }
-
-        .reason h3 {
-            font-family: 'Crimson Pro', serif;
-            font-weight: 400;
-            font-size: 1.3rem;
-            margin-bottom: 6px;
-        }
-
-        .reason p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        /* ---------- Enquiry form ---------- */
         .enquiry {
             text-align: left;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 0 auto 30px;
-            max-width: 640px;
+            gap: 14px;
         }
 
         .enquiry .full { grid-column: 1 / -1; }
 
         .enquiry label {
             display: block;
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             letter-spacing: 1px;
             text-transform: uppercase;
-            color: var(--text-secondary);
+            color: var(--text-2);
             margin-bottom: 6px;
         }
 
-        .enquiry input,
-        .enquiry select,
-        .enquiry textarea {
+        .enquiry input, .enquiry select, .enquiry textarea {
             width: 100%;
             font: inherit;
             font-size: 0.95rem;
-            color: var(--text-primary);
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
+            color: var(--text);
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 11px 13px;
         }
 
-        .enquiry select option { color: #1a1a1a; }
-
         .enquiry textarea { min-height: 120px; resize: vertical; }
 
-        .enquiry input:focus,
-        .enquiry select:focus,
-        .enquiry textarea:focus {
+        .enquiry input:focus, .enquiry select:focus, .enquiry textarea:focus {
             outline: none;
-            border-color: #8b45c5;
+            border-color: var(--purple);
             box-shadow: 0 0 0 3px rgba(139, 69, 197, 0.2);
         }
 
-        .enquiry button.contact-btn {
-            border: none;
-            font: inherit;
-            font-weight: 600;
+        .enquiry-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+
+        .hint { color: var(--text-2); font-size: 0.8rem; line-height: 1.5; }
+
+        .direct { margin-top: 26px; color: var(--text-2); font-size: 0.92rem; }
+
+        .copy-btn {
+            margin-left: 8px;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 4px 12px;
+            color: var(--text-2);
+            font-size: 0.78rem;
             cursor: pointer;
         }
 
-        .enquiry-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .enquiry-hint {
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            line-height: 1.5;
-        }
-
-        .contact-or {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-
-        .foot-links a {
-            color: var(--text-secondary);
-            margin: 0 6px;
-        }
-
-        .foot-links a:hover { color: var(--text-primary); }
-
-        /* Bright yellow is unreadable on white: use a deeper gold in light mode */
-        [data-theme="light"] .hero-kicker,
-        [data-theme="light"] .section-kicker,
-        [data-theme="light"] .step-num { color: #b7950b; }
-        [data-theme="light"] .case:nth-child(4n+4),
-        [data-theme="light"] .flow-step:nth-child(4) { --acc-solid: #b7950b; }
-
-        /* ---------- Footer (legal notice) ---------- */
+        /* ---------- Footer ---------- */
         .tmd-foot {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            padding: 22px 24px calc(22px + env(safe-area-inset-bottom, 0px));
-            border-top: 1px solid var(--card-border);
-            color: var(--text-secondary);
+            gap: 6px;
+            padding: 22px 24px calc(84px + env(safe-area-inset-bottom, 0px));
+            border-top: 1px solid var(--border);
+            color: var(--text-2);
             text-align: center;
             font-size: 0.76rem;
             line-height: 1.5;
         }
 
-        .tmd-foot b { color: var(--text-primary); font-weight: 500; }
+        .tmd-foot b { color: var(--text); font-weight: 500; }
 
+        .foot-links a { color: var(--text-2); margin: 0 6px; }
+
+        /* ---------- Assistant ---------- */
+        #assistant-launch {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px 12px 14px;
+            color: #fff;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            box-shadow: 0 8px 30px rgba(139, 69, 197, 0.45);
+            cursor: pointer;
+        }
+
+        #assistant-launch .ld {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #fff;
+            animation: brandPulse 2.4s ease-in-out infinite;
+        }
+
+        #assistant-launch[hidden] { display: none; }
+
+        #assistant {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 60;
+            width: 390px;
+            height: min(580px, calc(100vh - 110px));
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+            border: 1px solid rgba(139, 69, 197, 0.4);
+            border-radius: 18px;
+            box-shadow: 0 18px 60px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        #assistant[hidden] { display: none; }
+
+        .as-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, rgba(139, 69, 197, 0.18), rgba(52, 152, 219, 0.18));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .as-head .ask-dot { width: 32px; height: 32px; }
+
+        .as-title { font-weight: 600; font-size: 0.95rem; }
+
+        .as-status { font-size: 0.74rem; color: var(--text-2); }
+
+        .as-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            line-height: 1;
+            cursor: pointer;
+            color: var(--text-2);
+            width: 32px;
+            height: 32px;
+        }
+
+        #as-log {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .msg {
+            max-width: 86%;
+            padding: 10px 13px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .msg.bot { align-self: flex-start; background: var(--surface-2); border-bottom-left-radius: 4px; }
+
+        .msg.user { align-self: flex-end; color: #fff; background: linear-gradient(135deg, var(--purple), var(--blue)); border-bottom-right-radius: 4px; }
+
+        .msg.act {
+            align-self: flex-start;
+            border: 1px dashed var(--border);
+            color: var(--text-2);
+            font-size: 0.78rem;
+            padding: 5px 10px;
+        }
+
+        .msg.typing span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin: 0 2px;
+            border-radius: 50%;
+            background: var(--text-2);
+            animation: typing 1.2s infinite;
+        }
+
+        .msg.typing span:nth-child(2) { animation-delay: 0.15s; }
+        .msg.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes typing { 50% { opacity: 0.25; transform: translateY(-3px); } }
+
+        .as-chips { display: flex; gap: 6px; padding: 0 12px 10px; flex-wrap: wrap; }
+
+        .as-chips .chip-btn { font-size: 0.76rem; padding: 5px 10px; }
+
+        .as-form {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .as-form input {
+            flex: 1;
+            min-width: 0;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 999px;
+            padding: 10px 14px;
+            font: inherit;
+            font-size: 0.9rem;
+        }
+
+        .as-form input:focus { outline: none; border-color: var(--purple); }
+
+        .as-form button {
+            border: none;
+            border-radius: 999px;
+            padding: 0 16px;
+            color: #fff;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--purple), var(--blue));
+            cursor: pointer;
+        }
+
+        /* ---------- Responsive ---------- */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
                 transition-duration: 0.01ms !important;
             }
+            html { scroll-behavior: auto; }
         }
 
         @media (max-width: 1100px) {
-            .grid, .flow { grid-template-columns: repeat(2, 1fr); }
-            .steps { grid-template-columns: repeat(2, 1fr); row-gap: 32px; }
+            .ai-grid, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .split { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 860px) {
-            .grid-3, .grid-2, .about { grid-template-columns: 1fr; }
-            .about { gap: 32px; }
             .nav-link { display: none; }
-        }
-
-        @media (max-width: 768px) {
-            .section { padding: 64px 20px 20px; }
-            .hero-cities { bottom: 84px; gap: 6px; padding: 0 16px; width: 100%; }
-            .hero-copy { top: 11%; }
-            .top-nav { padding: 12px 16px; gap: 12px; }
-            .proof { grid-template-columns: 1fr; gap: 28px; margin-top: 50px; }
+            .grid-3, .grid-2 { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 600px) {
-            .grid, .steps, .flow, .enquiry { grid-template-columns: 1fr; }
-            .hero-actions { margin-top: 18px; }
-            .hero-cities button { padding: 6px 8px; letter-spacing: 1.5px; }
+            .top-nav { padding: 12px 16px; gap: 12px; }
             .brand { font-size: 1.1rem; }
-            .nav-cta { padding: 7px 12px; }
+            .section { padding: 56px 16px 16px; }
+            .hero { padding: 100px 16px 56px; min-height: auto; }
+            .ask { border-radius: 18px; flex-wrap: wrap; }
+            .ask input { flex-basis: calc(100% - 60px); padding: 8px 4px; }
+            .ask button { width: 100%; padding: 11px; }
+            .ai-grid, .grid-4, .enquiry { grid-template-columns: 1fr; }
+            .panel { padding: 18px 14px; }
+            .tabs { display: grid; grid-template-columns: 1fr 1fr; }
+            #net .node-label { font-size: 18px; }
+            #net .flag { font-size: 18px; }
+            .tab { min-width: 0; padding: 10px 12px; font-size: 0.9rem; }
+            .tab small { display: none; }
+            #assistant { right: 0; bottom: 0; width: 100%; height: min(78vh, 600px); border-radius: 18px 18px 0 0; }
+            #assistant-launch { right: 14px; bottom: 14px; }
         }
     </style>
 </head>
 <body>
-    <!-- Top navigation -->
     <nav class="top-nav" aria-label="Main">
         <a class="brand" href="#top"><span class="brand-dot" aria-hidden="true"></span>the moving dot</a>
-        <a class="nav-link" href="#services">What we do</a>
-        <a class="nav-link" href="#surveys">Surveys</a>
-        <a class="nav-link" href="#cases">Projects</a>
-        <a class="nav-link" href="#work">Tools</a>
-        <a class="nav-link" href="#about">About</a>
+        <a class="nav-link" href="#dashboard" data-open="counting">Traffic counting</a>
+        <a class="nav-link" href="#dashboard" data-open="modelling">Modelling</a>
+        <a class="nav-link" href="#dashboard" data-open="tools">Tools</a>
+        <a class="nav-link" href="#dashboard" data-open="services">Services</a>
         <a class="nav-cta" href="#contact">Contact</a>
-        <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-            <span class="theme-icon">☀️</span>
-        </button>
+        <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="theme-icon">☀️</span></button>
     </nav>
 
-    <!-- Hero -->
-    <section class="hero" id="top">
-        <canvas id="globe-canvas" aria-hidden="true"></canvas>
-
-        <div class="hero-copy">
-            <div class="hero-kicker">Transport software &amp; consultancy</div>
-            <h1 class="hero-title">Software for how cities move</h1>
-            <p class="hero-sub">Transport surveys, modelling and the software behind them, delivered by one team from the planning question to the live platform. Working with clients worldwide.</p>
-            <div class="hero-actions">
-                <a class="btn-primary" href="#contact">Discuss a project</a>
-                <a class="btn-ghost" href="#cases">See our projects</a>
+    <!-- Hero: the assistant is the front door -->
+    <header class="hero" id="top">
+        <canvas id="hero-net" aria-hidden="true"></canvas>
+        <div class="hero-inner">
+            <div class="kicker">Transport · Data · AI</div>
+            <h1>Count it. Model it. Run it.</h1>
+            <p class="hero-sub">We count traffic from video with AI, model how networks respond to change, and build the software clients use every day. One team, from the kerb to the model, working with clients worldwide.</p>
+            <form class="ask" id="hero-ask">
+                <span class="ask-dot" aria-hidden="true"><span></span></span>
+                <input id="hero-input" type="text" autocomplete="off" aria-label="Ask our assistant" placeholder="Ask anything, e.g. what happens if the bridge closes?">
+                <button type="submit">Ask</button>
+            </form>
+            <div class="chips">
+                <button type="button" class="chip-btn" data-prompt="Show me AI traffic counting">Show me AI traffic counting</button>
+                <button type="button" class="chip-btn" data-prompt="What happens if the central bridge closes?">What if the bridge closes?</button>
+                <button type="button" class="chip-btn" data-prompt="What services do you offer?">What do you offer?</button>
+                <button type="button" class="chip-btn" data-prompt="I want to start a project">Start a project</button>
             </div>
         </div>
+    </header>
 
-        <div class="hero-cities" aria-label="Zoom the globe">
-            <button type="button" data-city="World" class="active">World</button>
-            <button type="button" data-city="Birmingham">Birmingham</button>
-            <button type="button" data-city="Riyadh">Riyadh</button>
-            <button type="button" data-city="Abu Dhabi">Abu Dhabi</button>
-            <button type="button" data-city="Dubai">Dubai</button>
-        </div>
-
-        <div class="hero-scroll" aria-hidden="true"></div>
-    </section>
-
-    <!-- What we do -->
-    <section class="section" id="services">
-        <div class="section-kicker">What we do</div>
-        <h2 class="section-title">From the question to the platform</h2>
-        <p class="section-sub">Most transport projects hand over a report. We hand over the report and the working software behind it: the tools that collect the data, model the network and show the result, built by people who understand the planning question.</p>
-        <div class="grid grid-3">
-            <article class="service">
-                <div class="service-verb">Advise</div>
-                <h3>Transport planning &amp; modelling</h3>
-                <p>Evidence for decisions on roads, public transport and new development, framed around the question the client actually has to answer.</p>
-                <ul>
-                    <li>Survey design and data collection strategy</li>
-                    <li>Traffic, demand and trip-generation analysis</li>
-                    <li>Network modelling and scenario testing</li>
-                    <li>Accessibility and public transport studies</li>
-                </ul>
-            </article>
-            <article class="service">
-                <div class="service-verb">Build</div>
-                <h3>Transport software, end to end</h3>
-                <p>Front end, back end and data, built for the job instead of forcing the job into a generic tool.</p>
-                <ul>
-                    <li>Field survey apps that work on a phone</li>
-                    <li>Web platforms, APIs and databases</li>
-                    <li>Dashboards and interactive maps</li>
-                    <li>3D network visualisation and video-based counting</li>
-                </ul>
-            </article>
-            <article class="service">
-                <div class="service-verb">Run</div>
-                <h3>Platforms &amp; data operations</h3>
-                <p>Software that keeps working after launch, with the data checked and delivered clean for as long as the project runs.</p>
-                <ul>
-                    <li>Hosting, monitoring and updates</li>
-                    <li>Data pipelines and quality control</li>
-                    <li>Live dashboards for clients and stakeholders</li>
-                    <li>Reusable platforms that carry into the next project</li>
-                </ul>
-            </article>
-        </div>
-        <div class="stack" aria-label="Tools we work with">
-            <span class="stack-label">Works with</span>
-            <span class="chip">PTV Visum</span>
-            <span class="chip">SUMO</span>
-            <span class="chip">ActivitySim</span>
-            <span class="chip">Python</span>
-            <span class="chip">PostgreSQL / Supabase</span>
-            <span class="chip">three.js</span>
-            <span class="chip">Cloudflare &amp; Netlify</span>
+    <!-- Where AI does the work -->
+    <section class="section" id="ai">
+        <div class="kicker">Innovation</div>
+        <h2 class="section-title">Where AI does the work</h2>
+        <p class="section-sub">We put AI where it saves real effort on transport projects: fewer people at the roadside, faster model checks, cleaner data and quicker answers.</p>
+        <div class="ai-grid">
+            <button type="button" class="ai-card" data-open="counting">
+                <h3>Counting from video</h3>
+                <p>Computer vision detects, classifies and counts vehicles from camera footage, so a count survey no longer needs a team standing at the roadside.</p>
+                <span class="go">See the demo →</span>
+            </button>
+            <button type="button" class="ai-card" data-open="modelling">
+                <h3>AI-assisted modelling</h3>
+                <p>AI agents connected to industry modelling software run network checks, assignments and validation, so modellers spend their time on judgement.</p>
+                <span class="go">Try a scenario →</span>
+            </button>
+            <button type="button" class="ai-card" data-open="services" data-spot="service-surveys">
+                <h3>Survey data quality</h3>
+                <p>Automated checks flag problems while fieldwork is still running, and every cleaning step is recorded so the final dataset stands up to review.</p>
+                <span class="go">How surveys work →</span>
+            </button>
+            <button type="button" class="ai-card" data-assistant>
+                <h3>An assistant that guides you</h3>
+                <p>Ask in plain words. It opens the right demo, runs scenarios, explains the results and drafts your enquiry.</p>
+                <span class="go">Open the assistant →</span>
+            </button>
         </div>
     </section>
 
+    <!-- Interactive dashboard -->
+    <section class="section" id="dashboard">
+        <div class="kicker">Explore</div>
+        <h2 class="section-title">What we do, live</h2>
+        <p class="section-sub">The four parts of the business in one dashboard. Click around, or ask the assistant to drive.</p>
 
-    <!-- Survey platform -->
-    <section class="section" id="surveys">
-        <div class="section-kicker">Survey platform</div>
-        <h2 class="section-title">Field surveys, from questionnaire to clean dataset</h2>
-        <p class="section-sub">Our own survey platform, set up for each project instead of rebuilt from scratch. Interviewers collect on a phone, you watch progress as it happens, and the data arrives checked, cleaned and ready to model with.</p>
-        <div class="survey-types" aria-label="Survey types">
-            <span class="chip">Roadside interview</span>
-            <span class="chip">Household travel diary</span>
-            <span class="chip">Public transport interview</span>
-            <span class="chip">Hotel &amp; visitor travel diary</span>
-            <span class="chip">Park-and-ride</span>
-            <span class="chip">Parking interview</span>
-            <span class="chip">Special generator / trip generation</span>
-            <span class="chip">Traffic counts: automatic, turning &amp; video</span>
-        </div>
-        <div class="flow">
-            <div class="flow-step">
-                <div class="step-num">01</div>
-                <h3>Design</h3>
-                <p>Questionnaire, sample plan and zoning agreed against what the model or study actually needs.</p>
+        <div class="dash">
+            <div class="tabs" role="tablist" aria-label="Business areas">
+                <button class="tab" role="tab" id="tab-counting" data-module="counting" aria-controls="counting" aria-selected="true"><span class="tab-dot"></span><span>Traffic counting<small>AI video counts</small></span></button>
+                <button class="tab" role="tab" id="tab-modelling" data-module="modelling" aria-controls="modelling" aria-selected="false" tabindex="-1"><span class="tab-dot"></span><span>Transport modelling<small>Test a change</small></span></button>
+                <button class="tab" role="tab" id="tab-tools" data-module="tools" aria-controls="tools" aria-selected="false" tabindex="-1"><span class="tab-dot"></span><span>Tools<small>Live platforms</small></span></button>
+                <button class="tab" role="tab" id="tab-services" data-module="services" aria-controls="services" aria-selected="false" tabindex="-1"><span class="tab-dot"></span><span>Services<small>How we work with you</small></span></button>
             </div>
-            <div class="flow-step">
-                <div class="step-num">02</div>
-                <h3>Collect</h3>
-                <p>Phone-based forms for interviewers in the field, in the languages the survey needs.</p>
-            </div>
-            <div class="flow-step">
-                <div class="step-num">03</div>
-                <h3>Monitor</h3>
-                <p>A live dashboard of responses, coverage and quality flags, so problems are fixed during fieldwork, not after it.</p>
-            </div>
-            <div class="flow-step">
-                <div class="step-num">04</div>
-                <h3>Deliver</h3>
-                <p>A validated dataset with zoning, maps and the quality-control evidence behind every cleaning decision.</p>
-            </div>
-        </div>
-    </section>
 
-    <!-- Case studies -->
-    <section class="section" id="cases">
-        <div class="section-kicker">Projects</div>
-        <h2 class="section-title">Recent client work</h2>
-        <p class="section-sub">A selection of projects delivered for public-sector and consultancy clients. Client names are kept confidential.</p>
-        <div class="grid grid-2">
-            <article class="case">
-                <div class="case-meta">Saudi Arabia · Surveys &amp; dashboards</div>
-                <h3>City-wide travel survey programme</h3>
-                <p>A major city needed one consistent picture of how residents, visitors and public transport users travel, collected across several survey types at once.</p>
-                <div class="case-label">What we delivered</div>
-                <ul>
-                    <li>Household, hotel-visitor, public transport, park-and-ride and special-generator surveys on one platform</li>
-                    <li>Automatic and turning-count dashboards for the traffic survey</li>
-                    <li>Review dashboards so the client could check the data as it came in</li>
-                </ul>
-            </article>
-            <article class="case">
-                <div class="case-meta">Saudi Arabia · Public transport</div>
-                <h3>Metro passenger surveys</h3>
-                <p>Understanding how passengers reach a new metro system: access mode, park-and-ride use and the shape of their journeys.</p>
-                <div class="case-label">What we delivered</div>
-                <ul>
-                    <li>Passenger interviews at more than 10 metro stations</li>
-                    <li>Survey forms, fieldwork monitoring and data cleaning</li>
-                    <li>A review platform for the cleaned results</li>
-                </ul>
-            </article>
-            <article class="case">
-                <div class="case-meta">UAE · Trip generation</div>
-                <h3>Trip generation manual, made digital</h3>
-                <p>Turning a trip generation manual into tools that planners and developers can use directly, instead of reading tables from a document.</p>
-                <div class="case-label">What we delivered</div>
-                <ul>
-                    <li>A trip-estimation calculator by land-use class</li>
-                    <li>A survey data explorer behind the manual's rates</li>
-                </ul>
-            </article>
-            <article class="case">
-                <div class="case-meta">Saudi Arabia · Road network</div>
-                <h3>Junction and corridor prioritisation</h3>
-                <p>Helping a regional road authority decide which junctions and corridors to improve first, on evidence rather than opinion.</p>
-                <div class="case-label">What we delivered</div>
-                <ul>
-                    <li>Junction count analysis and performance review</li>
-                    <li>An interactive corridor prioritisation tool</li>
-                </ul>
-            </article>
-        </div>
-    </section>
-
-    <!-- Proof -->
-    <div class="proof" aria-label="Track record">
-        <div>
-            <div class="proof-num">3</div>
-            <div class="proof-label">countries of project work<br>UK · Saudi Arabia · UAE</div>
-        </div>
-        <div>
-            <div class="proof-num">30+</div>
-            <div class="proof-label">web applications running<br>in production</div>
-        </div>
-        <div>
-            <div class="proof-num">670+</div>
-            <div class="proof-label">bus and metro routes<br>rendered in 3D</div>
-        </div>
-    </div>
-
-    <!-- Work -->
-    <section class="section" id="work">
-        <div class="section-kicker">Tools</div>
-        <h2 class="section-title">Built and running</h2>
-        <p class="section-sub">Platforms, analysis tools and visualisations we have built. Each one is live and public; click through and try it.</p>
-        <div class="grid">
-            <a class="t-card" href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter">
-                <span class="t-tag">Product</span>
-                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
-                <h3 class="t-title">Vehicle Counter</h3>
-                <p class="t-desc">Counts and classifies traffic from camera footage, so a count survey no longer needs a team standing on the kerb.</p>
-                <span class="t-link">vehcount.themovingdot.com →</span>
-            </a>
-            <a class="t-card" href="https://one2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="one2many">
-                <span class="t-tag">Platform</span>
-                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
-                <h3 class="t-title">One2Many</h3>
-                <p class="t-desc">Route from one origin to many destinations and compare them side by side, for logistics, site selection and commuter catchments.</p>
-                <span class="t-link">one2many.themovingdot.com →</span>
-            </a>
-            <a class="t-card" href="https://many2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="many2many">
-                <span class="t-tag">Platform</span>
-                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
-                <h3 class="t-title">Many2Many</h3>
-                <p class="t-desc">Every origin–destination pair of a study on one map, so journey patterns read at a glance instead of from a spreadsheet.</p>
-                <span class="t-link">many2many.themovingdot.com →</span>
-            </a>
-            <a class="t-card" href="https://mismatch.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="mismatch">
-                <span class="t-tag">Analysis</span>
-                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
-                <h3 class="t-title">Mismatch</h3>
-                <p class="t-desc">Pinpoints where car-free households in the West Midlands cannot reach essential services by public transport: evidence for where investment matters most.</p>
-                <span class="t-link">mismatch.themovingdot.com →</span>
-            </a>
-            <a class="t-card" href="https://wmbusflow.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="bus-flow-analyzer">
-                <span class="t-tag">Analysis</span>
-                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
-                <h3 class="t-title">Bus Flow Analyzer</h3>
-                <p class="t-desc">Shows where West Midlands buses actually run, how often, and which corridors carry the network.</p>
-                <span class="t-link">wmbusflow.themovingdot.com →</span>
-            </a>
-            <a class="t-card" href="https://uaetransit.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="uae-transit-animation">
-                <span class="t-tag">3D visualisation</span>
-                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
-                <h3 class="t-title">UAE Transit Animation</h3>
-                <p class="t-desc">Ride 670+ bus and metro routes through real UAE streets in 3D. A network explained in a minute rather than a report.</p>
-                <span class="t-link">uaetransit.themovingdot.com →</span>
-            </a>
-            <a class="t-card" href="https://riyadh-transit-animation.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="riyadh-transit-animation">
-                <span class="t-tag">Visualisation</span>
-                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
-                <h3 class="t-title">Riyadh Transit Animation</h3>
-                <p class="t-desc">Riyadh's metro network animated line by line: a clear way to show stakeholders what a new system changes.</p>
-                <span class="t-link">riyadh-transit-animation.themovingdot.com →</span>
-            </a>
-            <a class="t-card" href="https://whereistherainbowbus.netlify.app/" target="_blank" rel="noopener" data-agent-id="rainbow-bus-tracker">
-                <span class="t-tag">Live data</span>
-                <div class="t-icon"><span class="orb-ring"></span><span class="orb-dot"></span></div>
-                <h3 class="t-title">Rainbow Bus Tracker</h3>
-                <p class="t-desc">Birmingham's rainbow bus on a public map in real time, from a live vehicle feed to a page anyone can open.</p>
-                <span class="t-link">whereistherainbowbus.netlify.app →</span>
-            </a>
-        </div>
-    </section>
-
-    <!-- How we work -->
-    <section class="section" id="approach">
-        <div class="section-kicker">How we work</div>
-        <h2 class="section-title">One team, planning to production</h2>
-        <p class="section-sub">No hand-off between the consultant who understands the problem and the developer who builds the tool. It is the same team, so nothing is lost in translation.</p>
-        <div class="steps">
-            <div class="step">
-                <div class="step-num">01</div>
-                <h3>Frame</h3>
-                <p>Agree the decision the work has to support, and what evidence would settle it.</p>
-            </div>
-            <div class="step">
-                <div class="step-num">02</div>
-                <h3>Collect</h3>
-                <p>Design the surveys and counts, and build the apps that gather clean data in the field.</p>
-            </div>
-            <div class="step">
-                <div class="step-num">03</div>
-                <h3>Model &amp; build</h3>
-                <p>Analyse and model the network, and turn the result into a platform people can use.</p>
-            </div>
-            <div class="step">
-                <div class="step-num">04</div>
-                <h3>Run</h3>
-                <p>Host it, keep the data flowing, and reuse what works on the next project.</p>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- About -->
-    <section class="section" id="about">
-        <div class="section-kicker">About</div>
-        <h2 class="section-title">Planners who build software</h2>
-        <div class="about">
-            <div class="about-text">
-                <p><strong>The Moving Dot Ltd</strong> is a transport software and consultancy company. We started from a simple frustration: transport studies end in a report, while the data, the model and the tools behind them are left behind.</p>
-                <p>So we do both. The same team that frames the planning question designs the surveys, models the network and builds the software that keeps the answer usable after the project closes.</p>
-                <p>We have delivered work in the UK, Saudi Arabia and the UAE, and work with clients worldwide.</p>
-            </div>
-            <div class="reasons">
-                <div class="reason">
-                    <h3>No hand-off</h3>
-                    <p>The person who understands the planning question is the person building the tool.</p>
+            <!-- Traffic counting -->
+            <section class="panel" id="counting" role="tabpanel" aria-labelledby="tab-counting">
+                <div class="panel-head">
+                    <div>
+                        <h3>Traffic counting with computer vision</h3>
+                        <p>Each vehicle is detected, classified and counted as it crosses the stop line, turn by turn. Our Vehicle Counter does this with real camera footage.</p>
+                    </div>
+                    <span class="demo-tag">Simulated demo · accelerated time</span>
                 </div>
-                <div class="reason">
-                    <h3>Software that stays</h3>
-                    <p>You keep working dashboards and platforms, not just a PDF.</p>
+                <div class="split">
+                    <div class="stage">
+                        <canvas id="count-canvas" aria-label="Animated junction with vehicles being detected and counted"></canvas>
+                        <div class="stage-bar">
+                            <button type="button" class="ctl" id="ctl-detect" aria-pressed="true">AI detections</button>
+                            <button type="button" class="ctl" id="ctl-fast" aria-pressed="false">Fast forward</button>
+                            <button type="button" class="ctl" id="ctl-reset">Reset</button>
+                            <span class="clock" id="count-clock">07:00</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="tiles" id="count-tiles"></div>
+                        <div class="chart-box">
+                            <div class="chart-title">Vehicles per 15 minutes, by class</div>
+                            <svg id="count-chart" viewBox="0 0 360 160" role="img" aria-label="Stacked bars of vehicles per 15 minutes by class"></svg>
+                            <div class="legend" id="count-legend"></div>
+                            <div class="tooltip" id="count-tip" hidden></div>
+                        </div>
+                        <div style="margin-top:10px">
+                            <button type="button" class="link-btn" id="ctl-table" aria-expanded="false">Show turning counts as a table</button>
+                            <div id="count-table-wrap" hidden></div>
+                        </div>
+                        <div class="cta-row">
+                            <a class="btn btn-primary" href="https://vehcount.themovingdot.com" target="_blank" rel="noopener">Open Vehicle Counter ↗</a>
+                            <a class="btn" href="#contact" data-enquire="Traffic counts">Plan a count</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="reason">
-                    <h3>Data you can defend</h3>
-                    <p>Every cleaning and validation step is recorded, so the numbers stand up to review.</p>
+            </section>
+
+            <!-- Transport modelling -->
+            <section class="panel" id="modelling" role="tabpanel" aria-labelledby="tab-modelling" hidden>
+                <div class="panel-head">
+                    <div>
+                        <h3>Test a change before you build it</h3>
+                        <p>A small city network, solved live. Traffic takes its fastest route, roads slow down as they fill, and the network settles into balance. Change the demand, pick a scenario, or click any road to close it.</p>
+                    </div>
+                    <span class="demo-tag">Simplified demo model</span>
                 </div>
-            </div>
+                <div class="split">
+                    <div class="stage">
+                        <svg id="net" viewBox="0 0 640 380" role="img" aria-label="Road network coloured by how full each road is"></svg>
+                        <div class="tooltip" id="net-tip" hidden></div>
+                        <div class="stage-bar">
+                            <span class="legend" style="margin:0">
+                                <span><span class="sw" style="background:var(--ok)"></span>Flowing (under 85% full)</span>
+                                <span><span class="sw" style="background:var(--warn)"></span>Busy (85–100%)</span>
+                                <span><span class="sw" style="background:var(--crit)"></span>! Over capacity</span>
+                                <span>Line width = traffic</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="scenarios" id="scenarios">
+                            <button type="button" class="ctl" data-scenario="base">Today</button>
+                            <button type="button" class="ctl" data-scenario="peak">Event peak +30%</button>
+                            <button type="button" class="ctl" data-scenario="closure">Bridge closed</button>
+                            <button type="button" class="ctl" data-scenario="growth">2035 growth + new link</button>
+                        </div>
+                        <div class="slider-row">
+                            <label for="demand">Demand</label>
+                            <input type="range" id="demand" min="60" max="160" step="5" value="100">
+                            <output id="demand-out" for="demand">100%</output>
+                        </div>
+                        <div class="tiles" id="net-tiles"></div>
+                        <div class="insight" id="net-insight" aria-live="polite"></div>
+                        <ul class="points">
+                            <li>Strategic and local models in PTV Visum, SUMO and ActivitySim</li>
+                            <li>AI agents that check network coding, run assignments and validate against counts</li>
+                            <li>Results delivered as interactive maps, not just tables</li>
+                        </ul>
+                        <div class="cta-row">
+                            <a class="btn btn-primary" href="#contact" data-enquire="Modelling & analysis">Discuss a model</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tools -->
+            <section class="panel" id="tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
+                <div class="panel-head">
+                    <div>
+                        <h3>Platforms we built, running now</h3>
+                        <p>Each one is live and public. Open it and try it.</p>
+                    </div>
+                </div>
+                <div class="grid-4">
+                    <a class="card" href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter"><span class="card-tag">Product · AI</span><h4>Vehicle Counter</h4><p>Counts and classifies traffic from camera footage.</p><span class="url">vehcount.themovingdot.com ↗</span></a>
+                    <a class="card" href="https://one2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="one2many"><span class="card-tag">Platform</span><h4>One2Many</h4><p>Route from one origin to many destinations and compare them side by side.</p><span class="url">one2many.themovingdot.com ↗</span></a>
+                    <a class="card" href="https://many2many.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="many2many"><span class="card-tag">Platform</span><h4>Many2Many</h4><p>Every origin–destination pair of a study on one map.</p><span class="url">many2many.themovingdot.com ↗</span></a>
+                    <a class="card" href="https://mismatch.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="mismatch"><span class="card-tag">Analysis</span><h4>Mismatch</h4><p>Where car-free households cannot reach essential services by public transport.</p><span class="url">mismatch.themovingdot.com ↗</span></a>
+                    <a class="card" href="https://wmbusflow.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="bus-flow-analyzer"><span class="card-tag">Analysis</span><h4>Bus Flow Analyzer</h4><p>Where buses actually run, how often, and which corridors carry the network.</p><span class="url">wmbusflow.themovingdot.com ↗</span></a>
+                    <a class="card" href="https://uaetransit.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="uae-transit-animation"><span class="card-tag">3D visualisation</span><h4>UAE Transit Animation</h4><p>Ride 670+ bus and metro routes through real streets in 3D.</p><span class="url">uaetransit.themovingdot.com ↗</span></a>
+                    <a class="card" href="https://riyadh-transit-animation.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="riyadh-transit-animation"><span class="card-tag">Visualisation</span><h4>Riyadh Transit Animation</h4><p>A metro network animated line by line, to show what a new system changes.</p><span class="url">riyadh-transit-animation.themovingdot.com ↗</span></a>
+                    <a class="card" href="https://whereistherainbowbus.netlify.app/" target="_blank" rel="noopener" data-agent-id="rainbow-bus-tracker"><span class="card-tag">Live data</span><h4>Rainbow Bus Tracker</h4><p>One bus on a public map in real time, from a live vehicle feed.</p><span class="url">whereistherainbowbus.netlify.app ↗</span></a>
+                </div>
+            </section>
+
+            <!-- Services -->
+            <section class="panel" id="services" role="tabpanel" aria-labelledby="tab-services" hidden>
+                <div class="panel-head">
+                    <div>
+                        <h3>From the question to the platform</h3>
+                        <p>Most transport projects end with a report. Ours end with the report and the working software behind it, built by the people who understand the planning question.</p>
+                    </div>
+                </div>
+                <div class="grid-3">
+                    <div class="card" data-agent-id="service-advise"><span class="card-tag">Advise</span><h4>Planning &amp; modelling</h4><p>Evidence for decisions on roads, public transport and new development.</p><ul><li>Survey design and data strategy</li><li>Traffic, demand and trip-generation analysis</li><li>Network modelling and scenario testing</li></ul></div>
+                    <div class="card" data-agent-id="service-build"><span class="card-tag">Build</span><h4>Transport software</h4><p>Front end, back end and data, built for the job.</p><ul><li>Field survey apps that work on a phone</li><li>Dashboards and interactive maps</li><li>AI video counting and 3D visualisation</li></ul></div>
+                    <div class="card" data-agent-id="service-run"><span class="card-tag">Run</span><h4>Platforms &amp; data operations</h4><p>Software that keeps working after launch.</p><ul><li>Hosting, monitoring and updates</li><li>Data pipelines and quality control</li><li>Live dashboards for stakeholders</li></ul></div>
+                </div>
+
+                <div class="subhead" data-agent-id="service-surveys">Survey platform</div>
+                <p class="hint" style="font-size:0.9rem;margin-bottom:12px">Phone-based forms for interviewers, a live dashboard during fieldwork, and a validated dataset at the end.</p>
+                <div class="pill-row">
+                    <span class="pill">Roadside interview</span>
+                    <span class="pill">Household travel diary</span>
+                    <span class="pill">Public transport interview</span>
+                    <span class="pill">Hotel &amp; visitor travel diary</span>
+                    <span class="pill">Park-and-ride</span>
+                    <span class="pill">Parking interview</span>
+                    <span class="pill">Special generator / trip generation</span>
+                    <span class="pill">Traffic counts: automatic, turning, video</span>
+                </div>
+
+                <div class="subhead" data-agent-id="projects">Recent client work · client names kept confidential</div>
+                <div class="grid-2">
+                    <div class="card"><span class="card-tag">Saudi Arabia · Surveys &amp; dashboards</span><h4>City-wide travel survey programme</h4><p>Household, hotel-visitor, public transport, park-and-ride and special-generator surveys on one platform, with traffic count and data review dashboards.</p></div>
+                    <div class="card"><span class="card-tag">Saudi Arabia · Public transport</span><h4>Metro passenger surveys</h4><p>Passenger interviews at more than 10 metro stations on access mode, park-and-ride use and journeys, with fieldwork monitoring and data cleaning.</p></div>
+                    <div class="card"><span class="card-tag">UAE · Trip generation</span><h4>Trip generation manual, made digital</h4><p>A trip-estimation calculator by land-use class and a survey data explorer behind the manual's rates.</p></div>
+                    <div class="card"><span class="card-tag">Saudi Arabia · Road network</span><h4>Junction and corridor prioritisation</h4><p>Junction count analysis and an interactive tool for deciding which corridors to improve first.</p></div>
+                </div>
+
+                <div class="subhead">Works with</div>
+                <div class="pill-row">
+                    <span class="pill">PTV Visum</span><span class="pill">SUMO</span><span class="pill">ActivitySim</span><span class="pill">Python</span><span class="pill">PostgreSQL / Supabase</span><span class="pill">three.js</span><span class="pill">Cloudflare &amp; Netlify</span>
+                </div>
+            </section>
         </div>
     </section>
 
     <!-- Contact -->
-    <section class="contact-band" id="contact">
+    <section class="contact" id="contact" data-agent-id="contact">
         <h2>Tell us about your project</h2>
-        <p>A survey to run, a network to model, or a platform to build. Tell us what you need to decide and we will reply with how we would get you there.</p>
+        <p>A count to run, a network to model, or a platform to build. Tell us what you need to decide and we will reply with how we would get you there.</p>
         <form class="enquiry" id="enquiry" novalidate>
             <div>
                 <label for="enq-name">Your name</label>
-                <input id="enq-name" name="name" type="text" autocomplete="name">
+                <input id="enq-name" type="text" autocomplete="name">
             </div>
             <div>
                 <label for="enq-org">Organisation</label>
-                <input id="enq-org" name="organisation" type="text" autocomplete="organization">
+                <input id="enq-org" type="text" autocomplete="organization">
             </div>
             <div>
                 <label for="enq-type">What do you need?</label>
-                <select id="enq-type" name="type">
-                    <option>Transport surveys</option>
+                <select id="enq-type">
                     <option>Traffic counts</option>
+                    <option>Transport surveys</option>
                     <option>Modelling &amp; analysis</option>
                     <option>Software, dashboard or platform</option>
                     <option>Something else</option>
@@ -1347,87 +1239,52 @@
             </div>
             <div>
                 <label for="enq-where">Project location</label>
-                <input id="enq-where" name="location" type="text" placeholder="City, country">
-            </div>
-            <div class="full">
-                <label for="enq-when">Timing</label>
-                <select id="enq-when" name="timing">
-                    <option>As soon as possible</option>
-                    <option>Within 3 months</option>
-                    <option>Later this year</option>
-                    <option>Just exploring</option>
-                </select>
+                <input id="enq-where" type="text" placeholder="City, country">
             </div>
             <div class="full">
                 <label for="enq-msg">The question you need to answer</label>
-                <textarea id="enq-msg" name="message" placeholder="A few lines are enough."></textarea>
+                <textarea id="enq-msg" placeholder="A few lines are enough."></textarea>
             </div>
             <div class="full enquiry-actions">
-                <button type="submit" class="contact-btn">Send enquiry</button>
-                <span class="enquiry-hint">Opens your email app with the details filled in, addressed to info@themovingdot.com.</span>
+                <button type="submit" class="btn btn-primary">Send enquiry</button>
+                <span class="hint">Opens your email app with the details filled in, addressed to info@themovingdot.com.</span>
             </div>
         </form>
-        <p class="contact-or">Prefer to write directly?</p>
-        <div class="contact-email">
-            <a href="mailto:info@themovingdot.com">info@themovingdot.com</a>
-            <button type="button" class="copy-btn" id="copy-email" data-email="info@themovingdot.com">Copy</button>
-        </div>
+        <p class="direct">Or write directly: <a href="mailto:info@themovingdot.com">info@themovingdot.com</a><button type="button" class="copy-btn" id="copy-email">Copy</button></p>
     </section>
 
     <footer class="tmd-foot">
         <span class="foot-links"><a href="/lab">Lab</a>·<a href="/flow">Flow</a>·<a href="/philosophy">Philosophy</a></span>
-        <span><b>The Moving Dot Ltd</b> · transport software &amp; consultancy. Globe geography: Natural Earth (public domain).</span>
+        <span><b>The Moving Dot Ltd</b> · transport software &amp; consultancy. The demos on this page are simulated for illustration.</span>
         <span>Platform software &copy; 2022&ndash;<span id="tmd-year">2026</span> The Moving Dot Ltd. All rights reserved.</span>
     </footer>
 
-    <!-- Globe -->
-    <script type="module" src="assets/globe.js"></script>
+    <!-- Assistant -->
+    <button type="button" id="assistant-launch" aria-controls="assistant" aria-expanded="false"><span class="ld" aria-hidden="true"></span>Ask the dot</button>
+    <aside id="assistant" aria-label="AI assistant" hidden>
+        <div class="as-head">
+            <span class="ask-dot" aria-hidden="true"><span></span></span>
+            <div>
+                <div class="as-title">the dot · AI assistant</div>
+                <div class="as-status" id="as-status">Opens demos, runs scenarios, drafts your enquiry</div>
+            </div>
+            <button type="button" class="as-close" id="as-close" aria-label="Close assistant">×</button>
+        </div>
+        <div id="as-log" aria-live="polite"></div>
+        <div class="as-chips">
+            <button type="button" class="chip-btn" data-prompt="Give me a quick tour">Quick tour</button>
+            <button type="button" class="chip-btn" data-prompt="Show me AI traffic counting">AI counting</button>
+            <button type="button" class="chip-btn" data-prompt="What happens if the central bridge closes?">Close the bridge</button>
+            <button type="button" class="chip-btn" data-prompt="I want to start a project">Start a project</button>
+        </div>
+        <form class="as-form" id="as-form">
+            <input id="as-input" type="text" autocomplete="off" placeholder="Ask anything…" aria-label="Message the assistant">
+            <button type="submit">Send</button>
+        </form>
+    </aside>
 
-    <!-- Theme Toggle Script -->
     <script src="/theme.js"></script>
-
-    <script>
-        document.getElementById('tmd-year').textContent = new Date().getFullYear();
-
-        // Enquiry form: no server involved. It composes an email in the
-        // visitor's own mail app, addressed to us, with the answers filled in.
-        (function () {
-            const form = document.getElementById('enquiry');
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const v = function (id) { return document.getElementById(id).value.trim(); };
-                const type = v('enq-type');
-                const lines = [
-                    'Name: ' + v('enq-name'),
-                    'Organisation: ' + v('enq-org'),
-                    'Need: ' + type,
-                    'Location: ' + v('enq-where'),
-                    'Timing: ' + v('enq-when'),
-                    '',
-                    v('enq-msg')
-                ];
-                const subject = 'Project enquiry: ' + type + (v('enq-where') ? ' (' + v('enq-where') + ')' : '');
-                window.location.href = 'mailto:info@themovingdot.com?subject=' +
-                    encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
-            });
-        })();
-
-        // Copy the email for people whose computer has no mail app set up.
-        (function () {
-            const btn = document.getElementById('copy-email');
-            btn.addEventListener('click', function () {
-                const email = btn.dataset.email;
-                const done = function (ok) {
-                    btn.textContent = ok ? 'Copied' : email;
-                    setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
-                };
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(email).then(function () { done(true); }, function () { done(false); });
-                } else {
-                    done(false);
-                }
-            });
-        })();
-    </script>
+    <script src="/assets/dashboard.js"></script>
+    <script src="/assets/assistant.js"></script>
 </body>
 </html>

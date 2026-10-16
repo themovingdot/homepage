@@ -30,7 +30,7 @@
         name: 'the moving dot',
         contact: 'info@themovingdot.com',
         pages: {
-            home: 'Main page of The Moving Dot Ltd, a transport software and consultancy company working worldwide: services (advise, build, run), the survey platform, anonymised client projects in Saudi Arabia and the UAE, live tools, about, and an enquiry form.',
+            home: 'Main page of The Moving Dot Ltd (transport, data and AI, working worldwide): an AI assistant, a section on where we use AI, and a live dashboard with four modules (AI traffic counting demo, transport modelling demo, live tools, services with anonymised client projects), then an enquiry form.',
             philosophy: 'A six-part philosophy (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) about awareness and presence. The dot at its centre links back to the home page.',
             product: 'Client-facing products for transport planning. PASSWORD-PROTECTED.',
             lab: 'Experimental projects and creative explorations. Open to everyone.',
