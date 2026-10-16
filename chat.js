@@ -22,14 +22,16 @@
         home: 'index.html',
         product: 'product.html',
         lab: 'lab.html',
-        flow: 'flow.html'
+        flow: 'flow.html',
+        philosophy: 'philosophy.html'
     };
 
     var SITE = {
         name: 'the moving dot',
         contact: 'info@themovingdot.com',
         pages: {
-            home: 'Landing page: a single dot at the centre of the rings links to https://transport.themovingdot.com/, and clicking anywhere else on the page goes there too. Scrolling down still reveals a six-part philosophy (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) about awareness and presence.',
+            home: 'Main page of The Moving Dot Ltd (transport consultancy and software, powered by AI, working worldwide): a minimal page with four sections (traffic counting, transport modelling, tools, services), a contact email, and its own floating AI assistant.',
+            philosophy: 'A six-part philosophy (The Dot, The Layers, Space and Time, The Sensor, The Choice, Celebration) about awareness and presence. The dot at its centre links back to the home page.',
             product: 'Client-facing products for transport planning. PASSWORD-PROTECTED.',
             lab: 'Experimental projects and creative explorations. Open to everyone.',
             flow: 'Perspectives on transport and urban movement (first pieces arriving soon). Open to everyone.'
@@ -50,8 +52,9 @@
     };
 
     function currentPage() {
-        var path = location.pathname.split('/').pop() || 'index.html';
-        for (var key in PAGE_FILES) if (PAGE_FILES[key] === path) return key;
+        // Cloudflare Pages serves /lab as well as /lab.html, so compare without the extension.
+        var path = (location.pathname.split('/').pop() || 'index').replace(/\.html$/, '');
+        for (var key in PAGE_FILES) if (PAGE_FILES[key].replace(/\.html$/, '') === path) return key;
         return 'home';
     }
 
@@ -85,7 +88,7 @@
             '{"say": "<your short reply, max ~40 words>", "actions": [<0 to 4 actions>]}',
             '',
             'Available actions ("tool" + "args"):',
-            '- go_to_page {"page": "home"|"product"|"lab"|"flow"} — navigate.',
+            '- go_to_page {"page": "home"|"product"|"lab"|"flow"|"philosophy"} — navigate.',
             '- show_card {"card": "<card id from the site map>"} — navigate if needed, scroll to the card and spotlight it. Preferred way to show any project.',
             '- open_project {"url": "<https url from the site map>"} — open a live demo in a new tab. Only when the visitor asks to open/try it.',
             '- set_theme {"theme": "light"|"dark"}',

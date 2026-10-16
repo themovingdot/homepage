@@ -1,7 +1,7 @@
 {
   "name": "the moving dot",
   "short_name": "TMD",
-  "description": "Interactive digital experiences, innovative products, and experimental lab projects",
+  "description": "Transport software and consultancy: surveys, modelling and the platforms behind them",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
