@@ -27,6 +27,8 @@
 
 - 2026-10-16：PR #34 已合并上线。之后首页「工具」只列 4 个（用户指定，暂定）：Vehicle Counter、UK Traffic Explorer、Trip Rate Explorer、GTFS Explorer；聊天机器人的工具清单同步，open_project 只允许 themovingdot.com 子域名。其他页面（lab 等）的旧工具卡片不动。
 
+- 2026-10-28：用户不喜欢上一版首页，要求主站「尽可能极简」，所有交通建模/咨询业务直接导向 transport.themovingdot.com（推翻 10-12「transport 子域名退役」的决定）。首页改为：标题 + 一句话 + 5 行链接（交通建模咨询→transport 子域名、4 个工具）+ 邮箱。去掉了折叠条目、询盘表单、悬浮聊天助手（页面不再加载 chatbot.js / feedback.js；文件仍留在 assets/ 里，Worker 不动）。待用户在 Cloudflare 后台删掉 transport 子域名跳回主域名的 Redirect Rule，并确认 transport 站内容从哪里部署（原 transport 仓库）。
+
 ## 待用户提供
 - Supabase publishable key（粘贴到 assets/chatbot.js 的 CONFIG.supabaseKey）。
 - 新询盘邮件提醒：用户选 Google Apps Script（10-16）。代码 workers/enquiry-alert/Code.gs（部署步骤见同目录 README）。表格「Website enquiries — The Moving Dot」已建在用户 Drive（文件 ID 1tR02DEG2mDT9rnH14Qn1Qv9JnoAoH4dvt1oS20MiRog）。已部署（10-16），/exec 网址已填进 assets/feedback.js 的 ALERT_URL；实测：健康检查正常、测试询盘进了表格、坏邮箱被拒。表格时区显示为美国太平洋时间，需用户在表格「文件 → 设置 → 时区」改成伦敦（连接器无法修改表格设置）。
