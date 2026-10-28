@@ -128,17 +128,15 @@
             border-top: 1px solid var(--line);
         }
 
-        .area-name { font-family: 'Crimson Pro', Georgia, serif; font-size: 1.45rem; font-weight: 400; }
-        .area-tag { font-size: 0.85rem; color: var(--text-2); text-align: right; }
-        .areas li { border-bottom: 1px solid var(--line); }
-        .row { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 18px 0; text-decoration: none; }
-        .row:hover .area-name { color: var(--accent); }
+        .go { margin-top: 48px; font-family: 'Crimson Pro', Georgia, serif; font-size: 1.6rem; }
+        .go a { text-decoration: none; border-bottom: 1px solid var(--line); transition: border-color 0.2s; }
+        .go a:hover { border-color: var(--accent); }
         .mail { margin-top: 40px; }
         .mail a { color: var(--text-2); text-decoration: none; border-bottom: 1px solid var(--line); }
         .mail a:hover { color: var(--text); }
 
         footer {
-            padding: 24px 28px 32px;
+            padding: 24px 104px 32px 28px;
             color: var(--text-2);
             font-size: 0.76rem;
             display: flex;
@@ -160,8 +158,7 @@
         @media (max-width: 600px) {
             .top { padding: 18px 18px; }
             main { padding: 6vh 18px 40px; }
-            .row { flex-wrap: wrap; gap: 2px 18px; }
-            footer { padding: 20px 18px 32px; }
+            footer { padding: 20px 18px 96px; }
         }
     </style>
 </head>
@@ -175,12 +172,7 @@
         <h1>Transport, data and AI.</h1>
         <p class="lede">Built by The Moving Dot. Working with clients worldwide.</p>
 
-        <ul class="areas">
-            <li><a class="row" href="https://transport.themovingdot.com"><span class="area-name">Transport modelling &amp; consultancy</span><span class="area-tag">&#8599;</span></a></li>
-            <li><a class="row" href="https://uktrafficexplorer.themovingdot.com/" target="_blank" rel="noopener"><span class="area-name">UK Traffic Explorer</span><span class="area-tag">&#8599;</span></a></li>
-            <li><a class="row" href="https://triprateexplorer.themovingdot.com/" target="_blank" rel="noopener"><span class="area-name">Trip Rate Explorer</span><span class="area-tag">&#8599;</span></a></li>
-            <li><a class="row" href="https://gtfsexplorer.themovingdot.com/" target="_blank" rel="noopener"><span class="area-name">GTFS Explorer</span><span class="area-tag">&#8599;</span></a></li>
-        </ul>
+        <p class="go"><a href="https://transport.themovingdot.com">Transport modelling &amp; consultancy <span aria-hidden="true">&#8599;</span></a></p>
 
         <p class="mail"><a href="mailto:info@themovingdot.com">info@themovingdot.com</a></p>
     </main>
@@ -192,5 +184,7 @@
 
     <script src="/theme.js"></script>
     <script>document.getElementById('tmd-year').textContent = new Date().getFullYear();</script>
+    <script src="/assets/feedback.js" data-site="themovingdot.com" data-button="off"></script>
+    <script src="/assets/chatbot.js"></script>
 </body>
 </html>
