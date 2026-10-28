@@ -128,129 +128,15 @@
             border-top: 1px solid var(--line);
         }
 
-        .area { border-bottom: 1px solid var(--line); }
-
-        .area-head {
-            width: 100%;
-            display: flex;
-            align-items: baseline;
-            gap: 18px;
-            padding: 20px 0;
-            background: none;
-            border: none;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .area-num {
-            font-size: 0.78rem;
-            color: var(--text-2);
-            font-variant-numeric: tabular-nums;
-            width: 22px;
-            flex: none;
-        }
-
-        .area-name {
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-size: 1.55rem;
-            font-weight: 400;
-            flex: 1;
-        }
-
-        .area-tag { font-size: 0.85rem; color: var(--text-2); }
-
-        .area-sign {
-            width: 18px;
-            flex: none;
-            text-align: right;
-            color: var(--text-2);
-            transition: transform 0.25s ease;
-        }
-
-        .area-head[aria-expanded="true"] .area-sign { transform: rotate(45deg); }
-
-        .area-head:hover .area-name { color: var(--accent); }
-
-        .area-body {
-            padding: 0 0 22px 40px;
-            color: var(--text-2);
-        }
-
-        .area-body[hidden] { display: none; }
-
-        .area-body p { max-width: 560px; }
-
-        .links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 18px;
-            margin-top: 12px;
-            font-size: 0.92rem;
-        }
-
-        .links a {
-            color: var(--text);
-            text-decoration: none;
-            border-bottom: 1px solid var(--line);
-            transition: border-color 0.2s;
-        }
-
-        .links a:hover { border-color: var(--accent); }
-
-        .spotlight {
-            border-bottom-color: #f1c40f !important;
-            background: rgba(241, 196, 15, 0.12);
-        }
-
-        .contact { margin-top: 56px; }
-
-        .contact h2 {
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-weight: 400;
-            font-size: 1.55rem;
-            margin-bottom: 14px;
-        }
-
-        .enquiry { display: flex; gap: 8px; }
-
-        .enquiry input {
-            min-width: 0;
-            flex: 1;
-            font: inherit;
-            font-size: 0.95rem;
-            color: var(--text);
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 11px 13px;
-        }
-
-        .enquiry #enq-msg { flex: 1.6; }
-
-        .enquiry input:focus { outline: none; border-color: var(--accent); }
-
-        .enquiry input.invalid { border-color: #d03b3b; }
-
-        .enquiry button {
-            border: none;
-            border-radius: 8px;
-            padding: 0 20px;
-            font-weight: 600;
-            color: #fff;
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            cursor: pointer;
-        }
-
-        .enquiry button:disabled { opacity: 0.6; cursor: default; }
-
-        .enq-note { margin-top: 10px; font-size: 0.85rem; color: var(--text-2); }
-
-        .enq-note a { color: var(--text); }
-
-        .enq-done { color: var(--text); font-size: 1rem; }
+        .go { margin-top: 48px; font-family: 'Crimson Pro', Georgia, serif; font-size: 1.6rem; }
+        .go a { text-decoration: none; border-bottom: 1px solid var(--line); transition: border-color 0.2s; }
+        .go a:hover { border-color: var(--accent); }
+        .mail { margin-top: 40px; }
+        .mail a { color: var(--text-2); text-decoration: none; border-bottom: 1px solid var(--line); }
+        .mail a:hover { color: var(--text); }
 
         footer {
-            padding: 24px 104px 32px 28px;   /* keep clear of the chat button */
+            padding: 24px 104px 32px 28px;
             color: var(--text-2);
             font-size: 0.76rem;
             display: flex;
@@ -272,11 +158,6 @@
         @media (max-width: 600px) {
             .top { padding: 18px 18px; }
             main { padding: 6vh 18px 40px; }
-            .area-head { flex-wrap: wrap; gap: 4px 14px; }
-            .area-tag { order: 3; width: 100%; padding-left: 36px; }
-            .area-body { padding-left: 36px; }
-            .enquiry { flex-direction: column; }
-            .enquiry button { padding: 12px; }
             footer { padding: 20px 18px 96px; }
         }
     </style>
@@ -288,60 +169,12 @@
     </header>
 
     <main>
-        <h1>Count it. Model it. Run it.</h1>
-        <p class="lede">Transport consultancy and software, powered by AI. Working worldwide.</p>
+        <h1>Transport, data and AI.</h1>
+        <p class="lede">Built by The Moving Dot. Working with clients worldwide.</p>
 
-        <ul class="areas">
-            <li class="area" id="counting">
-                <button class="area-head" aria-expanded="false" aria-controls="counting-body">
-                    <span class="area-num">01</span><span class="area-name">Traffic counting</span><span class="area-tag">AI video counts</span><span class="area-sign" aria-hidden="true">+</span>
-                </button>
-                <div class="area-body" id="counting-body" hidden>
-                    <p>Computer vision detects, classifies and counts vehicles from camera footage, by class and turning movement. No team at the roadside.</p>
-                    <div class="links"><a href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter">Vehicle Counter ↗</a></div>
-                </div>
-            </li>
-            <li class="area" id="modelling">
-                <button class="area-head" aria-expanded="false" aria-controls="modelling-body">
-                    <span class="area-num">02</span><span class="area-name">Transport modelling</span><span class="area-tag">Test a change first</span><span class="area-sign" aria-hidden="true">+</span>
-                </button>
-                <div class="area-body" id="modelling-body" hidden>
-                    <p>Network and demand models in PTV Visum, SUMO and ActivitySim, with AI agents that check the network and validate against counts.</p>
-                </div>
-            </li>
-            <li class="area" id="tools">
-                <button class="area-head" aria-expanded="false" aria-controls="tools-body">
-                    <span class="area-num">03</span><span class="area-name">Tools</span><span class="area-tag">Live platforms</span><span class="area-sign" aria-hidden="true">+</span>
-                </button>
-                <div class="area-body" id="tools-body" hidden>
-                    <p>Built by us and running now.</p>
-                    <div class="links">
-                        <a href="https://vehcount.themovingdot.com" target="_blank" rel="noopener" data-agent-id="vehicle-counter">Vehicle Counter ↗</a>
-                        <a href="https://uktrafficexplorer.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="uk-traffic-explorer">UK Traffic Explorer ↗</a>
-                        <a href="https://triprateexplorer.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="trip-rate-explorer">Trip Rate Explorer ↗</a>
-                        <a href="https://gtfsexplorer.themovingdot.com/" target="_blank" rel="noopener" data-agent-id="gtfs-explorer">GTFS Explorer ↗</a>
-                    </div>
-                </div>
-            </li>
-            <li class="area" id="services">
-                <button class="area-head" aria-expanded="false" aria-controls="services-body">
-                    <span class="area-num">04</span><span class="area-name">Services</span><span class="area-tag">Advise · Build · Run</span><span class="area-sign" aria-hidden="true">+</span>
-                </button>
-                <div class="area-body" id="services-body" hidden>
-                    <p>Surveys, analysis and modelling; the software and dashboards behind them; and the data operations that keep them running. Projects in the UK, Saudi Arabia and the UAE.</p>
-                </div>
-            </li>
-        </ul>
+        <p class="go"><a href="https://transport.themovingdot.com">Transport modelling &amp; consultancy <span aria-hidden="true">&#8599;</span></a></p>
 
-        <section class="contact" id="contact" data-agent-id="contact" aria-labelledby="contact-title">
-            <h2 id="contact-title">Start a project</h2>
-            <form class="enquiry" id="enquiry" novalidate>
-                <input type="email" id="enq-email" required placeholder="Your email" aria-label="Your email" autocomplete="email">
-                <input type="text" id="enq-msg" placeholder="What do you need? (optional)" aria-label="What do you need">
-                <button type="submit">Send</button>
-            </form>
-            <p class="enq-note" id="enq-note" aria-live="polite">We reply by email. Or write to <a href="mailto:info@themovingdot.com">info@themovingdot.com</a></p>
-        </section>
+        <p class="mail"><a href="mailto:info@themovingdot.com">info@themovingdot.com</a></p>
     </main>
 
     <footer>
@@ -350,78 +183,7 @@
     </footer>
 
     <script src="/theme.js"></script>
-    <script>
-        // The four areas: one open at a time. window.TMD is what the chatbot drives.
-        (function () {
-            var AREAS = ['counting', 'modelling', 'tools', 'services'];
-
-            function openArea(id, scroll) {
-                if (AREAS.indexOf(id) === -1) return false;
-                AREAS.forEach(function (a) {
-                    var head = document.querySelector('#' + a + ' .area-head');
-                    var on = a === id && head.getAttribute('aria-expanded') !== 'true' || (a === id && scroll);
-                    head.setAttribute('aria-expanded', String(on));
-                    document.getElementById(a + '-body').hidden = !on;
-                });
-                if (scroll) document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return true;
-            }
-
-            AREAS.forEach(function (a) {
-                document.querySelector('#' + a + ' .area-head').addEventListener('click', function () { openArea(a, false); });
-            });
-
-            function spotlight(id) {
-                var el = document.querySelector('[data-agent-id="' + id + '"]');
-                if (!el) return false;
-                var area = el.closest('.area');
-                if (area) openArea(area.id, true);
-                el.classList.add('spotlight');
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                setTimeout(function () { el.classList.remove('spotlight'); }, 2600);
-                return true;
-            }
-
-            document.getElementById('tmd-year').textContent = new Date().getFullYear();
-
-            // Enquiry: one email box. Saved straight to our inbox table; email app only as a fallback.
-            var form = document.getElementById('enquiry');
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                var emailEl = document.getElementById('enq-email');
-                var email = emailEl.value.trim();
-                var msg = document.getElementById('enq-msg').value.trim();
-                var ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
-                emailEl.classList.toggle('invalid', !ok);
-                if (!ok) { emailEl.focus(); return; }
-                var btn = form.querySelector('button');
-                btn.disabled = true;
-                var save = window.TMDChat && window.TMDChat.saveEnquiry
-                    ? window.TMDChat.saveEnquiry(email, msg, 'form')
-                    : Promise.reject(new Error('not ready'));
-                save.then(function () {
-                    form.hidden = true;
-                    var note = document.getElementById('enq-note');
-                    note.className = 'enq-done';
-                    note.textContent = "Thanks! We'll reply to " + email + '.';
-                }, function () {
-                    btn.disabled = false;
-                    window.location.href = 'mailto:info@themovingdot.com?subject=' + encodeURIComponent('Project enquiry') + '&body=' + encodeURIComponent(msg + '\n\nReply to: ' + email);
-                });
-            });
-
-            window.TMD = {
-                areas: AREAS.slice(),
-                openArea: function (id) { return openArea(id, true); },
-                spotlight: spotlight,
-                state: function () {
-                    var open = AREAS.filter(function (a) { return !document.getElementById(a + '-body').hidden; });
-                    return open.length ? 'Open section: ' + open[0] + '.' : 'No section open.';
-                }
-            };
-        })();
-    </script>
-    <script src="/assets/feedback.js" data-site="themovingdot.com" data-button="off"></script>
-    <script src="/assets/chatbot.js"></script>
+    <script>document.getElementById('tmd-year').textContent = new Date().getFullYear();</script>
+    <script type="module" src="/assets/copilot.js"></script>
 </body>
 </html>
