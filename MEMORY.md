@@ -53,3 +53,5 @@
 - 客户项目站点都在 Netlify（zhwlxl 团队），源码不在本仓库。
 - 聊天助手后端：workers/cloudflare-llm-worker（地址写在 chat.js 和 assets/chatbot.js 的 apiUrl）。
 - 风险（不在本仓库）：adtgmdemo.themovingdot.com 的 gemini_config.js 把 Gemini API 密钥明文放在网页里。已要求下线，见上。
+
+- 2026-10-29：Lab 页描述按实际内容改正：Time Compare（原写「多时区比较」，实为两个时段的驾车等时圈对比）、Life → A Day in the Life（原写「冥想式界面」，实为基于 DfT 统计的 1,000 人出行一日模拟）、UAE Transit Animation → UAE Transit Atlas，「670+ routes」改为线上页面显示的 342 条线路 / 6,122 站。chat.js 里的工具说明同步。One2Many / Many2Many 线上底图显示「API KEY REQUIRED」（CARTO 底图），待修。
