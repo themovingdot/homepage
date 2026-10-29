@@ -39,15 +39,15 @@
         cards: [
             { id: 'vehicle-counter', page: 'product', title: 'Vehicle Counter', url: 'https://vehcount.themovingdot.com', desc: 'Real-time vehicle counting and traffic flow analysis for transportation planning.' },
             { id: 'bus-flow-analyzer', page: 'lab', title: 'Bus Flow Analyzer', url: 'https://wmbusflow.themovingdot.com', desc: 'Visualization of urban bus network flow patterns (West Midlands).' },
-            { id: 'time-compare', page: 'lab', title: 'Time Compare', url: 'https://timecompare.themovingdot.com', desc: 'Multi-timezone comparison utility.' },
-            { id: 'life', page: 'lab', title: 'Life', url: 'https://life.themovingdot.com', desc: 'Contemplative interface for exploring life patterns and reflection.' },
+            { id: 'time-compare', page: 'lab', title: 'Time Compare', url: 'https://timecompare.themovingdot.com', desc: 'Drive-time catchments compared for two times of day.' },
+            { id: 'life', page: 'lab', title: 'A Day in the Life', url: 'https://life.themovingdot.com', desc: '1,000 simulated people through a weekday in England, from DfT travel statistics.' },
             { id: 'mismatch', page: 'lab', title: 'Mismatch', url: 'https://mismatch.themovingdot.com', desc: 'West Midlands analysis of car-free households with poor public transport access.' },
             { id: 'one2many', page: 'lab', title: 'One2Many', url: 'https://one2many.themovingdot.com', desc: 'Multi-origin route planning with bidirectional routing modes.' },
             { id: 'rainbow-bus-tracker', page: 'lab', title: 'Rainbow Bus Tracker', url: 'https://whereistherainbowbus.netlify.app', desc: "Real-time tracker for Birmingham's rainbow bus." },
             { id: 'dots', page: 'lab', title: 'Dots', url: 'https://dots.themovingdot.com', desc: 'Collaborative experiment: every connected user is a dot of color and sound.' },
             { id: 'many2many', page: 'lab', title: 'Many2Many', url: 'https://many2many.themovingdot.com', desc: 'Multiple origin-destination pairs visualized on one map.' },
             { id: 'riyadh-transit-animation', page: 'lab', title: 'Riyadh Transit Animation', url: 'https://riyadh-transit-animation.themovingdot.com', desc: "Animated visualization of Riyadh's expanding transit network." },
-            { id: 'uae-transit-animation', page: 'lab', title: 'UAE Transit Animation', url: 'https://uaetransit.themovingdot.com', desc: "3D ride-along across UAE's 670+ bus and metro routes." }
+            { id: 'uae-transit-animation', page: 'lab', title: 'UAE Transit Animation', url: 'https://uaetransit.themovingdot.com', desc: '3D ride-along across 342 bus and metro routes in Abu Dhabi and Dubai.' }
         ]
     };
 
