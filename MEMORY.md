@@ -25,7 +25,7 @@
 - ADTGM demo：用户最终只要求「从本网站去掉链接」，站点本身保留。查过仓库、main 分支和线上各页面，已经没有任何 ADTGM 链接（PR #33 已删）。
 - 风险：两个 Supabase 项目的 riyadh_metro_survey 表都对所有人开放了读、写、改、删（public 策略）。用户 10-16 决定不改。
 
-- 2026-10-16：PR #34 已合并上线。之后首页「工具」只列 4 个（用户指定，暂定）：Vehicle Counter、UK Traffic Explorer、Trip Rate Explorer、GTFS Explorer；聊天机器人的工具清单同步，open_project 只允许 themovingdot.com 子域名。其他页面（lab 等）的旧工具卡片不动。
+- 2026-10-16：PR #34、#35 已合并上线。之后首页「工具」只列 4 个（用户指定，暂定）：Vehicle Counter、UK Traffic Explorer、Trip Rate Explorer、GTFS Explorer；聊天机器人的工具清单同步，open_project 只允许 themovingdot.com 子域名。其他页面（lab 等）的旧工具卡片不动。
 
 - 2026-10-28：用户不喜欢上一版首页，要求主站「尽可能极简」，所有交通建模/咨询业务直接导向 transport.themovingdot.com（推翻 10-12「transport 子域名退役」的决定）。首页改为：标题 + 一句话 + 5 行链接（交通建模咨询→transport 子域名、4 个工具）+ 邮箱。去掉了折叠条目、询盘表单、悬浮聊天助手（页面不再加载 chatbot.js / feedback.js；文件仍留在 assets/ 里，Worker 不动）。（同日第二轮：去掉三个工具链接和 Vehicle Counter，只剩 transport 链接 + 邮箱；聊天助手「the dot」加回悬浮在右下角，工具由它按需引导。）（10-28 又改：助手换成共用的 Project Copilot，仓库 themovingdot/website-copilot；页面端 assets/copilot.js，目前指向其 staging Worker；首页的站点说明在该仓库 sites/homepage.mjs。必须先把该 Worker 部署并放行 themovingdot.com，再合并首页，否则首页聊天会失效。旧的 assets/chatbot.js 暂留。）待用户在 Cloudflare 后台删掉 transport 子域名跳回主域名的 Redirect Rule，并确认 transport 站内容从哪里部署（原 transport 仓库）。
 
@@ -41,7 +41,9 @@
 - 调查平台要不要起正式产品名。
 
 ## 踩坑
-- www.themovingdot.com 返回 525（Cloudflare 与源站之间 SSL 握手失败），需在 Cloudflare 后台处理：最简单是加一条 Redirect Rule 把 www 跳到主域名。
+- www.themovingdot.com 曾返回 525（Cloudflare 与源站 SSL 握手失败）。2026-10-16 用户在 Cloudflare 加了 Redirect Rule，已验证：www（http/https）301 跳到 https://themovingdot.com，路径和参数保留。
+- 2026-10-16 验证时 transport.themovingdot.com 仍直接显示旧站（经 Cloudflare 代理到 Netlify，200），说明 transport 那条 Redirect Rule 还没生效/没加；需要用户在 Cloudflare 照 www 那条再加一条（Hostname equals transport.themovingdot.com）。该站不在本账户 Netlify 项目列表里。
+- Cloudflare 连接器只有 Workers/D1/KV/R2 等，没有 DNS 和 Rules 权限，域名跳转只能用户自己在后台做。
 - transport 站没有接 GitHub 自动部署（见 transport 仓库 MEMORY.md），所以子域名跳转要在 Cloudflare 后台用 Redirect Rule 做，改 transport 仓库没用。
 - Cloudflare Pages 会把仓库根目录原样公开，AGENTS.md / MEMORY.md 用 `_redirects` 挡住。
 - 本地截图时 Google Fonts 会因代理证书报错，是环境问题。
