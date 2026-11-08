@@ -29,6 +29,8 @@
 
 - 2026-10-28：用户不喜欢上一版首页，要求主站「尽可能极简」，所有交通建模/咨询业务直接导向 transport.themovingdot.com（推翻 10-12「transport 子域名退役」的决定）。首页改为：标题 + 一句话 + 5 行链接（交通建模咨询→transport 子域名、4 个工具）+ 邮箱。去掉了折叠条目、询盘表单、悬浮聊天助手（页面不再加载 chatbot.js / feedback.js；文件仍留在 assets/ 里，Worker 不动）。（同日第二轮：去掉三个工具链接和 Vehicle Counter，只剩 transport 链接 + 邮箱；聊天助手「the dot」加回悬浮在右下角，工具由它按需引导。）（10-28 又改：助手换成共用的 Project Copilot，仓库 themovingdot/website-copilot；页面端 assets/copilot.js，目前指向其 staging Worker；首页的站点说明在该仓库 sites/homepage.mjs。必须先把该 Worker 部署并放行 themovingdot.com，再合并首页，否则首页聊天会失效。旧的 assets/chatbot.js 暂留。）待用户在 Cloudflare 后台删掉 transport 子域名跳回主域名的 Redirect Rule，并确认 transport 站内容从哪里部署（原 transport 仓库）。
 
+- 2026-11-08：首页再改版（PR #37 合并后的第二轮）。文案定为「Understand how people move.」+「Traffic counts, transport models and tools, built with AI.」（放弃「AI-native mobility」：mobility 太泛、AI-native 是行话，客户看不懂）；版式选「黑白大字报」，页头小字 Sense · Understand · Reach（点的哲学：感知→理解→到达）。默认浅色，跟随系统，手动切换记在 localStorage 的 tmd-home-theme（与其他页面的 theme.js 互不影响）。页脚用 tmd-legal-notice 的单行版本。助手是共用的 website-copilot（目前连其 staging Worker）。
+
 ## 待用户提供
 - Supabase publishable key（粘贴到 assets/chatbot.js 的 CONFIG.supabaseKey）。
 - 新询盘邮件提醒：用户选 Google Apps Script（10-16）。代码 workers/enquiry-alert/Code.gs（部署步骤见同目录 README）。表格「Website enquiries — The Moving Dot」已建在用户 Drive（文件 ID 1tR02DEG2mDT9rnH14Qn1Qv9JnoAoH4dvt1oS20MiRog）。已部署（10-16），/exec 网址已填进 assets/feedback.js 的 ALERT_URL；实测：健康检查正常、测试询盘进了表格、坏邮箱被拒。表格时区显示为美国太平洋时间，需用户在表格「文件 → 设置 → 时区」改成伦敦（连接器无法修改表格设置）。

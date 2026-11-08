@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Moving Dot · Transport, data and AI</title>
+    <title>The Moving Dot · Understand how people move</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <link rel="canonical" href="https://themovingdot.com/">
-    <meta name="description" content="The Moving Dot: AI traffic counting, transport modelling and the software behind them. Working with clients worldwide.">
+    <meta name="description" content="The Moving Dot: traffic counts, transport models and tools, built with AI. Working with clients worldwide.">
     <meta name="author" content="The Moving Dot Ltd">
     <meta name="copyright" content="Platform software © 2022-2026 The Moving Dot Ltd. All rights reserved.">
-    <meta property="og:title" content="The Moving Dot · Transport, data and AI">
-    <meta property="og:description" content="AI traffic counting, transport modelling and the software behind them.">
+    <meta property="og:title" content="The Moving Dot · Understand how people move">
+    <meta property="og:description" content="Traffic counts, transport models and tools, built with AI.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://themovingdot.com/">
     <meta property="og:image" content="https://themovingdot.com/assets/og-image.png">
@@ -23,167 +23,94 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://themovingdot.com/assets/og-image.png">
     <style>
-        :root { --accent: #8b45c5; --accent-2: #3498db; }
-
+        :root, :root[data-theme="light"] {
+            color-scheme: light;
+            --bg: #ffffff; --ink: #0a0a0a; --mute: #767676; --line: #0a0a0a; --acc: #ffd400;
+        }
         :root[data-theme="dark"] {
             color-scheme: dark;
-            --bg: #0b0b0e;
-            --surface: #15151a;
-            --text: #ececf1;
-            --text-2: #9b9aa8;
-            --line: rgba(255, 255, 255, 0.10);
+            --bg: #0a0a0a; --ink: #fafafa; --mute: #8a8a8a; --line: #fafafa;
         }
-
-        :root[data-theme="light"] {
-            color-scheme: light;
-            --bg: #fbfbfc;
-            --surface: #ffffff;
-            --text: #141418;
-            --text-2: #5d5c6b;
-            --line: rgba(0, 0, 0, 0.10);
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            background: var(--bg); color: var(--ink);
+            font: 400 15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+            min-height: 100dvh; display: flex; flex-direction: column;
         }
-
-        a { color: inherit; }
-
-        button { font: inherit; color: inherit; }
-
-        :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 4px; }
-
-        .top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 22px 28px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-size: 1.2rem;
-        }
-
-        .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: #f1c40f;
-            box-shadow: 0 0 10px rgba(241, 196, 15, 0.6);
-        }
-
-        #theme-toggle {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            border: 1px solid var(--line);
-            background: none;
-            cursor: pointer;
-            font-size: 0.95rem;
-            display: grid;
-            place-items: center;
-        }
-
-        .theme-icon { pointer-events: none; }
-
-        main {
-            flex: 1;
-            width: 100%;
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 9vh 24px 60px;
-        }
-
-        h1 {
-            font-family: 'Crimson Pro', Georgia, serif;
-            font-weight: 300;
-            font-size: clamp(2.4rem, 7vw, 3.8rem);
-            line-height: 1.08;
-        }
-
-        .lede {
-            margin-top: 16px;
-            color: var(--text-2);
-            font-size: 1.05rem;
-        }
-
-        /* the four lines of business */
-        .areas {
-            list-style: none;
-            margin-top: 56px;
-            border-top: 1px solid var(--line);
-        }
-
-        .go { margin-top: 48px; font-family: 'Crimson Pro', Georgia, serif; font-size: 1.6rem; }
-        .go a { text-decoration: none; border-bottom: 1px solid var(--line); transition: border-color 0.2s; }
-        .go a:hover { border-color: var(--accent); }
-        .mail { margin-top: 40px; }
-        .mail a { color: var(--text-2); text-decoration: none; border-bottom: 1px solid var(--line); }
-        .mail a:hover { color: var(--text); }
-
-        footer {
-            padding: 24px 104px 32px 28px;
-            color: var(--text-2);
-            font-size: 0.76rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 18px;
-            justify-content: space-between;
-        }
-
-        footer nav { display: flex; gap: 16px; }
-
-        footer a { text-decoration: none; }
-
-        footer a:hover { color: var(--text); }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-        }
-
+        a { color: inherit; text-decoration: none; }
+        button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+        :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+        .mono { font: 400 12px/1 "JetBrains Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: .08em; }
+        .top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 36px; border-bottom: 1px solid var(--line); }
+        .brand { display: flex; gap: 10px; align-items: center; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--acc); }
+        .top-r { display: flex; gap: 22px; align-items: center; }
+        .top-r .steps { color: var(--mute); }
+        #theme-toggle { text-transform: uppercase; }
+        main { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+        h1 { font: 700 clamp(3rem, 10.5vw, 9.5rem)/.9 Inter, sans-serif; letter-spacing: -.06em; padding: 0 36px 26px; }
+        h1 span { color: var(--mute); }
+        .lede { padding: 0 36px 30px; max-width: 46ch; font-size: 18px; color: var(--mute); }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 22px 36px; border-top: 1px solid var(--line); font-size: clamp(1.1rem, 2.4vw, 1.6rem); font-weight: 500; letter-spacing: -.02em; transition: background .2s, color .2s; }
+        .row:hover { background: var(--ink); color: var(--bg); }
+        .row .mono { margin-right: 18px; }
+        footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px 104px 22px 36px; border-top: 1px solid var(--line); color: var(--mute); }
+        footer nav { display: flex; gap: 18px; }
+        footer a:hover { color: var(--ink); }
+        @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; } }
         @media (max-width: 600px) {
-            .top { padding: 18px 18px; }
-            main { padding: 6vh 18px 40px; }
-            footer { padding: 20px 18px 96px; }
+            .top { padding: 16px 20px; }
+            .top-r .steps { display: none; }
+            h1, .lede { padding-left: 20px; padding-right: 20px; }
+            .row { padding: 20px; }
+            footer { padding: 18px 20px 92px; }
         }
     </style>
+    <script>
+        // Light by default; follow the visitor's system, and remember a manual choice.
+        (function () {
+            var t = null;
+            try { t = localStorage.getItem('tmd-home-theme'); } catch (e) { /* storage blocked */ }
+            if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
 </head>
 <body>
-    <header class="top">
-        <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>the moving dot</a>
-        <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"><span class="theme-icon">☀️</span></button>
+    <header class="top mono">
+        <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>The Moving Dot</a>
+        <div class="top-r">
+            <span class="steps">Sense · Understand · Reach</span>
+            <button id="theme-toggle" type="button" aria-label="Switch colour mode"></button>
+        </div>
     </header>
 
     <main>
-        <h1>Transport, data and AI.</h1>
-        <p class="lede">Built by The Moving Dot. Working with clients worldwide.</p>
-
-        <p class="go"><a href="https://transport.themovingdot.com">Transport modelling &amp; consultancy <span aria-hidden="true">&#8599;</span></a></p>
-
-        <p class="mail"><a href="mailto:info@themovingdot.com">info@themovingdot.com</a></p>
+        <h1>Understand<br>how people<br><span>move.</span></h1>
+        <p class="lede">Traffic counts, transport models and tools, built with AI.</p>
+        <a class="row" href="https://transport.themovingdot.com"><span><span class="mono">01</span>Transport modelling &amp; consultancy</span><span aria-hidden="true">&rarr;</span></a>
     </main>
 
-    <footer>
-        <span>Platform software &copy; 2022&ndash;<span id="tmd-year">2026</span> The Moving Dot Ltd. All rights reserved.</span>
+    <footer class="mono">
+        <a href="mailto:info@themovingdot.com">info@themovingdot.com</a>
         <nav aria-label="More"><a href="/lab">Lab</a><a href="/flow">Flow</a><a href="/philosophy">Philosophy</a></nav>
+        <span>Platform software &copy; 2022&ndash;<span id="tmd-year">2026</span> The Moving Dot Ltd. All rights reserved.</span>
     </footer>
 
-    <script src="/theme.js"></script>
-    <script>document.getElementById('tmd-year').textContent = new Date().getFullYear();</script>
+    <script>
+        document.getElementById('tmd-year').textContent = new Date().getFullYear();
+        (function () {
+            var root = document.documentElement, btn = document.getElementById('theme-toggle');
+            function label() { btn.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light' : 'Dark'; }
+            btn.addEventListener('click', function () {
+                var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                root.setAttribute('data-theme', next);
+                try { localStorage.setItem('tmd-home-theme', next); } catch (e) { /* storage blocked */ }
+                label();
+            });
+            label();
+        })();
+    </script>
     <script type="module" src="/assets/copilot.js"></script>
 </body>
 </html>
